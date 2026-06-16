@@ -6,9 +6,10 @@ import { getDayRange, getTimelineDays } from "@/lib/tournament";
 type TimelineProps = {
   day: number;
   onDayChange: (day: number) => void;
+  isSimulating?: boolean;
 };
 
-export function Timeline({ day, onDayChange }: TimelineProps) {
+export function Timeline({ day, onDayChange, isSimulating = false }: TimelineProps) {
   const { min, max } = getDayRange();
   const timelineDays = getTimelineDays();
 
@@ -37,10 +38,11 @@ export function Timeline({ day, onDayChange }: TimelineProps) {
                 <span key={entry.day} className="inline-flex p-1">
                   <button
                     type="button"
-                    onClick={() => onDayChange(entry.day)}
+                    onClick={() => !isSimulating && onDayChange(entry.day)}
+                    disabled={isSimulating}
                     aria-label={`Matchday ${entry.day}`}
                     aria-current={isActive ? "step" : undefined}
-                    className={`h-4 w-4 shrink-0 rounded-full border-2 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 dark:focus-visible:ring-zinc-100 dark:focus-visible:ring-offset-zinc-900 ${stageStyle} ${
+                    className={`h-4 w-4 shrink-0 rounded-full border-2 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-zinc-100 dark:focus-visible:ring-offset-zinc-900 ${stageStyle} ${
                       isActive
                         ? "ring-2 ring-zinc-900 ring-offset-2 dark:ring-zinc-100 dark:ring-offset-zinc-900"
                         : "opacity-70 hover:opacity-100"

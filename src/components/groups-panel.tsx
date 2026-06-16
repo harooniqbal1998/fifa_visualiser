@@ -2,6 +2,7 @@
 
 import type { Snapshot, Team } from "@/types";
 import { Flag } from "@/components/flag";
+import { CollapsibleSection } from "@/components/collapsible-section";
 import { getGroupStandings } from "@/lib/tournament";
 
 type GroupsPanelProps = {
@@ -16,8 +17,15 @@ export function GroupsPanel({ teams, snapshot, day }: GroupsPanelProps) {
   const groupIds = [...new Set(teams.map((team) => team.group))].sort();
 
   return (
-    <section className="border-t border-zinc-200 px-6 py-4 dark:border-zinc-800">
-      <h2 className="mb-3 text-sm font-medium">Groups</h2>
+    <CollapsibleSection
+      className="border-t border-zinc-200 dark:border-zinc-800"
+      contentClassName="px-6 pb-4"
+      summary={
+        <div className="px-6 py-4">
+          <h2 className="text-sm font-medium">Groups</h2>
+        </div>
+      }
+    >
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
         {groupIds.map((groupId) => {
           const table = standings[groupId] ?? [];
@@ -56,6 +64,6 @@ export function GroupsPanel({ teams, snapshot, day }: GroupsPanelProps) {
           );
         })}
       </div>
-    </section>
+    </CollapsibleSection>
   );
 }

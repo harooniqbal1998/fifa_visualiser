@@ -2,6 +2,7 @@
 
 import type { Snapshot, Team } from "@/types";
 import { Flag } from "@/components/flag";
+import { CollapsibleSection } from "@/components/collapsible-section";
 import { getTeamById } from "@/lib/tournament";
 
 type NextOpponentsProps = {
@@ -26,19 +27,25 @@ export function NextOpponents({ snapshot, teams, day }: NextOpponentsProps) {
   const opponents = dayMatches[leader.team.id] ?? [];
 
   return (
-    <section className="border-t border-zinc-200 px-6 py-4 dark:border-zinc-800">
-      <div className="mb-3 flex flex-wrap items-center gap-2">
-        <h2 className="text-sm font-medium">Likely next opponents</h2>
-        <span className="text-xs text-zinc-500 dark:text-zinc-400">
-          for{" "}
-          <span className="inline-flex items-center gap-1 font-medium text-zinc-700 dark:text-zinc-300">
-            <Flag isoCode={leader.team.isoCode} size={16} className="rounded-sm" />
-            {leader.team.name}
-          </span>{" "}
-          ({leader.probability.toFixed(1)}% win chance)
-        </span>
-      </div>
-
+    <CollapsibleSection
+      className="border-t border-zinc-200 dark:border-zinc-800"
+      contentClassName="px-6 pb-4"
+      summary={
+        <div className="px-6 py-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 className="text-sm font-medium">Likely next opponents</h2>
+            <span className="text-xs text-zinc-500 dark:text-zinc-400">
+              for{" "}
+              <span className="inline-flex items-center gap-1 font-medium text-zinc-700 dark:text-zinc-300">
+                <Flag isoCode={leader.team.isoCode} size={16} className="rounded-sm" />
+                {leader.team.name}
+              </span>{" "}
+              ({leader.probability.toFixed(1)}% win chance)
+            </span>
+          </div>
+        </div>
+      }
+    >
       {opponents.length === 0 ? (
         <p className="text-xs text-zinc-500 dark:text-zinc-400">
           No remaining group-stage opponents on day {day}.
@@ -61,6 +68,6 @@ export function NextOpponents({ snapshot, teams, day }: NextOpponentsProps) {
           })}
         </ul>
       )}
-    </section>
+    </CollapsibleSection>
   );
 }
