@@ -4,95 +4,95 @@ export const snapshots: Snapshot[] = [
   {
     "day": 0,
     "probabilities": {
-      "mex": 2.2,
-      "rsa": 0.22,
-      "kor": 1.47,
-      "den": 1.69,
-      "can": 0.73,
-      "qat": 0.22,
-      "sui": 1.83,
-      "ecu": 0.81,
-      "bra": 9.16,
-      "mar": 1.32,
-      "hai": 0.22,
-      "sco": 0.88,
-      "usa": 2.57,
-      "aus": 0.59,
-      "par": 0.44,
-      "tur": 1.1,
-      "ger": 6.23,
-      "cuw": 0.22,
-      "civ": 0.37,
-      "pol": 0.95,
-      "ned": 4.77,
-      "jpn": 1.61,
-      "tun": 0.37,
-      "ukr": 0.73,
-      "bel": 3.67,
-      "egy": 0.37,
-      "irn": 1.03,
-      "nzl": 0.22,
-      "esp": 6.96,
-      "cpv": 0.22,
-      "ksa": 0.22,
-      "uru": 3.3,
-      "fra": 9.53,
-      "sen": 1.25,
-      "nor": 0.66,
-      "bol": 0.29,
-      "arg": 10.63,
-      "alg": 0.59,
-      "aut": 1.17,
-      "jor": 0.29,
-      "por": 5.13,
-      "uzb": 0.29,
-      "col": 2.93,
-      "cro": 2.05,
-      "eng": 7.33,
-      "gha": 0.51,
-      "pan": 0.22,
-      "crc": 0.44
+      "mex": 2.04,
+      "rsa": 1.25,
+      "kor": 2.43,
+      "cze": 0.86,
+      "can": 1.57,
+      "bih": 0.55,
+      "qat": 1.41,
+      "sui": 2.82,
+      "bra": 3.52,
+      "mar": 3.05,
+      "hai": 0.94,
+      "sco": 1.88,
+      "usa": 2.66,
+      "par": 1.8,
+      "aus": 2.19,
+      "tur": 0.78,
+      "ger": 3.21,
+      "cuw": 1.02,
+      "civ": 1.64,
+      "ecu": 2.35,
+      "ned": 3.37,
+      "jpn": 2.74,
+      "swe": 0.7,
+      "tun": 1.72,
+      "bel": 3.29,
+      "egy": 2.11,
+      "irn": 2.51,
+      "nzl": 0.07,
+      "esp": 3.84,
+      "cpv": 1.17,
+      "ksa": 1.33,
+      "uru": 2.9,
+      "fra": 3.68,
+      "sen": 2.58,
+      "irq": 0.63,
+      "nor": 2.11,
+      "arg": 3.76,
+      "alg": 1.96,
+      "aut": 2.27,
+      "jor": 1.1,
+      "por": 3.45,
+      "cod": 0.47,
+      "uzb": 1.49,
+      "col": 2.98,
+      "eng": 3.6,
+      "cro": 3.13,
+      "gha": 1.17,
+      "pan": 1.88
     },
     "possibleOpponents": {
       "mex": [
         "rsa",
         "kor",
-        "den"
+        "cze"
       ],
       "rsa": [
         "mex",
         "kor",
-        "den"
+        "cze"
       ],
       "kor": [
         "mex",
         "rsa",
-        "den"
+        "cze"
       ],
-      "den": [
+      "cze": [
         "mex",
         "rsa",
         "kor"
       ],
       "can": [
+        "bih",
         "qat",
-        "sui",
-        "ecu"
+        "sui"
       ],
-      "qat": [
-        "can",
-        "sui",
-        "ecu"
-      ],
-      "sui": [
-        "can",
-        "qat",
-        "ecu"
-      ],
-      "ecu": [
+      "bih": [
         "can",
         "qat",
         "sui"
+      ],
+      "qat": [
+        "can",
+        "bih",
+        "sui"
+      ],
+      "sui": [
+        "can",
+        "bih",
+        "qat"
       ],
       "bra": [
         "mar",
@@ -115,13 +115,8 @@ export const snapshots: Snapshot[] = [
         "hai"
       ],
       "usa": [
+        "par",
         "aus",
-        "par",
-        "tur"
-      ],
-      "aus": [
-        "usa",
-        "par",
         "tur"
       ],
       "par": [
@@ -129,50 +124,55 @@ export const snapshots: Snapshot[] = [
         "aus",
         "tur"
       ],
+      "aus": [
+        "usa",
+        "par",
+        "tur"
+      ],
       "tur": [
         "usa",
-        "aus",
-        "par"
+        "par",
+        "aus"
       ],
       "ger": [
         "cuw",
         "civ",
-        "pol"
+        "ecu"
       ],
       "cuw": [
         "ger",
         "civ",
-        "pol"
+        "ecu"
       ],
       "civ": [
         "ger",
         "cuw",
-        "pol"
+        "ecu"
       ],
-      "pol": [
+      "ecu": [
         "ger",
         "cuw",
         "civ"
       ],
       "ned": [
         "jpn",
-        "tun",
-        "ukr"
+        "swe",
+        "tun"
       ],
       "jpn": [
         "ned",
-        "tun",
-        "ukr"
+        "swe",
+        "tun"
+      ],
+      "swe": [
+        "ned",
+        "jpn",
+        "tun"
       ],
       "tun": [
         "ned",
         "jpn",
-        "ukr"
-      ],
-      "ukr": [
-        "ned",
-        "jpn",
-        "tun"
+        "swe"
       ],
       "bel": [
         "egy",
@@ -216,23 +216,23 @@ export const snapshots: Snapshot[] = [
       ],
       "fra": [
         "sen",
-        "nor",
-        "bol"
+        "irq",
+        "nor"
       ],
       "sen": [
         "fra",
-        "nor",
-        "bol"
+        "irq",
+        "nor"
+      ],
+      "irq": [
+        "fra",
+        "sen",
+        "nor"
       ],
       "nor": [
         "fra",
         "sen",
-        "bol"
-      ],
-      "bol": [
-        "fra",
-        "sen",
-        "nor"
+        "irq"
       ],
       "arg": [
         "alg",
@@ -255,168 +255,151 @@ export const snapshots: Snapshot[] = [
         "aut"
       ],
       "por": [
+        "cod",
         "uzb",
-        "col",
-        "cro"
+        "col"
       ],
-      "uzb": [
-        "por",
-        "col",
-        "cro"
-      ],
-      "col": [
-        "por",
-        "uzb",
-        "cro"
-      ],
-      "cro": [
+      "cod": [
         "por",
         "uzb",
         "col"
       ],
+      "uzb": [
+        "por",
+        "cod",
+        "col"
+      ],
+      "col": [
+        "por",
+        "cod",
+        "uzb"
+      ],
       "eng": [
+        "cro",
         "gha",
-        "pan",
-        "crc"
+        "pan"
       ],
-      "gha": [
-        "eng",
-        "pan",
-        "crc"
-      ],
-      "pan": [
-        "eng",
-        "gha",
-        "crc"
-      ],
-      "crc": [
+      "cro": [
         "eng",
         "gha",
         "pan"
+      ],
+      "gha": [
+        "eng",
+        "cro",
+        "pan"
+      ],
+      "pan": [
+        "eng",
+        "cro",
+        "gha"
       ]
     }
   },
   {
     "day": 1,
     "probabilities": {
-      "mex": 2.42,
-      "rsa": 0.22,
-      "kor": 1.44,
-      "den": 1.85,
-      "can": 0.81,
-      "qat": 0.22,
-      "sui": 2.01,
-      "ecu": 0.79,
-      "bra": 10.06,
-      "mar": 1.29,
-      "hai": 0.22,
-      "sco": 0.97,
-      "usa": 2.52,
-      "aus": 0.58,
-      "par": 0.43,
-      "tur": 1.08,
-      "ger": 6.11,
-      "cuw": 0.22,
-      "civ": 0.36,
-      "pol": 0.93,
-      "ned": 4.67,
-      "jpn": 1.58,
-      "tun": 0.36,
-      "ukr": 0.72,
-      "bel": 3.59,
-      "egy": 0.36,
-      "irn": 1.01,
-      "nzl": 0.22,
-      "esp": 6.83,
-      "cpv": 0.22,
-      "ksa": 0.22,
-      "uru": 3.24,
-      "fra": 9.35,
-      "sen": 1.22,
-      "nor": 0.65,
-      "bol": 0.29,
-      "arg": 10.42,
-      "alg": 0.58,
-      "aut": 1.15,
-      "jor": 0.29,
-      "por": 5.03,
-      "uzb": 0.29,
-      "col": 2.88,
-      "cro": 2.01,
-      "eng": 7.19,
-      "gha": 0.5,
-      "pan": 0.22,
-      "crc": 0.43
+      "mex": 2.26,
+      "rsa": 1.24,
+      "kor": 2.69,
+      "cze": 0.85,
+      "can": 1.55,
+      "bih": 0.54,
+      "qat": 1.39,
+      "sui": 3.12,
+      "bra": 3.49,
+      "mar": 3.02,
+      "hai": 0.93,
+      "sco": 2.08,
+      "usa": 2.63,
+      "par": 1.78,
+      "aus": 2.17,
+      "tur": 0.77,
+      "ger": 3.18,
+      "cuw": 1.01,
+      "civ": 1.63,
+      "ecu": 2.32,
+      "ned": 3.33,
+      "jpn": 2.71,
+      "swe": 0.7,
+      "tun": 1.7,
+      "bel": 3.25,
+      "egy": 2.09,
+      "irn": 2.48,
+      "nzl": 0.07,
+      "esp": 3.8,
+      "cpv": 1.16,
+      "ksa": 1.32,
+      "uru": 2.87,
+      "fra": 3.64,
+      "sen": 2.56,
+      "irq": 0.62,
+      "nor": 2.09,
+      "arg": 3.72,
+      "alg": 1.94,
+      "aut": 2.25,
+      "jor": 1.08,
+      "por": 3.41,
+      "cod": 0.46,
+      "uzb": 1.47,
+      "col": 2.94,
+      "eng": 3.56,
+      "cro": 3.1,
+      "gha": 1.16,
+      "pan": 1.86
     },
     "possibleOpponents": {
       "mex": [
-        "rsa",
         "kor",
-        "den"
+        "cze"
       ],
       "rsa": [
-        "mex",
         "kor",
-        "den"
+        "cze"
       ],
       "kor": [
         "mex",
-        "rsa",
-        "den"
+        "rsa"
       ],
-      "den": [
+      "cze": [
         "mex",
-        "rsa",
-        "kor"
+        "rsa"
       ],
       "can": [
         "qat",
-        "sui",
-        "ecu"
+        "sui"
       ],
-      "qat": [
-        "can",
-        "sui",
-        "ecu"
-      ],
-      "sui": [
-        "can",
-        "qat",
-        "ecu"
-      ],
-      "ecu": [
-        "can",
+      "bih": [
         "qat",
         "sui"
       ],
+      "qat": [
+        "can",
+        "bih"
+      ],
+      "sui": [
+        "can",
+        "bih"
+      ],
       "bra": [
-        "mar",
         "hai",
         "sco"
       ],
       "mar": [
-        "bra",
         "hai",
         "sco"
       ],
       "hai": [
         "bra",
-        "mar",
-        "sco"
+        "mar"
       ],
       "sco": [
         "bra",
-        "mar",
-        "hai"
+        "mar"
       ],
       "usa": [
+        "par",
         "aus",
-        "par",
-        "tur"
-      ],
-      "aus": [
-        "usa",
-        "par",
         "tur"
       ],
       "par": [
@@ -424,50 +407,55 @@ export const snapshots: Snapshot[] = [
         "aus",
         "tur"
       ],
+      "aus": [
+        "usa",
+        "par",
+        "tur"
+      ],
       "tur": [
         "usa",
-        "aus",
-        "par"
+        "par",
+        "aus"
       ],
       "ger": [
         "cuw",
         "civ",
-        "pol"
+        "ecu"
       ],
       "cuw": [
         "ger",
         "civ",
-        "pol"
+        "ecu"
       ],
       "civ": [
         "ger",
         "cuw",
-        "pol"
+        "ecu"
       ],
-      "pol": [
+      "ecu": [
         "ger",
         "cuw",
         "civ"
       ],
       "ned": [
         "jpn",
-        "tun",
-        "ukr"
+        "swe",
+        "tun"
       ],
       "jpn": [
         "ned",
-        "tun",
-        "ukr"
+        "swe",
+        "tun"
+      ],
+      "swe": [
+        "ned",
+        "jpn",
+        "tun"
       ],
       "tun": [
         "ned",
         "jpn",
-        "ukr"
-      ],
-      "ukr": [
-        "ned",
-        "jpn",
-        "tun"
+        "swe"
       ],
       "bel": [
         "egy",
@@ -511,23 +499,23 @@ export const snapshots: Snapshot[] = [
       ],
       "fra": [
         "sen",
-        "nor",
-        "bol"
+        "irq",
+        "nor"
       ],
       "sen": [
         "fra",
-        "nor",
-        "bol"
+        "irq",
+        "nor"
+      ],
+      "irq": [
+        "fra",
+        "sen",
+        "nor"
       ],
       "nor": [
         "fra",
         "sen",
-        "bol"
-      ],
-      "bol": [
-        "fra",
-        "sen",
-        "nor"
+        "irq"
       ],
       "arg": [
         "alg",
@@ -550,219 +538,195 @@ export const snapshots: Snapshot[] = [
         "aut"
       ],
       "por": [
+        "cod",
         "uzb",
-        "col",
-        "cro"
+        "col"
       ],
-      "uzb": [
-        "por",
-        "col",
-        "cro"
-      ],
-      "col": [
-        "por",
-        "uzb",
-        "cro"
-      ],
-      "cro": [
+      "cod": [
         "por",
         "uzb",
         "col"
       ],
+      "uzb": [
+        "por",
+        "cod",
+        "col"
+      ],
+      "col": [
+        "por",
+        "cod",
+        "uzb"
+      ],
       "eng": [
+        "cro",
         "gha",
-        "pan",
-        "crc"
+        "pan"
       ],
-      "gha": [
-        "eng",
-        "pan",
-        "crc"
-      ],
-      "pan": [
-        "eng",
-        "gha",
-        "crc"
-      ],
-      "crc": [
+      "cro": [
         "eng",
         "gha",
         "pan"
+      ],
+      "gha": [
+        "eng",
+        "cro",
+        "pan"
+      ],
+      "pan": [
+        "eng",
+        "cro",
+        "gha"
       ]
     }
   },
   {
     "day": 2,
     "probabilities": {
-      "mex": 2.16,
-      "rsa": 0.22,
-      "kor": 1.44,
-      "den": 1.65,
-      "can": 0.72,
-      "qat": 0.22,
-      "sui": 1.8,
-      "ecu": 0.79,
-      "bra": 8.99,
-      "mar": 1.3,
-      "hai": 0.22,
-      "sco": 0.86,
-      "usa": 2.82,
-      "aus": 0.58,
-      "par": 0.43,
-      "tur": 1.21,
-      "ger": 6.85,
-      "cuw": 0.22,
-      "civ": 0.4,
-      "pol": 0.94,
-      "ned": 5.24,
-      "jpn": 1.58,
-      "tun": 0.36,
-      "ukr": 0.81,
-      "bel": 3.6,
-      "egy": 0.36,
-      "irn": 1.01,
-      "nzl": 0.22,
-      "esp": 6.84,
-      "cpv": 0.22,
-      "ksa": 0.22,
-      "uru": 3.24,
-      "fra": 9.35,
-      "sen": 1.22,
-      "nor": 0.65,
-      "bol": 0.29,
-      "arg": 10.43,
-      "alg": 0.58,
-      "aut": 1.15,
-      "jor": 0.29,
-      "por": 5.04,
-      "uzb": 0.29,
-      "col": 2.88,
-      "cro": 2.01,
-      "eng": 7.2,
-      "gha": 0.5,
-      "pan": 0.22,
-      "crc": 0.43
+      "mex": 2.01,
+      "rsa": 1.24,
+      "kor": 2.4,
+      "cze": 0.85,
+      "can": 1.55,
+      "bih": 0.54,
+      "qat": 1.39,
+      "sui": 2.78,
+      "bra": 3.48,
+      "mar": 3.02,
+      "hai": 0.93,
+      "sco": 1.86,
+      "usa": 2.95,
+      "par": 1.78,
+      "aus": 2.43,
+      "tur": 0.77,
+      "ger": 3.55,
+      "cuw": 1.01,
+      "civ": 1.82,
+      "ecu": 2.32,
+      "ned": 3.33,
+      "jpn": 2.71,
+      "swe": 0.78,
+      "tun": 1.7,
+      "bel": 3.25,
+      "egy": 2.09,
+      "irn": 2.48,
+      "nzl": 0.07,
+      "esp": 3.79,
+      "cpv": 1.16,
+      "ksa": 1.31,
+      "uru": 2.86,
+      "fra": 3.64,
+      "sen": 2.55,
+      "irq": 0.62,
+      "nor": 2.09,
+      "arg": 3.71,
+      "alg": 1.93,
+      "aut": 2.24,
+      "jor": 1.08,
+      "por": 3.4,
+      "cod": 0.46,
+      "uzb": 1.47,
+      "col": 2.94,
+      "eng": 3.56,
+      "cro": 3.09,
+      "gha": 1.16,
+      "pan": 1.86
     },
     "possibleOpponents": {
       "mex": [
-        "rsa",
         "kor",
-        "den"
+        "cze"
       ],
       "rsa": [
-        "mex",
         "kor",
-        "den"
+        "cze"
       ],
       "kor": [
         "mex",
-        "rsa",
-        "den"
+        "rsa"
       ],
-      "den": [
+      "cze": [
         "mex",
-        "rsa",
-        "kor"
+        "rsa"
       ],
       "can": [
         "qat",
-        "sui",
-        "ecu"
+        "sui"
       ],
-      "qat": [
-        "can",
-        "sui",
-        "ecu"
-      ],
-      "sui": [
-        "can",
-        "qat",
-        "ecu"
-      ],
-      "ecu": [
-        "can",
+      "bih": [
         "qat",
         "sui"
       ],
+      "qat": [
+        "can",
+        "bih"
+      ],
+      "sui": [
+        "can",
+        "bih"
+      ],
       "bra": [
-        "mar",
         "hai",
         "sco"
       ],
       "mar": [
-        "bra",
         "hai",
         "sco"
       ],
       "hai": [
         "bra",
-        "mar",
-        "sco"
+        "mar"
       ],
       "sco": [
         "bra",
-        "mar",
-        "hai"
+        "mar"
       ],
       "usa": [
         "aus",
-        "par",
+        "tur"
+      ],
+      "par": [
+        "aus",
         "tur"
       ],
       "aus": [
         "usa",
-        "par",
-        "tur"
-      ],
-      "par": [
-        "usa",
-        "aus",
-        "tur"
+        "par"
       ],
       "tur": [
         "usa",
-        "aus",
         "par"
       ],
       "ger": [
-        "cuw",
         "civ",
-        "pol"
+        "ecu"
       ],
       "cuw": [
-        "ger",
         "civ",
-        "pol"
+        "ecu"
       ],
       "civ": [
         "ger",
-        "cuw",
-        "pol"
+        "cuw"
       ],
-      "pol": [
+      "ecu": [
         "ger",
-        "cuw",
-        "civ"
+        "cuw"
       ],
       "ned": [
-        "jpn",
-        "tun",
-        "ukr"
+        "swe",
+        "tun"
       ],
       "jpn": [
+        "swe",
+        "tun"
+      ],
+      "swe": [
         "ned",
-        "tun",
-        "ukr"
+        "jpn"
       ],
       "tun": [
         "ned",
-        "jpn",
-        "ukr"
-      ],
-      "ukr": [
-        "ned",
-        "jpn",
-        "tun"
+        "jpn"
       ],
       "bel": [
         "egy",
@@ -806,23 +770,23 @@ export const snapshots: Snapshot[] = [
       ],
       "fra": [
         "sen",
-        "nor",
-        "bol"
+        "irq",
+        "nor"
       ],
       "sen": [
         "fra",
-        "nor",
-        "bol"
+        "irq",
+        "nor"
+      ],
+      "irq": [
+        "fra",
+        "sen",
+        "nor"
       ],
       "nor": [
         "fra",
         "sen",
-        "bol"
-      ],
-      "bol": [
-        "fra",
-        "sen",
-        "nor"
+        "irq"
       ],
       "arg": [
         "alg",
@@ -845,279 +809,243 @@ export const snapshots: Snapshot[] = [
         "aut"
       ],
       "por": [
+        "cod",
         "uzb",
-        "col",
-        "cro"
+        "col"
       ],
-      "uzb": [
-        "por",
-        "col",
-        "cro"
-      ],
-      "col": [
-        "por",
-        "uzb",
-        "cro"
-      ],
-      "cro": [
+      "cod": [
         "por",
         "uzb",
         "col"
       ],
+      "uzb": [
+        "por",
+        "cod",
+        "col"
+      ],
+      "col": [
+        "por",
+        "cod",
+        "uzb"
+      ],
       "eng": [
+        "cro",
         "gha",
-        "pan",
-        "crc"
+        "pan"
       ],
-      "gha": [
-        "eng",
-        "pan",
-        "crc"
-      ],
-      "pan": [
-        "eng",
-        "gha",
-        "crc"
-      ],
-      "crc": [
+      "cro": [
         "eng",
         "gha",
         "pan"
+      ],
+      "gha": [
+        "eng",
+        "cro",
+        "pan"
+      ],
+      "pan": [
+        "eng",
+        "cro",
+        "gha"
       ]
     }
   },
   {
     "day": 3,
     "probabilities": {
-      "mex": 2.13,
-      "rsa": 0.21,
-      "kor": 1.42,
-      "den": 1.64,
-      "can": 0.71,
-      "qat": 0.21,
-      "sui": 1.78,
-      "ecu": 0.78,
-      "bra": 8.9,
-      "mar": 1.28,
-      "hai": 0.21,
-      "sco": 0.85,
-      "usa": 2.49,
-      "aus": 0.57,
-      "par": 0.43,
-      "tur": 1.07,
-      "ger": 6.05,
-      "cuw": 0.21,
-      "civ": 0.36,
-      "pol": 0.93,
-      "ned": 4.63,
-      "jpn": 1.57,
-      "tun": 0.36,
-      "ukr": 0.71,
-      "bel": 3.99,
-      "egy": 0.36,
-      "irn": 1.12,
-      "nzl": 0.21,
-      "esp": 7.57,
-      "cpv": 0.21,
-      "ksa": 0.21,
-      "uru": 3.59,
-      "fra": 10.36,
-      "sen": 1.21,
-      "nor": 0.72,
-      "bol": 0.28,
-      "arg": 10.32,
-      "alg": 0.57,
-      "aut": 1.14,
-      "jor": 0.28,
-      "por": 4.98,
-      "uzb": 0.28,
-      "col": 2.85,
-      "cro": 1.99,
-      "eng": 7.12,
-      "gha": 0.5,
-      "pan": 0.21,
-      "crc": 0.43
+      "mex": 2.02,
+      "rsa": 1.24,
+      "kor": 2.4,
+      "cze": 0.85,
+      "can": 1.55,
+      "bih": 0.54,
+      "qat": 1.4,
+      "sui": 2.79,
+      "bra": 3.49,
+      "mar": 3.02,
+      "hai": 0.93,
+      "sco": 1.86,
+      "usa": 2.64,
+      "par": 1.78,
+      "aus": 2.17,
+      "tur": 0.78,
+      "ger": 3.18,
+      "cuw": 1.01,
+      "civ": 1.63,
+      "ecu": 2.33,
+      "ned": 3.33,
+      "jpn": 2.71,
+      "swe": 0.7,
+      "tun": 1.71,
+      "bel": 3.26,
+      "egy": 2.09,
+      "irn": 2.48,
+      "nzl": 0.07,
+      "esp": 3.8,
+      "cpv": 1.16,
+      "ksa": 1.32,
+      "uru": 3.21,
+      "fra": 4.08,
+      "sen": 2.56,
+      "irq": 0.62,
+      "nor": 2.34,
+      "arg": 3.72,
+      "alg": 1.94,
+      "aut": 2.25,
+      "jor": 1.09,
+      "por": 3.41,
+      "cod": 0.47,
+      "uzb": 1.47,
+      "col": 2.95,
+      "eng": 3.57,
+      "cro": 3.1,
+      "gha": 1.16,
+      "pan": 1.86
     },
     "possibleOpponents": {
       "mex": [
-        "rsa",
         "kor",
-        "den"
+        "cze"
       ],
       "rsa": [
-        "mex",
         "kor",
-        "den"
+        "cze"
       ],
       "kor": [
         "mex",
-        "rsa",
-        "den"
+        "rsa"
       ],
-      "den": [
+      "cze": [
         "mex",
-        "rsa",
-        "kor"
+        "rsa"
       ],
       "can": [
         "qat",
-        "sui",
-        "ecu"
+        "sui"
       ],
-      "qat": [
-        "can",
-        "sui",
-        "ecu"
-      ],
-      "sui": [
-        "can",
-        "qat",
-        "ecu"
-      ],
-      "ecu": [
-        "can",
+      "bih": [
         "qat",
         "sui"
       ],
+      "qat": [
+        "can",
+        "bih"
+      ],
+      "sui": [
+        "can",
+        "bih"
+      ],
       "bra": [
-        "mar",
         "hai",
         "sco"
       ],
       "mar": [
-        "bra",
         "hai",
         "sco"
       ],
       "hai": [
         "bra",
-        "mar",
-        "sco"
+        "mar"
       ],
       "sco": [
         "bra",
-        "mar",
-        "hai"
+        "mar"
       ],
       "usa": [
         "aus",
-        "par",
+        "tur"
+      ],
+      "par": [
+        "aus",
         "tur"
       ],
       "aus": [
         "usa",
-        "par",
-        "tur"
-      ],
-      "par": [
-        "usa",
-        "aus",
-        "tur"
+        "par"
       ],
       "tur": [
         "usa",
-        "aus",
         "par"
       ],
       "ger": [
-        "cuw",
         "civ",
-        "pol"
+        "ecu"
       ],
       "cuw": [
-        "ger",
         "civ",
-        "pol"
+        "ecu"
       ],
       "civ": [
         "ger",
-        "cuw",
-        "pol"
+        "cuw"
       ],
-      "pol": [
+      "ecu": [
         "ger",
-        "cuw",
-        "civ"
+        "cuw"
       ],
       "ned": [
-        "jpn",
-        "tun",
-        "ukr"
+        "swe",
+        "tun"
       ],
       "jpn": [
+        "swe",
+        "tun"
+      ],
+      "swe": [
         "ned",
-        "tun",
-        "ukr"
+        "jpn"
       ],
       "tun": [
         "ned",
-        "jpn",
-        "ukr"
-      ],
-      "ukr": [
-        "ned",
-        "jpn",
-        "tun"
+        "jpn"
       ],
       "bel": [
-        "egy",
         "irn",
         "nzl"
       ],
       "egy": [
-        "bel",
         "irn",
         "nzl"
       ],
       "irn": [
         "bel",
-        "egy",
-        "nzl"
+        "egy"
       ],
       "nzl": [
         "bel",
-        "egy",
-        "irn"
+        "egy"
       ],
       "esp": [
-        "cpv",
         "ksa",
         "uru"
       ],
       "cpv": [
-        "esp",
         "ksa",
         "uru"
       ],
       "ksa": [
         "esp",
-        "cpv",
-        "uru"
+        "cpv"
       ],
       "uru": [
         "esp",
-        "cpv",
-        "ksa"
+        "cpv"
       ],
       "fra": [
-        "sen",
-        "nor",
-        "bol"
+        "irq",
+        "nor"
       ],
       "sen": [
+        "irq",
+        "nor"
+      ],
+      "irq": [
         "fra",
-        "nor",
-        "bol"
+        "sen"
       ],
       "nor": [
         "fra",
-        "sen",
-        "bol"
-      ],
-      "bol": [
-        "fra",
-        "sen",
-        "nor"
+        "sen"
       ],
       "arg": [
         "alg",
@@ -1140,2461 +1068,1670 @@ export const snapshots: Snapshot[] = [
         "aut"
       ],
       "por": [
+        "cod",
         "uzb",
-        "col",
-        "cro"
+        "col"
       ],
-      "uzb": [
-        "por",
-        "col",
-        "cro"
-      ],
-      "col": [
-        "por",
-        "uzb",
-        "cro"
-      ],
-      "cro": [
+      "cod": [
         "por",
         "uzb",
         "col"
       ],
+      "uzb": [
+        "por",
+        "cod",
+        "col"
+      ],
+      "col": [
+        "por",
+        "cod",
+        "uzb"
+      ],
       "eng": [
+        "cro",
         "gha",
-        "pan",
-        "crc"
+        "pan"
       ],
-      "gha": [
-        "eng",
-        "pan",
-        "crc"
-      ],
-      "pan": [
-        "eng",
-        "gha",
-        "crc"
-      ],
-      "crc": [
+      "cro": [
         "eng",
         "gha",
         "pan"
+      ],
+      "gha": [
+        "eng",
+        "cro",
+        "pan"
+      ],
+      "pan": [
+        "eng",
+        "cro",
+        "gha"
       ]
     }
   },
   {
     "day": 4,
     "probabilities": {
-      "mex": 2.13,
-      "rsa": 0.21,
-      "kor": 1.42,
-      "den": 1.63,
-      "can": 0.71,
-      "qat": 0.21,
-      "sui": 1.77,
-      "ecu": 0.78,
-      "bra": 8.87,
-      "mar": 1.28,
-      "hai": 0.21,
-      "sco": 0.85,
-      "usa": 2.48,
-      "aus": 0.57,
-      "par": 0.43,
-      "tur": 1.06,
-      "ger": 6.03,
-      "cuw": 0.21,
-      "civ": 0.35,
-      "pol": 0.92,
-      "ned": 4.61,
-      "jpn": 1.56,
-      "tun": 0.35,
-      "ukr": 0.71,
-      "bel": 3.55,
-      "egy": 0.35,
-      "irn": 0.99,
-      "nzl": 0.21,
-      "esp": 6.74,
-      "cpv": 0.21,
-      "ksa": 0.21,
-      "uru": 3.19,
-      "fra": 9.22,
-      "sen": 1.21,
-      "nor": 0.64,
-      "bol": 0.28,
-      "arg": 11.52,
-      "alg": 0.57,
-      "aut": 1.27,
-      "jor": 0.28,
-      "por": 5.56,
-      "uzb": 0.28,
-      "col": 3.18,
-      "cro": 1.99,
-      "eng": 7.95,
-      "gha": 0.5,
-      "pan": 0.21,
-      "crc": 0.48
+      "mex": 1.99,
+      "rsa": 1.23,
+      "kor": 2.38,
+      "cze": 0.84,
+      "can": 1.53,
+      "bih": 0.54,
+      "qat": 1.38,
+      "sui": 2.76,
+      "bra": 3.45,
+      "mar": 2.99,
+      "hai": 0.92,
+      "sco": 1.84,
+      "usa": 2.61,
+      "par": 1.76,
+      "aus": 2.15,
+      "tur": 0.77,
+      "ger": 3.14,
+      "cuw": 1,
+      "civ": 1.61,
+      "ecu": 2.3,
+      "ned": 3.3,
+      "jpn": 2.68,
+      "swe": 0.69,
+      "tun": 1.69,
+      "bel": 3.22,
+      "egy": 2.07,
+      "irn": 2.45,
+      "nzl": 0.07,
+      "esp": 3.76,
+      "cpv": 1.15,
+      "ksa": 1.3,
+      "uru": 2.84,
+      "fra": 3.6,
+      "sen": 2.53,
+      "irq": 0.61,
+      "nor": 2.07,
+      "arg": 4.12,
+      "alg": 1.92,
+      "aut": 2.49,
+      "jor": 1.07,
+      "por": 3.78,
+      "cod": 0.46,
+      "uzb": 1.46,
+      "col": 3.26,
+      "eng": 3.95,
+      "cro": 3.07,
+      "gha": 1.15,
+      "pan": 2.06
     },
     "possibleOpponents": {
       "mex": [
-        "rsa",
         "kor",
-        "den"
+        "cze"
       ],
       "rsa": [
-        "mex",
         "kor",
-        "den"
+        "cze"
       ],
       "kor": [
         "mex",
-        "rsa",
-        "den"
+        "rsa"
       ],
-      "den": [
+      "cze": [
         "mex",
-        "rsa",
-        "kor"
+        "rsa"
       ],
       "can": [
         "qat",
-        "sui",
-        "ecu"
+        "sui"
       ],
-      "qat": [
-        "can",
-        "sui",
-        "ecu"
-      ],
-      "sui": [
-        "can",
-        "qat",
-        "ecu"
-      ],
-      "ecu": [
-        "can",
+      "bih": [
         "qat",
         "sui"
       ],
+      "qat": [
+        "can",
+        "bih"
+      ],
+      "sui": [
+        "can",
+        "bih"
+      ],
       "bra": [
-        "mar",
         "hai",
         "sco"
       ],
       "mar": [
-        "bra",
         "hai",
         "sco"
       ],
       "hai": [
         "bra",
-        "mar",
-        "sco"
+        "mar"
       ],
       "sco": [
         "bra",
-        "mar",
-        "hai"
+        "mar"
       ],
       "usa": [
         "aus",
-        "par",
+        "tur"
+      ],
+      "par": [
+        "aus",
         "tur"
       ],
       "aus": [
         "usa",
-        "par",
-        "tur"
-      ],
-      "par": [
-        "usa",
-        "aus",
-        "tur"
+        "par"
       ],
       "tur": [
         "usa",
-        "aus",
         "par"
       ],
       "ger": [
-        "cuw",
         "civ",
-        "pol"
+        "ecu"
       ],
       "cuw": [
-        "ger",
         "civ",
-        "pol"
+        "ecu"
       ],
       "civ": [
         "ger",
-        "cuw",
-        "pol"
+        "cuw"
       ],
-      "pol": [
+      "ecu": [
         "ger",
-        "cuw",
-        "civ"
+        "cuw"
       ],
       "ned": [
-        "jpn",
-        "tun",
-        "ukr"
+        "swe",
+        "tun"
       ],
       "jpn": [
+        "swe",
+        "tun"
+      ],
+      "swe": [
         "ned",
-        "tun",
-        "ukr"
+        "jpn"
       ],
       "tun": [
         "ned",
-        "jpn",
-        "ukr"
-      ],
-      "ukr": [
-        "ned",
-        "jpn",
-        "tun"
+        "jpn"
       ],
       "bel": [
-        "egy",
         "irn",
         "nzl"
       ],
       "egy": [
-        "bel",
         "irn",
         "nzl"
       ],
       "irn": [
         "bel",
-        "egy",
-        "nzl"
+        "egy"
       ],
       "nzl": [
         "bel",
-        "egy",
-        "irn"
+        "egy"
       ],
       "esp": [
-        "cpv",
         "ksa",
         "uru"
       ],
       "cpv": [
-        "esp",
         "ksa",
         "uru"
       ],
       "ksa": [
         "esp",
-        "cpv",
-        "uru"
+        "cpv"
       ],
       "uru": [
         "esp",
-        "cpv",
-        "ksa"
+        "cpv"
       ],
       "fra": [
-        "sen",
-        "nor",
-        "bol"
+        "irq",
+        "nor"
       ],
       "sen": [
+        "irq",
+        "nor"
+      ],
+      "irq": [
         "fra",
-        "nor",
-        "bol"
+        "sen"
       ],
       "nor": [
         "fra",
-        "sen",
-        "bol"
-      ],
-      "bol": [
-        "fra",
-        "sen",
-        "nor"
+        "sen"
       ],
       "arg": [
-        "alg",
         "aut",
         "jor"
       ],
       "alg": [
-        "arg",
         "aut",
         "jor"
       ],
       "aut": [
         "arg",
-        "alg",
-        "jor"
+        "alg"
       ],
       "jor": [
         "arg",
-        "alg",
-        "aut"
+        "alg"
       ],
       "por": [
         "uzb",
-        "col",
-        "cro"
+        "col"
       ],
-      "uzb": [
-        "por",
-        "col",
-        "cro"
-      ],
-      "col": [
-        "por",
-        "uzb",
-        "cro"
-      ],
-      "cro": [
-        "por",
+      "cod": [
         "uzb",
         "col"
       ],
+      "uzb": [
+        "por",
+        "cod"
+      ],
+      "col": [
+        "por",
+        "cod"
+      ],
       "eng": [
         "gha",
-        "pan",
-        "crc"
+        "pan"
+      ],
+      "cro": [
+        "gha",
+        "pan"
       ],
       "gha": [
         "eng",
-        "pan",
-        "crc"
+        "cro"
       ],
       "pan": [
         "eng",
-        "gha",
-        "crc"
-      ],
-      "crc": [
-        "eng",
-        "gha",
-        "pan"
+        "cro"
       ]
     }
   },
   {
     "day": 5,
     "probabilities": {
-      "mex": 2.41,
-      "rsa": 0.22,
-      "kor": 1.44,
-      "den": 1.85,
-      "can": 0.72,
-      "qat": 0.22,
-      "sui": 2.01,
-      "ecu": 0.89,
-      "bra": 10.06,
-      "mar": 1.45,
-      "hai": 0.22,
-      "sco": 0.86,
-      "usa": 2.51,
-      "aus": 0.57,
-      "par": 0.43,
-      "tur": 1.08,
-      "ger": 6.11,
-      "cuw": 0.22,
-      "civ": 0.36,
-      "pol": 0.93,
-      "ned": 4.67,
-      "jpn": 1.58,
-      "tun": 0.36,
-      "ukr": 0.72,
-      "bel": 3.59,
-      "egy": 0.36,
-      "irn": 1.01,
-      "nzl": 0.22,
-      "esp": 6.83,
-      "cpv": 0.22,
-      "ksa": 0.22,
-      "uru": 3.23,
-      "fra": 9.34,
-      "sen": 1.22,
-      "nor": 0.65,
-      "bol": 0.29,
-      "arg": 10.42,
-      "alg": 0.57,
-      "aut": 1.15,
-      "jor": 0.29,
-      "por": 5.03,
-      "uzb": 0.29,
-      "col": 2.87,
-      "cro": 2.01,
-      "eng": 7.18,
-      "gha": 0.5,
-      "pan": 0.22,
-      "crc": 0.43
+      "mex": 2,
+      "rsa": 1.38,
+      "kor": 2.67,
+      "cze": 0.85,
+      "can": 1.72,
+      "bih": 0.54,
+      "qat": 1.39,
+      "sui": 3.1,
+      "bra": 3.88,
+      "mar": 3.36,
+      "hai": 0.92,
+      "sco": 1.85,
+      "usa": 2.62,
+      "par": 1.77,
+      "aus": 2.16,
+      "tur": 0.77,
+      "ger": 3.16,
+      "cuw": 1,
+      "civ": 1.62,
+      "ecu": 2.31,
+      "ned": 3.31,
+      "jpn": 2.69,
+      "swe": 0.69,
+      "tun": 1.69,
+      "bel": 3.23,
+      "egy": 2.08,
+      "irn": 2.46,
+      "nzl": 0.07,
+      "esp": 3.77,
+      "cpv": 1.15,
+      "ksa": 1.31,
+      "uru": 2.85,
+      "fra": 3.62,
+      "sen": 2.54,
+      "irq": 0.62,
+      "nor": 2.08,
+      "arg": 3.69,
+      "alg": 1.92,
+      "aut": 2.23,
+      "jor": 1.08,
+      "por": 3.39,
+      "cod": 0.46,
+      "uzb": 1.46,
+      "col": 2.92,
+      "eng": 3.54,
+      "cro": 3.08,
+      "gha": 1.15,
+      "pan": 1.85
     },
     "possibleOpponents": {
       "mex": [
-        "rsa",
-        "kor",
-        "den"
+        "cze"
       ],
       "rsa": [
-        "mex",
-        "kor",
-        "den"
-      ],
-      "kor": [
-        "mex",
-        "rsa",
-        "den"
-      ],
-      "den": [
-        "mex",
-        "rsa",
         "kor"
       ],
+      "kor": [
+        "rsa"
+      ],
+      "cze": [
+        "mex"
+      ],
       "can": [
-        "qat",
-        "sui",
-        "ecu"
-      ],
-      "qat": [
-        "can",
-        "sui",
-        "ecu"
-      ],
-      "sui": [
-        "can",
-        "qat",
-        "ecu"
-      ],
-      "ecu": [
-        "can",
-        "qat",
         "sui"
       ],
+      "bih": [
+        "qat"
+      ],
+      "qat": [
+        "bih"
+      ],
+      "sui": [
+        "can"
+      ],
       "bra": [
-        "mar",
-        "hai",
         "sco"
       ],
       "mar": [
-        "bra",
-        "hai",
-        "sco"
+        "hai"
       ],
       "hai": [
-        "bra",
-        "mar",
-        "sco"
+        "mar"
       ],
       "sco": [
-        "bra",
-        "mar",
-        "hai"
+        "bra"
       ],
       "usa": [
         "aus",
-        "par",
+        "tur"
+      ],
+      "par": [
+        "aus",
         "tur"
       ],
       "aus": [
         "usa",
-        "par",
-        "tur"
-      ],
-      "par": [
-        "usa",
-        "aus",
-        "tur"
+        "par"
       ],
       "tur": [
         "usa",
-        "aus",
         "par"
       ],
       "ger": [
-        "cuw",
         "civ",
-        "pol"
+        "ecu"
       ],
       "cuw": [
-        "ger",
         "civ",
-        "pol"
+        "ecu"
       ],
       "civ": [
         "ger",
-        "cuw",
-        "pol"
+        "cuw"
       ],
-      "pol": [
+      "ecu": [
         "ger",
-        "cuw",
-        "civ"
+        "cuw"
       ],
       "ned": [
-        "jpn",
-        "tun",
-        "ukr"
+        "swe",
+        "tun"
       ],
       "jpn": [
+        "swe",
+        "tun"
+      ],
+      "swe": [
         "ned",
-        "tun",
-        "ukr"
+        "jpn"
       ],
       "tun": [
         "ned",
-        "jpn",
-        "ukr"
-      ],
-      "ukr": [
-        "ned",
-        "jpn",
-        "tun"
+        "jpn"
       ],
       "bel": [
-        "egy",
         "irn",
         "nzl"
       ],
       "egy": [
-        "bel",
         "irn",
         "nzl"
       ],
       "irn": [
         "bel",
-        "egy",
-        "nzl"
+        "egy"
       ],
       "nzl": [
         "bel",
-        "egy",
-        "irn"
+        "egy"
       ],
       "esp": [
-        "cpv",
         "ksa",
         "uru"
       ],
       "cpv": [
-        "esp",
         "ksa",
         "uru"
       ],
       "ksa": [
         "esp",
-        "cpv",
-        "uru"
+        "cpv"
       ],
       "uru": [
         "esp",
-        "cpv",
-        "ksa"
+        "cpv"
       ],
       "fra": [
-        "sen",
-        "nor",
-        "bol"
+        "irq",
+        "nor"
       ],
       "sen": [
+        "irq",
+        "nor"
+      ],
+      "irq": [
         "fra",
-        "nor",
-        "bol"
+        "sen"
       ],
       "nor": [
         "fra",
-        "sen",
-        "bol"
-      ],
-      "bol": [
-        "fra",
-        "sen",
-        "nor"
+        "sen"
       ],
       "arg": [
-        "alg",
         "aut",
         "jor"
       ],
       "alg": [
-        "arg",
         "aut",
         "jor"
       ],
       "aut": [
         "arg",
-        "alg",
-        "jor"
+        "alg"
       ],
       "jor": [
         "arg",
-        "alg",
-        "aut"
+        "alg"
       ],
       "por": [
         "uzb",
-        "col",
-        "cro"
+        "col"
       ],
-      "uzb": [
-        "por",
-        "col",
-        "cro"
-      ],
-      "col": [
-        "por",
-        "uzb",
-        "cro"
-      ],
-      "cro": [
-        "por",
+      "cod": [
         "uzb",
         "col"
       ],
+      "uzb": [
+        "por",
+        "cod"
+      ],
+      "col": [
+        "por",
+        "cod"
+      ],
       "eng": [
         "gha",
-        "pan",
-        "crc"
+        "pan"
+      ],
+      "cro": [
+        "gha",
+        "pan"
       ],
       "gha": [
         "eng",
-        "pan",
-        "crc"
+        "cro"
       ],
       "pan": [
         "eng",
-        "gha",
-        "crc"
-      ],
-      "crc": [
-        "eng",
-        "gha",
-        "pan"
+        "cro"
       ]
     }
   },
   {
     "day": 6,
     "probabilities": {
-      "mex": 2.16,
-      "rsa": 0.22,
-      "kor": 1.44,
-      "den": 1.65,
-      "can": 0.72,
-      "qat": 0.22,
-      "sui": 1.8,
-      "ecu": 0.79,
-      "bra": 8.98,
-      "mar": 1.29,
-      "hai": 0.22,
-      "sco": 0.86,
-      "usa": 2.82,
-      "aus": 0.64,
-      "par": 0.43,
-      "tur": 1.08,
-      "ger": 6.84,
-      "cuw": 0.22,
-      "civ": 0.36,
-      "pol": 1.05,
-      "ned": 5.23,
-      "jpn": 1.77,
-      "tun": 0.36,
-      "ukr": 0.72,
-      "bel": 3.59,
-      "egy": 0.36,
-      "irn": 1.01,
-      "nzl": 0.22,
-      "esp": 6.83,
-      "cpv": 0.22,
-      "ksa": 0.22,
-      "uru": 3.23,
-      "fra": 9.34,
-      "sen": 1.22,
-      "nor": 0.65,
-      "bol": 0.29,
-      "arg": 10.42,
-      "alg": 0.57,
-      "aut": 1.15,
-      "jor": 0.29,
-      "por": 5.03,
-      "uzb": 0.29,
-      "col": 2.87,
-      "cro": 2.01,
-      "eng": 7.19,
-      "gha": 0.5,
-      "pan": 0.22,
-      "crc": 0.43
+      "mex": 2,
+      "rsa": 1.23,
+      "kor": 2.38,
+      "cze": 0.85,
+      "can": 1.54,
+      "bih": 0.54,
+      "qat": 1.38,
+      "sui": 2.77,
+      "bra": 3.46,
+      "mar": 3,
+      "hai": 0.92,
+      "sco": 1.84,
+      "usa": 2.93,
+      "par": 1.98,
+      "aus": 2.15,
+      "tur": 0.77,
+      "ger": 3.53,
+      "cuw": 1,
+      "civ": 1.61,
+      "ecu": 2.58,
+      "ned": 3.7,
+      "jpn": 3.01,
+      "swe": 0.69,
+      "tun": 1.69,
+      "bel": 3.23,
+      "egy": 2.07,
+      "irn": 2.46,
+      "nzl": 0.07,
+      "esp": 3.76,
+      "cpv": 1.15,
+      "ksa": 1.31,
+      "uru": 2.84,
+      "fra": 3.61,
+      "sen": 2.54,
+      "irq": 0.61,
+      "nor": 2.07,
+      "arg": 3.69,
+      "alg": 1.92,
+      "aut": 2.23,
+      "jor": 1.08,
+      "por": 3.38,
+      "cod": 0.46,
+      "uzb": 1.46,
+      "col": 2.92,
+      "eng": 3.53,
+      "cro": 3.07,
+      "gha": 1.15,
+      "pan": 1.84
     },
     "possibleOpponents": {
       "mex": [
-        "rsa",
-        "kor",
-        "den"
+        "cze"
       ],
       "rsa": [
-        "mex",
-        "kor",
-        "den"
-      ],
-      "kor": [
-        "mex",
-        "rsa",
-        "den"
-      ],
-      "den": [
-        "mex",
-        "rsa",
         "kor"
       ],
+      "kor": [
+        "rsa"
+      ],
+      "cze": [
+        "mex"
+      ],
       "can": [
-        "qat",
-        "sui",
-        "ecu"
-      ],
-      "qat": [
-        "can",
-        "sui",
-        "ecu"
-      ],
-      "sui": [
-        "can",
-        "qat",
-        "ecu"
-      ],
-      "ecu": [
-        "can",
-        "qat",
         "sui"
       ],
+      "bih": [
+        "qat"
+      ],
+      "qat": [
+        "bih"
+      ],
+      "sui": [
+        "can"
+      ],
       "bra": [
-        "mar",
-        "hai",
         "sco"
       ],
       "mar": [
-        "bra",
-        "hai",
-        "sco"
-      ],
-      "hai": [
-        "bra",
-        "mar",
-        "sco"
-      ],
-      "sco": [
-        "bra",
-        "mar",
         "hai"
       ],
-      "usa": [
-        "aus",
-        "par",
-        "tur"
+      "hai": [
+        "mar"
       ],
-      "aus": [
-        "usa",
-        "par",
+      "sco": [
+        "bra"
+      ],
+      "usa": [
         "tur"
       ],
       "par": [
-        "usa",
-        "aus",
-        "tur"
+        "aus"
       ],
-      "tur": [
-        "usa",
-        "aus",
+      "aus": [
         "par"
       ],
+      "tur": [
+        "usa"
+      ],
       "ger": [
-        "cuw",
-        "civ",
-        "pol"
+        "ecu"
       ],
       "cuw": [
-        "ger",
-        "civ",
-        "pol"
-      ],
-      "civ": [
-        "ger",
-        "cuw",
-        "pol"
-      ],
-      "pol": [
-        "ger",
-        "cuw",
         "civ"
       ],
+      "civ": [
+        "cuw"
+      ],
+      "ecu": [
+        "ger"
+      ],
       "ned": [
-        "jpn",
-        "tun",
-        "ukr"
-      ],
-      "jpn": [
-        "ned",
-        "tun",
-        "ukr"
-      ],
-      "tun": [
-        "ned",
-        "jpn",
-        "ukr"
-      ],
-      "ukr": [
-        "ned",
-        "jpn",
         "tun"
       ],
+      "jpn": [
+        "swe"
+      ],
+      "swe": [
+        "jpn"
+      ],
+      "tun": [
+        "ned"
+      ],
       "bel": [
-        "egy",
         "irn",
         "nzl"
       ],
       "egy": [
-        "bel",
         "irn",
         "nzl"
       ],
       "irn": [
         "bel",
-        "egy",
-        "nzl"
+        "egy"
       ],
       "nzl": [
         "bel",
-        "egy",
-        "irn"
+        "egy"
       ],
       "esp": [
-        "cpv",
         "ksa",
         "uru"
       ],
       "cpv": [
-        "esp",
         "ksa",
         "uru"
       ],
       "ksa": [
         "esp",
-        "cpv",
-        "uru"
+        "cpv"
       ],
       "uru": [
         "esp",
-        "cpv",
-        "ksa"
+        "cpv"
       ],
       "fra": [
-        "sen",
-        "nor",
-        "bol"
+        "irq",
+        "nor"
       ],
       "sen": [
+        "irq",
+        "nor"
+      ],
+      "irq": [
         "fra",
-        "nor",
-        "bol"
+        "sen"
       ],
       "nor": [
         "fra",
-        "sen",
-        "bol"
-      ],
-      "bol": [
-        "fra",
-        "sen",
-        "nor"
+        "sen"
       ],
       "arg": [
-        "alg",
         "aut",
         "jor"
       ],
       "alg": [
-        "arg",
         "aut",
         "jor"
       ],
       "aut": [
         "arg",
-        "alg",
-        "jor"
+        "alg"
       ],
       "jor": [
         "arg",
-        "alg",
-        "aut"
+        "alg"
       ],
       "por": [
         "uzb",
-        "col",
-        "cro"
+        "col"
       ],
-      "uzb": [
-        "por",
-        "col",
-        "cro"
-      ],
-      "col": [
-        "por",
-        "uzb",
-        "cro"
-      ],
-      "cro": [
-        "por",
+      "cod": [
         "uzb",
         "col"
       ],
+      "uzb": [
+        "por",
+        "cod"
+      ],
+      "col": [
+        "por",
+        "cod"
+      ],
       "eng": [
         "gha",
-        "pan",
-        "crc"
+        "pan"
+      ],
+      "cro": [
+        "gha",
+        "pan"
       ],
       "gha": [
         "eng",
-        "pan",
-        "crc"
+        "cro"
       ],
       "pan": [
         "eng",
-        "gha",
-        "crc"
-      ],
-      "crc": [
-        "eng",
-        "gha",
-        "pan"
+        "cro"
       ]
     }
   },
   {
     "day": 7,
     "probabilities": {
-      "mex": 2.14,
-      "rsa": 0.21,
-      "kor": 1.42,
-      "den": 1.64,
-      "can": 0.71,
-      "qat": 0.21,
-      "sui": 1.78,
-      "ecu": 0.78,
-      "bra": 8.9,
-      "mar": 1.28,
-      "hai": 0.21,
-      "sco": 0.85,
-      "usa": 2.49,
-      "aus": 0.57,
-      "par": 0.43,
-      "tur": 1.07,
-      "ger": 6.05,
-      "cuw": 0.21,
-      "civ": 0.36,
-      "pol": 0.93,
-      "ned": 4.63,
-      "jpn": 1.57,
-      "tun": 0.36,
-      "ukr": 0.71,
-      "bel": 3.99,
-      "egy": 0.4,
-      "irn": 1,
-      "nzl": 0.21,
-      "esp": 7.57,
-      "cpv": 0.21,
-      "ksa": 0.21,
-      "uru": 3.59,
-      "fra": 10.36,
-      "sen": 1.36,
-      "nor": 0.64,
-      "bol": 0.28,
-      "arg": 10.32,
-      "alg": 0.57,
-      "aut": 1.14,
-      "jor": 0.28,
-      "por": 4.98,
-      "uzb": 0.28,
-      "col": 2.85,
-      "cro": 1.99,
-      "eng": 7.12,
-      "gha": 0.5,
-      "pan": 0.21,
-      "crc": 0.43
+      "mex": 1.99,
+      "rsa": 1.23,
+      "kor": 2.38,
+      "cze": 0.84,
+      "can": 1.53,
+      "bih": 0.54,
+      "qat": 1.38,
+      "sui": 2.76,
+      "bra": 3.45,
+      "mar": 2.99,
+      "hai": 0.92,
+      "sco": 1.84,
+      "usa": 2.61,
+      "par": 1.76,
+      "aus": 2.15,
+      "tur": 0.77,
+      "ger": 3.14,
+      "cuw": 1,
+      "civ": 1.61,
+      "ecu": 2.3,
+      "ned": 3.29,
+      "jpn": 2.68,
+      "swe": 0.69,
+      "tun": 1.69,
+      "bel": 3.6,
+      "egy": 2.32,
+      "irn": 2.45,
+      "nzl": 0.07,
+      "esp": 4.21,
+      "cpv": 1.15,
+      "ksa": 1.3,
+      "uru": 3.18,
+      "fra": 4.03,
+      "sen": 2.83,
+      "irq": 0.61,
+      "nor": 2.07,
+      "arg": 3.68,
+      "alg": 1.92,
+      "aut": 2.22,
+      "jor": 1.07,
+      "por": 3.37,
+      "cod": 0.46,
+      "uzb": 1.46,
+      "col": 2.91,
+      "eng": 3.52,
+      "cro": 3.06,
+      "gha": 1.15,
+      "pan": 1.84
     },
     "possibleOpponents": {
       "mex": [
-        "rsa",
-        "kor",
-        "den"
+        "cze"
       ],
       "rsa": [
-        "mex",
-        "kor",
-        "den"
-      ],
-      "kor": [
-        "mex",
-        "rsa",
-        "den"
-      ],
-      "den": [
-        "mex",
-        "rsa",
         "kor"
       ],
+      "kor": [
+        "rsa"
+      ],
+      "cze": [
+        "mex"
+      ],
       "can": [
-        "qat",
-        "sui",
-        "ecu"
-      ],
-      "qat": [
-        "can",
-        "sui",
-        "ecu"
-      ],
-      "sui": [
-        "can",
-        "qat",
-        "ecu"
-      ],
-      "ecu": [
-        "can",
-        "qat",
         "sui"
       ],
+      "bih": [
+        "qat"
+      ],
+      "qat": [
+        "bih"
+      ],
+      "sui": [
+        "can"
+      ],
       "bra": [
-        "mar",
-        "hai",
         "sco"
       ],
       "mar": [
-        "bra",
-        "hai",
-        "sco"
-      ],
-      "hai": [
-        "bra",
-        "mar",
-        "sco"
-      ],
-      "sco": [
-        "bra",
-        "mar",
         "hai"
       ],
-      "usa": [
-        "aus",
-        "par",
-        "tur"
+      "hai": [
+        "mar"
       ],
-      "aus": [
-        "usa",
-        "par",
+      "sco": [
+        "bra"
+      ],
+      "usa": [
         "tur"
       ],
       "par": [
-        "usa",
-        "aus",
-        "tur"
+        "aus"
       ],
-      "tur": [
-        "usa",
-        "aus",
+      "aus": [
         "par"
       ],
+      "tur": [
+        "usa"
+      ],
       "ger": [
-        "cuw",
-        "civ",
-        "pol"
+        "ecu"
       ],
       "cuw": [
-        "ger",
-        "civ",
-        "pol"
-      ],
-      "civ": [
-        "ger",
-        "cuw",
-        "pol"
-      ],
-      "pol": [
-        "ger",
-        "cuw",
         "civ"
       ],
+      "civ": [
+        "cuw"
+      ],
+      "ecu": [
+        "ger"
+      ],
       "ned": [
-        "jpn",
-        "tun",
-        "ukr"
-      ],
-      "jpn": [
-        "ned",
-        "tun",
-        "ukr"
-      ],
-      "tun": [
-        "ned",
-        "jpn",
-        "ukr"
-      ],
-      "ukr": [
-        "ned",
-        "jpn",
         "tun"
       ],
+      "jpn": [
+        "swe"
+      ],
+      "swe": [
+        "jpn"
+      ],
+      "tun": [
+        "ned"
+      ],
       "bel": [
-        "egy",
-        "irn",
         "nzl"
       ],
       "egy": [
-        "bel",
-        "irn",
-        "nzl"
-      ],
-      "irn": [
-        "bel",
-        "egy",
-        "nzl"
-      ],
-      "nzl": [
-        "bel",
-        "egy",
         "irn"
       ],
+      "irn": [
+        "egy"
+      ],
+      "nzl": [
+        "bel"
+      ],
       "esp": [
-        "cpv",
-        "ksa",
         "uru"
       ],
       "cpv": [
-        "esp",
-        "ksa",
-        "uru"
-      ],
-      "ksa": [
-        "esp",
-        "cpv",
-        "uru"
-      ],
-      "uru": [
-        "esp",
-        "cpv",
         "ksa"
       ],
+      "ksa": [
+        "cpv"
+      ],
+      "uru": [
+        "esp"
+      ],
       "fra": [
-        "sen",
-        "nor",
-        "bol"
-      ],
-      "sen": [
-        "fra",
-        "nor",
-        "bol"
-      ],
-      "nor": [
-        "fra",
-        "sen",
-        "bol"
-      ],
-      "bol": [
-        "fra",
-        "sen",
         "nor"
       ],
+      "sen": [
+        "irq"
+      ],
+      "irq": [
+        "sen"
+      ],
+      "nor": [
+        "fra"
+      ],
       "arg": [
-        "alg",
         "aut",
         "jor"
       ],
       "alg": [
-        "arg",
         "aut",
         "jor"
       ],
       "aut": [
         "arg",
-        "alg",
-        "jor"
+        "alg"
       ],
       "jor": [
         "arg",
-        "alg",
-        "aut"
+        "alg"
       ],
       "por": [
         "uzb",
-        "col",
-        "cro"
+        "col"
       ],
-      "uzb": [
-        "por",
-        "col",
-        "cro"
-      ],
-      "col": [
-        "por",
-        "uzb",
-        "cro"
-      ],
-      "cro": [
-        "por",
+      "cod": [
         "uzb",
         "col"
       ],
+      "uzb": [
+        "por",
+        "cod"
+      ],
+      "col": [
+        "por",
+        "cod"
+      ],
       "eng": [
         "gha",
-        "pan",
-        "crc"
+        "pan"
+      ],
+      "cro": [
+        "gha",
+        "pan"
       ],
       "gha": [
         "eng",
-        "pan",
-        "crc"
+        "cro"
       ],
       "pan": [
         "eng",
-        "gha",
-        "crc"
-      ],
-      "crc": [
-        "eng",
-        "gha",
-        "pan"
+        "cro"
       ]
     }
   },
   {
     "day": 8,
     "probabilities": {
-      "mex": 2.13,
-      "rsa": 0.21,
-      "kor": 1.42,
-      "den": 1.63,
-      "can": 0.71,
-      "qat": 0.21,
-      "sui": 1.78,
-      "ecu": 0.78,
-      "bra": 8.88,
-      "mar": 1.28,
-      "hai": 0.21,
-      "sco": 0.85,
-      "usa": 2.49,
-      "aus": 0.57,
-      "par": 0.43,
-      "tur": 1.07,
-      "ger": 6.04,
-      "cuw": 0.21,
-      "civ": 0.36,
-      "pol": 0.92,
-      "ned": 4.62,
-      "jpn": 1.56,
-      "tun": 0.36,
-      "ukr": 0.71,
-      "bel": 3.55,
-      "egy": 0.36,
-      "irn": 1,
-      "nzl": 0.21,
-      "esp": 6.75,
-      "cpv": 0.21,
-      "ksa": 0.21,
-      "uru": 3.2,
-      "fra": 9.24,
-      "sen": 1.21,
-      "nor": 0.64,
-      "bol": 0.28,
-      "arg": 11.54,
-      "alg": 0.64,
-      "aut": 1.14,
-      "jor": 0.28,
-      "por": 5.57,
-      "uzb": 0.28,
-      "col": 2.84,
-      "cro": 2.23,
-      "eng": 7.96,
-      "gha": 0.56,
-      "pan": 0.21,
-      "crc": 0.43
+      "mex": 1.99,
+      "rsa": 1.23,
+      "kor": 2.37,
+      "cze": 0.84,
+      "can": 1.53,
+      "bih": 0.54,
+      "qat": 1.38,
+      "sui": 2.76,
+      "bra": 3.45,
+      "mar": 2.99,
+      "hai": 0.92,
+      "sco": 1.84,
+      "usa": 2.6,
+      "par": 1.76,
+      "aus": 2.14,
+      "tur": 0.77,
+      "ger": 3.14,
+      "cuw": 1,
+      "civ": 1.61,
+      "ecu": 2.3,
+      "ned": 3.29,
+      "jpn": 2.68,
+      "swe": 0.69,
+      "tun": 1.68,
+      "bel": 3.22,
+      "egy": 2.07,
+      "irn": 2.45,
+      "nzl": 0.07,
+      "esp": 3.75,
+      "cpv": 1.15,
+      "ksa": 1.3,
+      "uru": 2.83,
+      "fra": 3.6,
+      "sen": 2.53,
+      "irq": 0.61,
+      "nor": 2.07,
+      "arg": 4.12,
+      "alg": 2.14,
+      "aut": 2.22,
+      "jor": 1.07,
+      "por": 3.77,
+      "cod": 0.46,
+      "uzb": 1.46,
+      "col": 3.26,
+      "eng": 3.95,
+      "cro": 3.43,
+      "gha": 1.15,
+      "pan": 1.84
     },
     "possibleOpponents": {
       "mex": [
-        "rsa",
-        "kor",
-        "den"
+        "cze"
       ],
       "rsa": [
-        "mex",
-        "kor",
-        "den"
-      ],
-      "kor": [
-        "mex",
-        "rsa",
-        "den"
-      ],
-      "den": [
-        "mex",
-        "rsa",
         "kor"
       ],
+      "kor": [
+        "rsa"
+      ],
+      "cze": [
+        "mex"
+      ],
       "can": [
-        "qat",
-        "sui",
-        "ecu"
-      ],
-      "qat": [
-        "can",
-        "sui",
-        "ecu"
-      ],
-      "sui": [
-        "can",
-        "qat",
-        "ecu"
-      ],
-      "ecu": [
-        "can",
-        "qat",
         "sui"
       ],
+      "bih": [
+        "qat"
+      ],
+      "qat": [
+        "bih"
+      ],
+      "sui": [
+        "can"
+      ],
       "bra": [
-        "mar",
-        "hai",
         "sco"
       ],
       "mar": [
-        "bra",
-        "hai",
-        "sco"
-      ],
-      "hai": [
-        "bra",
-        "mar",
-        "sco"
-      ],
-      "sco": [
-        "bra",
-        "mar",
         "hai"
       ],
-      "usa": [
-        "aus",
-        "par",
-        "tur"
+      "hai": [
+        "mar"
       ],
-      "aus": [
-        "usa",
-        "par",
+      "sco": [
+        "bra"
+      ],
+      "usa": [
         "tur"
       ],
       "par": [
-        "usa",
-        "aus",
-        "tur"
+        "aus"
       ],
-      "tur": [
-        "usa",
-        "aus",
+      "aus": [
         "par"
       ],
+      "tur": [
+        "usa"
+      ],
       "ger": [
-        "cuw",
-        "civ",
-        "pol"
+        "ecu"
       ],
       "cuw": [
-        "ger",
-        "civ",
-        "pol"
-      ],
-      "civ": [
-        "ger",
-        "cuw",
-        "pol"
-      ],
-      "pol": [
-        "ger",
-        "cuw",
         "civ"
       ],
+      "civ": [
+        "cuw"
+      ],
+      "ecu": [
+        "ger"
+      ],
       "ned": [
-        "jpn",
-        "tun",
-        "ukr"
-      ],
-      "jpn": [
-        "ned",
-        "tun",
-        "ukr"
-      ],
-      "tun": [
-        "ned",
-        "jpn",
-        "ukr"
-      ],
-      "ukr": [
-        "ned",
-        "jpn",
         "tun"
       ],
+      "jpn": [
+        "swe"
+      ],
+      "swe": [
+        "jpn"
+      ],
+      "tun": [
+        "ned"
+      ],
       "bel": [
-        "egy",
-        "irn",
         "nzl"
       ],
       "egy": [
-        "bel",
-        "irn",
-        "nzl"
-      ],
-      "irn": [
-        "bel",
-        "egy",
-        "nzl"
-      ],
-      "nzl": [
-        "bel",
-        "egy",
         "irn"
       ],
+      "irn": [
+        "egy"
+      ],
+      "nzl": [
+        "bel"
+      ],
       "esp": [
-        "cpv",
-        "ksa",
         "uru"
       ],
       "cpv": [
-        "esp",
-        "ksa",
-        "uru"
-      ],
-      "ksa": [
-        "esp",
-        "cpv",
-        "uru"
-      ],
-      "uru": [
-        "esp",
-        "cpv",
         "ksa"
       ],
+      "ksa": [
+        "cpv"
+      ],
+      "uru": [
+        "esp"
+      ],
       "fra": [
-        "sen",
-        "nor",
-        "bol"
-      ],
-      "sen": [
-        "fra",
-        "nor",
-        "bol"
-      ],
-      "nor": [
-        "fra",
-        "sen",
-        "bol"
-      ],
-      "bol": [
-        "fra",
-        "sen",
         "nor"
       ],
+      "sen": [
+        "irq"
+      ],
+      "irq": [
+        "sen"
+      ],
+      "nor": [
+        "fra"
+      ],
       "arg": [
-        "alg",
-        "aut",
         "jor"
       ],
       "alg": [
-        "arg",
-        "aut",
-        "jor"
-      ],
-      "aut": [
-        "arg",
-        "alg",
-        "jor"
-      ],
-      "jor": [
-        "arg",
-        "alg",
         "aut"
       ],
+      "aut": [
+        "alg"
+      ],
+      "jor": [
+        "arg"
+      ],
       "por": [
-        "uzb",
-        "col",
-        "cro"
-      ],
-      "uzb": [
-        "por",
-        "col",
-        "cro"
-      ],
-      "col": [
-        "por",
-        "uzb",
-        "cro"
-      ],
-      "cro": [
-        "por",
-        "uzb",
         "col"
       ],
+      "cod": [
+        "uzb"
+      ],
+      "uzb": [
+        "cod"
+      ],
+      "col": [
+        "por"
+      ],
       "eng": [
-        "gha",
-        "pan",
-        "crc"
+        "pan"
+      ],
+      "cro": [
+        "gha"
       ],
       "gha": [
-        "eng",
-        "pan",
-        "crc"
+        "cro"
       ],
       "pan": [
-        "eng",
-        "gha",
-        "crc"
-      ],
-      "crc": [
-        "eng",
-        "gha",
-        "pan"
+        "eng"
       ]
     }
   },
   {
     "day": 9,
     "probabilities": {
-      "mex": 2.16,
-      "rsa": 0.22,
-      "kor": 1.61,
-      "den": 1.85,
-      "can": 0.72,
-      "qat": 0.22,
-      "sui": 2.01,
-      "ecu": 0.89,
-      "bra": 10.07,
-      "mar": 1.45,
-      "hai": 0.22,
-      "sco": 0.86,
-      "usa": 2.52,
-      "aus": 0.58,
-      "par": 0.43,
-      "tur": 1.08,
-      "ger": 6.11,
-      "cuw": 0.22,
-      "civ": 0.36,
-      "pol": 0.93,
-      "ned": 4.67,
-      "jpn": 1.58,
-      "tun": 0.36,
-      "ukr": 0.72,
-      "bel": 3.6,
-      "egy": 0.36,
-      "irn": 1.01,
-      "nzl": 0.22,
-      "esp": 6.83,
-      "cpv": 0.22,
-      "ksa": 0.22,
-      "uru": 3.24,
-      "fra": 9.35,
-      "sen": 1.22,
-      "nor": 0.65,
-      "bol": 0.29,
-      "arg": 10.43,
-      "alg": 0.58,
-      "aut": 1.15,
-      "jor": 0.29,
-      "por": 5.03,
-      "uzb": 0.29,
-      "col": 2.88,
-      "cro": 2.01,
-      "eng": 7.19,
-      "gha": 0.5,
-      "pan": 0.22,
-      "crc": 0.43
+      "mex": 2.24,
+      "rsa": 1.23,
+      "kor": 2.67,
+      "cze": 0.85,
+      "can": 1.54,
+      "bih": 0.54,
+      "qat": 1.55,
+      "sui": 3.1,
+      "bra": 3.88,
+      "mar": 3.36,
+      "hai": 0.92,
+      "sco": 1.85,
+      "usa": 2.61,
+      "par": 1.77,
+      "aus": 2.15,
+      "tur": 0.77,
+      "ger": 3.15,
+      "cuw": 1,
+      "civ": 1.62,
+      "ecu": 2.31,
+      "ned": 3.31,
+      "jpn": 2.69,
+      "swe": 0.69,
+      "tun": 1.69,
+      "bel": 3.23,
+      "egy": 2.08,
+      "irn": 2.46,
+      "nzl": 0.07,
+      "esp": 3.77,
+      "cpv": 1.15,
+      "ksa": 1.31,
+      "uru": 2.85,
+      "fra": 3.61,
+      "sen": 2.54,
+      "irq": 0.62,
+      "nor": 2.08,
+      "arg": 3.69,
+      "alg": 1.92,
+      "aut": 2.23,
+      "jor": 1.08,
+      "por": 3.38,
+      "cod": 0.46,
+      "uzb": 1.46,
+      "col": 2.92,
+      "eng": 3.54,
+      "cro": 3.08,
+      "gha": 1.15,
+      "pan": 1.85
     },
     "possibleOpponents": {
-      "mex": [
-        "rsa",
-        "kor",
-        "den"
-      ],
-      "rsa": [
-        "mex",
-        "kor",
-        "den"
-      ],
-      "kor": [
-        "mex",
-        "rsa",
-        "den"
-      ],
-      "den": [
-        "mex",
-        "rsa",
-        "kor"
-      ],
-      "can": [
-        "qat",
-        "sui",
-        "ecu"
-      ],
-      "qat": [
-        "can",
-        "sui",
-        "ecu"
-      ],
-      "sui": [
-        "can",
-        "qat",
-        "ecu"
-      ],
-      "ecu": [
-        "can",
-        "qat",
-        "sui"
-      ],
-      "bra": [
-        "mar",
-        "hai",
-        "sco"
-      ],
-      "mar": [
-        "bra",
-        "hai",
-        "sco"
-      ],
-      "hai": [
-        "bra",
-        "mar",
-        "sco"
-      ],
-      "sco": [
-        "bra",
-        "mar",
-        "hai"
-      ],
+      "mex": [],
+      "rsa": [],
+      "kor": [],
+      "cze": [],
+      "can": [],
+      "bih": [],
+      "qat": [],
+      "sui": [],
+      "bra": [],
+      "mar": [],
+      "hai": [],
+      "sco": [],
       "usa": [
-        "aus",
-        "par",
-        "tur"
-      ],
-      "aus": [
-        "usa",
-        "par",
         "tur"
       ],
       "par": [
-        "usa",
-        "aus",
-        "tur"
+        "aus"
       ],
-      "tur": [
-        "usa",
-        "aus",
+      "aus": [
         "par"
       ],
+      "tur": [
+        "usa"
+      ],
       "ger": [
-        "cuw",
-        "civ",
-        "pol"
+        "ecu"
       ],
       "cuw": [
-        "ger",
-        "civ",
-        "pol"
-      ],
-      "civ": [
-        "ger",
-        "cuw",
-        "pol"
-      ],
-      "pol": [
-        "ger",
-        "cuw",
         "civ"
       ],
+      "civ": [
+        "cuw"
+      ],
+      "ecu": [
+        "ger"
+      ],
       "ned": [
-        "jpn",
-        "tun",
-        "ukr"
-      ],
-      "jpn": [
-        "ned",
-        "tun",
-        "ukr"
-      ],
-      "tun": [
-        "ned",
-        "jpn",
-        "ukr"
-      ],
-      "ukr": [
-        "ned",
-        "jpn",
         "tun"
       ],
+      "jpn": [
+        "swe"
+      ],
+      "swe": [
+        "jpn"
+      ],
+      "tun": [
+        "ned"
+      ],
       "bel": [
-        "egy",
-        "irn",
         "nzl"
       ],
       "egy": [
-        "bel",
-        "irn",
-        "nzl"
-      ],
-      "irn": [
-        "bel",
-        "egy",
-        "nzl"
-      ],
-      "nzl": [
-        "bel",
-        "egy",
         "irn"
       ],
+      "irn": [
+        "egy"
+      ],
+      "nzl": [
+        "bel"
+      ],
       "esp": [
-        "cpv",
-        "ksa",
         "uru"
       ],
       "cpv": [
-        "esp",
-        "ksa",
-        "uru"
-      ],
-      "ksa": [
-        "esp",
-        "cpv",
-        "uru"
-      ],
-      "uru": [
-        "esp",
-        "cpv",
         "ksa"
       ],
+      "ksa": [
+        "cpv"
+      ],
+      "uru": [
+        "esp"
+      ],
       "fra": [
-        "sen",
-        "nor",
-        "bol"
-      ],
-      "sen": [
-        "fra",
-        "nor",
-        "bol"
-      ],
-      "nor": [
-        "fra",
-        "sen",
-        "bol"
-      ],
-      "bol": [
-        "fra",
-        "sen",
         "nor"
       ],
+      "sen": [
+        "irq"
+      ],
+      "irq": [
+        "sen"
+      ],
+      "nor": [
+        "fra"
+      ],
       "arg": [
-        "alg",
-        "aut",
         "jor"
       ],
       "alg": [
-        "arg",
-        "aut",
-        "jor"
-      ],
-      "aut": [
-        "arg",
-        "alg",
-        "jor"
-      ],
-      "jor": [
-        "arg",
-        "alg",
         "aut"
       ],
+      "aut": [
+        "alg"
+      ],
+      "jor": [
+        "arg"
+      ],
       "por": [
-        "uzb",
-        "col",
-        "cro"
-      ],
-      "uzb": [
-        "por",
-        "col",
-        "cro"
-      ],
-      "col": [
-        "por",
-        "uzb",
-        "cro"
-      ],
-      "cro": [
-        "por",
-        "uzb",
         "col"
       ],
+      "cod": [
+        "uzb"
+      ],
+      "uzb": [
+        "cod"
+      ],
+      "col": [
+        "por"
+      ],
       "eng": [
-        "gha",
-        "pan",
-        "crc"
+        "pan"
+      ],
+      "cro": [
+        "gha"
       ],
       "gha": [
-        "eng",
-        "pan",
-        "crc"
+        "cro"
       ],
       "pan": [
-        "eng",
-        "gha",
-        "crc"
-      ],
-      "crc": [
-        "eng",
-        "gha",
-        "pan"
+        "eng"
       ]
     }
   },
   {
     "day": 10,
     "probabilities": {
-      "mex": 2.16,
-      "rsa": 0.22,
-      "kor": 1.44,
-      "den": 1.66,
-      "can": 0.72,
-      "qat": 0.22,
-      "sui": 1.8,
-      "ecu": 0.79,
-      "bra": 9.01,
-      "mar": 1.3,
-      "hai": 0.22,
-      "sco": 0.86,
-      "usa": 2.52,
-      "aus": 0.58,
-      "par": 0.48,
-      "tur": 1.21,
-      "ger": 6.86,
-      "cuw": 0.22,
-      "civ": 0.4,
-      "pol": 0.94,
-      "ned": 5.25,
-      "jpn": 1.78,
-      "tun": 0.36,
-      "ukr": 0.72,
-      "bel": 3.6,
-      "egy": 0.36,
-      "irn": 1.01,
-      "nzl": 0.22,
-      "esp": 6.85,
-      "cpv": 0.22,
-      "ksa": 0.22,
-      "uru": 3.24,
-      "fra": 9.37,
-      "sen": 1.22,
-      "nor": 0.65,
-      "bol": 0.29,
-      "arg": 10.45,
-      "alg": 0.58,
-      "aut": 1.15,
-      "jor": 0.29,
-      "por": 5.04,
-      "uzb": 0.29,
-      "col": 2.88,
-      "cro": 2.02,
-      "eng": 7.21,
-      "gha": 0.5,
-      "pan": 0.22,
-      "crc": 0.43
+      "mex": 2,
+      "rsa": 1.23,
+      "kor": 2.38,
+      "cze": 0.85,
+      "can": 1.54,
+      "bih": 0.54,
+      "qat": 1.38,
+      "sui": 2.77,
+      "bra": 3.46,
+      "mar": 3,
+      "hai": 0.92,
+      "sco": 1.84,
+      "usa": 2.93,
+      "par": 1.77,
+      "aus": 2.41,
+      "tur": 0.77,
+      "ger": 3.53,
+      "cuw": 1,
+      "civ": 1.81,
+      "ecu": 2.31,
+      "ned": 3.7,
+      "jpn": 3.01,
+      "swe": 0.69,
+      "tun": 1.69,
+      "bel": 3.23,
+      "egy": 2.08,
+      "irn": 2.46,
+      "nzl": 0.07,
+      "esp": 3.77,
+      "cpv": 1.15,
+      "ksa": 1.31,
+      "uru": 2.84,
+      "fra": 3.61,
+      "sen": 2.54,
+      "irq": 0.61,
+      "nor": 2.08,
+      "arg": 3.69,
+      "alg": 1.92,
+      "aut": 2.23,
+      "jor": 1.08,
+      "por": 3.38,
+      "cod": 0.46,
+      "uzb": 1.46,
+      "col": 2.92,
+      "eng": 3.54,
+      "cro": 3.07,
+      "gha": 1.15,
+      "pan": 1.84
     },
     "possibleOpponents": {
-      "mex": [
-        "rsa",
-        "kor",
-        "den"
-      ],
-      "rsa": [
-        "mex",
-        "kor",
-        "den"
-      ],
-      "kor": [
-        "mex",
-        "rsa",
-        "den"
-      ],
-      "den": [
-        "mex",
-        "rsa",
-        "kor"
-      ],
-      "can": [
-        "qat",
-        "sui",
-        "ecu"
-      ],
-      "qat": [
-        "can",
-        "sui",
-        "ecu"
-      ],
-      "sui": [
-        "can",
-        "qat",
-        "ecu"
-      ],
-      "ecu": [
-        "can",
-        "qat",
-        "sui"
-      ],
-      "bra": [
-        "mar",
-        "hai",
-        "sco"
-      ],
-      "mar": [
-        "bra",
-        "hai",
-        "sco"
-      ],
-      "hai": [
-        "bra",
-        "mar",
-        "sco"
-      ],
-      "sco": [
-        "bra",
-        "mar",
-        "hai"
-      ],
-      "usa": [
-        "aus",
-        "par",
-        "tur"
-      ],
-      "aus": [
-        "usa",
-        "par",
-        "tur"
-      ],
-      "par": [
-        "usa",
-        "aus",
-        "tur"
-      ],
-      "tur": [
-        "usa",
-        "aus",
-        "par"
-      ],
-      "ger": [
-        "cuw",
-        "civ",
-        "pol"
-      ],
-      "cuw": [
-        "ger",
-        "civ",
-        "pol"
-      ],
-      "civ": [
-        "ger",
-        "cuw",
-        "pol"
-      ],
-      "pol": [
-        "ger",
-        "cuw",
-        "civ"
-      ],
-      "ned": [
-        "jpn",
-        "tun",
-        "ukr"
-      ],
-      "jpn": [
-        "ned",
-        "tun",
-        "ukr"
-      ],
-      "tun": [
-        "ned",
-        "jpn",
-        "ukr"
-      ],
-      "ukr": [
-        "ned",
-        "jpn",
-        "tun"
-      ],
+      "mex": [],
+      "rsa": [],
+      "kor": [],
+      "cze": [],
+      "can": [],
+      "bih": [],
+      "qat": [],
+      "sui": [],
+      "bra": [],
+      "mar": [],
+      "hai": [],
+      "sco": [],
+      "usa": [],
+      "par": [],
+      "aus": [],
+      "tur": [],
+      "ger": [],
+      "cuw": [],
+      "civ": [],
+      "ecu": [],
+      "ned": [],
+      "jpn": [],
+      "swe": [],
+      "tun": [],
       "bel": [
-        "egy",
-        "irn",
         "nzl"
       ],
       "egy": [
-        "bel",
-        "irn",
-        "nzl"
-      ],
-      "irn": [
-        "bel",
-        "egy",
-        "nzl"
-      ],
-      "nzl": [
-        "bel",
-        "egy",
         "irn"
       ],
+      "irn": [
+        "egy"
+      ],
+      "nzl": [
+        "bel"
+      ],
       "esp": [
-        "cpv",
-        "ksa",
         "uru"
       ],
       "cpv": [
-        "esp",
-        "ksa",
-        "uru"
-      ],
-      "ksa": [
-        "esp",
-        "cpv",
-        "uru"
-      ],
-      "uru": [
-        "esp",
-        "cpv",
         "ksa"
       ],
+      "ksa": [
+        "cpv"
+      ],
+      "uru": [
+        "esp"
+      ],
       "fra": [
-        "sen",
-        "nor",
-        "bol"
-      ],
-      "sen": [
-        "fra",
-        "nor",
-        "bol"
-      ],
-      "nor": [
-        "fra",
-        "sen",
-        "bol"
-      ],
-      "bol": [
-        "fra",
-        "sen",
         "nor"
       ],
+      "sen": [
+        "irq"
+      ],
+      "irq": [
+        "sen"
+      ],
+      "nor": [
+        "fra"
+      ],
       "arg": [
-        "alg",
-        "aut",
         "jor"
       ],
       "alg": [
-        "arg",
-        "aut",
-        "jor"
-      ],
-      "aut": [
-        "arg",
-        "alg",
-        "jor"
-      ],
-      "jor": [
-        "arg",
-        "alg",
         "aut"
       ],
+      "aut": [
+        "alg"
+      ],
+      "jor": [
+        "arg"
+      ],
       "por": [
-        "uzb",
-        "col",
-        "cro"
-      ],
-      "uzb": [
-        "por",
-        "col",
-        "cro"
-      ],
-      "col": [
-        "por",
-        "uzb",
-        "cro"
-      ],
-      "cro": [
-        "por",
-        "uzb",
         "col"
       ],
+      "cod": [
+        "uzb"
+      ],
+      "uzb": [
+        "cod"
+      ],
+      "col": [
+        "por"
+      ],
       "eng": [
-        "gha",
-        "pan",
-        "crc"
+        "pan"
+      ],
+      "cro": [
+        "gha"
       ],
       "gha": [
-        "eng",
-        "pan",
-        "crc"
+        "cro"
       ],
       "pan": [
-        "eng",
-        "gha",
-        "crc"
-      ],
-      "crc": [
-        "eng",
-        "gha",
-        "pan"
+        "eng"
       ]
     }
   },
   {
     "day": 11,
     "probabilities": {
-      "mex": 2.14,
-      "rsa": 0.21,
-      "kor": 1.43,
-      "den": 1.64,
-      "can": 0.71,
-      "qat": 0.21,
-      "sui": 1.78,
-      "ecu": 0.79,
-      "bra": 8.92,
-      "mar": 1.28,
-      "hai": 0.21,
-      "sco": 0.86,
-      "usa": 2.5,
-      "aus": 0.57,
-      "par": 0.43,
-      "tur": 1.07,
-      "ger": 6.07,
-      "cuw": 0.21,
-      "civ": 0.36,
-      "pol": 0.93,
-      "ned": 4.64,
-      "jpn": 1.57,
-      "tun": 0.36,
-      "ukr": 0.71,
-      "bel": 4,
-      "egy": 0.36,
-      "irn": 1.12,
-      "nzl": 0.21,
-      "esp": 7.59,
-      "cpv": 0.21,
-      "ksa": 0.24,
-      "uru": 3.21,
-      "fra": 10.39,
-      "sen": 1.36,
-      "nor": 0.64,
-      "bol": 0.29,
-      "arg": 10.35,
-      "alg": 0.57,
-      "aut": 1.14,
-      "jor": 0.29,
-      "por": 5,
-      "uzb": 0.29,
-      "col": 2.85,
-      "cro": 2,
-      "eng": 7.14,
-      "gha": 0.5,
-      "pan": 0.21,
-      "crc": 0.43
+      "mex": 2,
+      "rsa": 1.23,
+      "kor": 2.38,
+      "cze": 0.84,
+      "can": 1.53,
+      "bih": 0.54,
+      "qat": 1.38,
+      "sui": 2.76,
+      "bra": 3.45,
+      "mar": 2.99,
+      "hai": 0.92,
+      "sco": 1.84,
+      "usa": 2.61,
+      "par": 1.76,
+      "aus": 2.15,
+      "tur": 0.77,
+      "ger": 3.15,
+      "cuw": 1,
+      "civ": 1.61,
+      "ecu": 2.3,
+      "ned": 3.3,
+      "jpn": 2.69,
+      "swe": 0.69,
+      "tun": 1.69,
+      "bel": 3.61,
+      "egy": 2.07,
+      "irn": 2.75,
+      "nzl": 0.07,
+      "esp": 4.21,
+      "cpv": 1.15,
+      "ksa": 1.46,
+      "uru": 2.84,
+      "fra": 4.04,
+      "sen": 2.84,
+      "irq": 0.61,
+      "nor": 2.07,
+      "arg": 3.68,
+      "alg": 1.92,
+      "aut": 2.23,
+      "jor": 1.07,
+      "por": 3.38,
+      "cod": 0.46,
+      "uzb": 1.46,
+      "col": 2.92,
+      "eng": 3.53,
+      "cro": 3.07,
+      "gha": 1.15,
+      "pan": 1.84
     },
     "possibleOpponents": {
-      "mex": [
-        "rsa",
-        "kor",
-        "den"
-      ],
-      "rsa": [
-        "mex",
-        "kor",
-        "den"
-      ],
-      "kor": [
-        "mex",
-        "rsa",
-        "den"
-      ],
-      "den": [
-        "mex",
-        "rsa",
-        "kor"
-      ],
-      "can": [
-        "qat",
-        "sui",
-        "ecu"
-      ],
-      "qat": [
-        "can",
-        "sui",
-        "ecu"
-      ],
-      "sui": [
-        "can",
-        "qat",
-        "ecu"
-      ],
-      "ecu": [
-        "can",
-        "qat",
-        "sui"
-      ],
-      "bra": [
-        "mar",
-        "hai",
-        "sco"
-      ],
-      "mar": [
-        "bra",
-        "hai",
-        "sco"
-      ],
-      "hai": [
-        "bra",
-        "mar",
-        "sco"
-      ],
-      "sco": [
-        "bra",
-        "mar",
-        "hai"
-      ],
-      "usa": [
-        "aus",
-        "par",
-        "tur"
-      ],
-      "aus": [
-        "usa",
-        "par",
-        "tur"
-      ],
-      "par": [
-        "usa",
-        "aus",
-        "tur"
-      ],
-      "tur": [
-        "usa",
-        "aus",
-        "par"
-      ],
-      "ger": [
-        "cuw",
-        "civ",
-        "pol"
-      ],
-      "cuw": [
-        "ger",
-        "civ",
-        "pol"
-      ],
-      "civ": [
-        "ger",
-        "cuw",
-        "pol"
-      ],
-      "pol": [
-        "ger",
-        "cuw",
-        "civ"
-      ],
-      "ned": [
-        "jpn",
-        "tun",
-        "ukr"
-      ],
-      "jpn": [
-        "ned",
-        "tun",
-        "ukr"
-      ],
-      "tun": [
-        "ned",
-        "jpn",
-        "ukr"
-      ],
-      "ukr": [
-        "ned",
-        "jpn",
-        "tun"
-      ],
-      "bel": [
-        "egy",
-        "irn",
-        "nzl"
-      ],
-      "egy": [
-        "bel",
-        "irn",
-        "nzl"
-      ],
-      "irn": [
-        "bel",
-        "egy",
-        "nzl"
-      ],
-      "nzl": [
-        "bel",
-        "egy",
-        "irn"
-      ],
-      "esp": [
-        "cpv",
-        "ksa",
-        "uru"
-      ],
-      "cpv": [
-        "esp",
-        "ksa",
-        "uru"
-      ],
-      "ksa": [
-        "esp",
-        "cpv",
-        "uru"
-      ],
-      "uru": [
-        "esp",
-        "cpv",
-        "ksa"
-      ],
-      "fra": [
-        "sen",
-        "nor",
-        "bol"
-      ],
-      "sen": [
-        "fra",
-        "nor",
-        "bol"
-      ],
-      "nor": [
-        "fra",
-        "sen",
-        "bol"
-      ],
-      "bol": [
-        "fra",
-        "sen",
-        "nor"
-      ],
+      "mex": [],
+      "rsa": [],
+      "kor": [],
+      "cze": [],
+      "can": [],
+      "bih": [],
+      "qat": [],
+      "sui": [],
+      "bra": [],
+      "mar": [],
+      "hai": [],
+      "sco": [],
+      "usa": [],
+      "par": [],
+      "aus": [],
+      "tur": [],
+      "ger": [],
+      "cuw": [],
+      "civ": [],
+      "ecu": [],
+      "ned": [],
+      "jpn": [],
+      "swe": [],
+      "tun": [],
+      "bel": [],
+      "egy": [],
+      "irn": [],
+      "nzl": [],
+      "esp": [],
+      "cpv": [],
+      "ksa": [],
+      "uru": [],
+      "fra": [],
+      "sen": [],
+      "irq": [],
+      "nor": [],
       "arg": [
-        "alg",
-        "aut",
         "jor"
       ],
       "alg": [
-        "arg",
-        "aut",
-        "jor"
-      ],
-      "aut": [
-        "arg",
-        "alg",
-        "jor"
-      ],
-      "jor": [
-        "arg",
-        "alg",
         "aut"
       ],
+      "aut": [
+        "alg"
+      ],
+      "jor": [
+        "arg"
+      ],
       "por": [
-        "uzb",
-        "col",
-        "cro"
-      ],
-      "uzb": [
-        "por",
-        "col",
-        "cro"
-      ],
-      "col": [
-        "por",
-        "uzb",
-        "cro"
-      ],
-      "cro": [
-        "por",
-        "uzb",
         "col"
       ],
+      "cod": [
+        "uzb"
+      ],
+      "uzb": [
+        "cod"
+      ],
+      "col": [
+        "por"
+      ],
       "eng": [
-        "gha",
-        "pan",
-        "crc"
+        "pan"
+      ],
+      "cro": [
+        "gha"
       ],
       "gha": [
-        "eng",
-        "pan",
-        "crc"
+        "cro"
       ],
       "pan": [
-        "eng",
-        "gha",
-        "crc"
-      ],
-      "crc": [
-        "eng",
-        "gha",
-        "pan"
+        "eng"
       ]
     }
   },
   {
     "day": 12,
     "probabilities": {
-      "mex": 2.28,
+      "mex": 2.39,
       "rsa": 0,
-      "kor": 1.52,
-      "den": 1.75,
-      "can": 0.76,
-      "qat": 0,
-      "sui": 1.9,
-      "ecu": 0.84,
-      "bra": 9.51,
-      "mar": 1.37,
+      "kor": 2.85,
+      "cze": 0,
+      "can": 1.84,
+      "bih": 0,
+      "qat": 1.66,
+      "sui": 3.32,
+      "bra": 4.14,
+      "mar": 3.59,
       "hai": 0,
-      "sco": 0.91,
-      "usa": 2.66,
-      "aus": 0.61,
+      "sco": 2.21,
+      "usa": 3.13,
       "par": 0,
-      "tur": 1.14,
-      "ger": 6.47,
+      "aus": 2.58,
+      "tur": 0,
+      "ger": 3.78,
       "cuw": 0,
-      "civ": 0.38,
-      "pol": 0.99,
-      "ned": 4.95,
-      "jpn": 1.67,
+      "civ": 1.93,
+      "ecu": 2.76,
+      "ned": 3.96,
+      "jpn": 3.22,
+      "swe": 0.83,
       "tun": 0,
-      "ukr": 0.76,
-      "bel": 3.8,
-      "egy": 0.38,
-      "irn": 1.07,
+      "bel": 3.87,
+      "egy": 2.49,
+      "irn": 2.95,
       "nzl": 0,
-      "esp": 7.23,
+      "esp": 4.51,
       "cpv": 0,
-      "ksa": 0.23,
-      "uru": 3.42,
-      "fra": 9.89,
-      "sen": 1.29,
-      "nor": 0,
-      "bol": 0,
-      "arg": 12.36,
-      "alg": 0,
-      "aut": 1.36,
+      "ksa": 1.57,
+      "uru": 3.41,
+      "fra": 4.33,
+      "sen": 3.04,
+      "irq": 0,
+      "nor": 2.49,
+      "arg": 4.95,
+      "alg": 2.3,
+      "aut": 2.99,
       "jor": 0,
-      "por": 5.96,
+      "por": 4.54,
+      "cod": 0,
       "uzb": 0,
-      "col": 3.41,
-      "cro": 0,
-      "eng": 8.52,
-      "gha": 0.6,
-      "pan": 0,
-      "crc": 0
+      "col": 3.5,
+      "eng": 4.74,
+      "cro": 4.13,
+      "gha": 0,
+      "pan": 0
     },
     "possibleOpponents": {
       "mex": [
+        "alg",
         "arg",
         "aus",
         "aut",
@@ -3603,29 +2740,28 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "kor",
         "mar",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
       "rsa": [],
       "kor": [
+        "alg",
         "arg",
         "aus",
         "aut",
@@ -3634,58 +2770,28 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
-      "den": [
-        "arg",
-        "aus",
-        "aut",
-        "bel",
-        "bra",
-        "can",
-        "civ",
-        "col",
-        "ecu",
-        "eng",
-        "esp",
-        "fra",
-        "ger",
-        "gha",
-        "irn",
-        "jpn",
-        "kor",
-        "mar",
-        "mex",
-        "ned",
-        "pol",
-        "sco",
-        "sen",
-        "sui",
-        "tur",
-        "ukr",
-        "uru",
-        "usa"
-      ],
+      "cze": [],
       "can": [
+        "alg",
         "arg",
         "aus",
         "aut",
@@ -3693,30 +2799,30 @@ export const snapshots: Snapshot[] = [
         "bra",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "kor",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
+      "bih": [],
       "qat": [],
       "sui": [
+        "alg",
         "arg",
         "aus",
         "aut",
@@ -3725,58 +2831,27 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "kor",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
-        "tur",
-        "ukr",
-        "uru",
-        "usa"
-      ],
-      "ecu": [
-        "arg",
-        "aus",
-        "aut",
-        "bel",
-        "bra",
-        "can",
-        "civ",
-        "col",
-        "den",
-        "eng",
-        "esp",
-        "fra",
-        "ger",
-        "gha",
-        "irn",
-        "jpn",
-        "kor",
-        "mar",
-        "mex",
-        "ned",
-        "pol",
-        "sco",
-        "sen",
-        "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
       "bra": [
+        "alg",
         "arg",
         "aus",
         "aut",
@@ -3784,29 +2859,28 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "kor",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
       "mar": [
+        "alg",
         "arg",
         "aus",
         "aut",
@@ -3815,29 +2889,28 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "kor",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
       "hai": [],
       "sco": [
+        "alg",
         "arg",
         "aus",
         "aut",
@@ -3846,28 +2919,27 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "kor",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
       "usa": [
+        "alg",
         "arg",
         "aus",
         "aut",
@@ -3876,89 +2948,58 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "kor",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru"
       ],
-      "aus": [
-        "arg",
-        "aut",
-        "bel",
-        "bra",
-        "can",
-        "civ",
-        "col",
-        "den",
-        "ecu",
-        "eng",
-        "esp",
-        "fra",
-        "ger",
-        "gha",
-        "irn",
-        "jpn",
-        "kor",
-        "mar",
-        "mex",
-        "ned",
-        "pol",
-        "sco",
-        "sen",
-        "sui",
-        "tur",
-        "ukr",
-        "uru",
-        "usa"
-      ],
       "par": [],
-      "tur": [
+      "aus": [
+        "alg",
         "arg",
-        "aus",
         "aut",
         "bel",
         "bra",
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "kor",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
+      "tur": [],
       "ger": [
+        "alg",
         "arg",
         "aus",
         "aut",
@@ -3967,29 +3008,28 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
-        "gha",
         "irn",
         "jpn",
         "kor",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
       "cuw": [],
       "civ": [
+        "alg",
         "arg",
         "aus",
         "aut",
@@ -3997,29 +3037,28 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "kor",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
-      "pol": [
+      "ecu": [
+        "alg",
         "arg",
         "aus",
         "aut",
@@ -4028,28 +3067,27 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
-        "ecu",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "kor",
         "mar",
         "mex",
         "ned",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
       "ned": [
+        "alg",
         "arg",
         "aus",
         "aut",
@@ -4058,28 +3096,27 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "kor",
         "mar",
         "mex",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
       "jpn": [
+        "alg",
         "arg",
         "aus",
         "aut",
@@ -4088,59 +3125,57 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "kor",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
+        "uru",
+        "usa"
+      ],
+      "swe": [
+        "alg",
+        "arg",
+        "aus",
+        "aut",
+        "bel",
+        "bra",
+        "can",
+        "civ",
+        "col",
+        "cro",
+        "ecu",
+        "eng",
+        "esp",
+        "fra",
+        "ger",
+        "irn",
+        "jpn",
+        "kor",
+        "mar",
+        "mex",
+        "ned",
+        "nor",
+        "sco",
+        "sen",
+        "sui",
         "uru",
         "usa"
       ],
       "tun": [],
-      "ukr": [
-        "arg",
-        "aus",
-        "aut",
-        "bel",
-        "bra",
-        "can",
-        "civ",
-        "col",
-        "den",
-        "ecu",
-        "eng",
-        "esp",
-        "fra",
-        "ger",
-        "gha",
-        "irn",
-        "jpn",
-        "kor",
-        "mar",
-        "mex",
-        "ned",
-        "pol",
-        "sco",
-        "sen",
-        "sui",
-        "tur",
-        "uru",
-        "usa"
-      ],
       "bel": [
+        "alg",
         "arg",
         "aus",
         "aut",
@@ -4148,30 +3183,29 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "kor",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
       "egy": [],
       "irn": [
+        "alg",
         "arg",
         "aus",
         "aut",
@@ -4180,29 +3214,28 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "jpn",
         "kor",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
       "nzl": [],
       "esp": [
+        "alg",
         "arg",
         "aus",
         "aut",
@@ -4211,30 +3244,29 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "kor",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
       "cpv": [],
       "ksa": [],
       "uru": [
+        "alg",
         "arg",
         "aus",
         "aut",
@@ -4243,28 +3275,27 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "kor",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "usa"
       ],
       "fra": [
+        "alg",
         "arg",
         "aus",
         "aut",
@@ -4273,28 +3304,27 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "kor",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
       "sen": [
+        "alg",
         "arg",
         "aus",
         "aut",
@@ -4303,30 +3333,57 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "kor",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
-      "nor": [],
-      "bol": [],
+      "irq": [],
+      "nor": [
+        "alg",
+        "arg",
+        "aus",
+        "aut",
+        "bel",
+        "bra",
+        "can",
+        "civ",
+        "col",
+        "cro",
+        "ecu",
+        "eng",
+        "esp",
+        "fra",
+        "ger",
+        "irn",
+        "jpn",
+        "kor",
+        "mar",
+        "mex",
+        "ned",
+        "sco",
+        "sen",
+        "sui",
+        "swe",
+        "uru",
+        "usa"
+      ],
       "arg": [
+        "alg",
         "aus",
         "aut",
         "bel",
@@ -4334,30 +3391,57 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "kor",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
-      "alg": [],
+      "alg": [
+        "arg",
+        "aus",
+        "aut",
+        "bel",
+        "bra",
+        "can",
+        "civ",
+        "col",
+        "cro",
+        "ecu",
+        "eng",
+        "esp",
+        "fra",
+        "ger",
+        "irn",
+        "jpn",
+        "kor",
+        "mar",
+        "mex",
+        "ned",
+        "nor",
+        "sco",
+        "sen",
+        "sui",
+        "swe",
+        "uru",
+        "usa"
+      ],
       "aut": [
+        "alg",
         "arg",
         "aus",
         "bel",
@@ -4365,32 +3449,32 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "kor",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
       "jor": [],
       "por": [],
+      "cod": [],
       "uzb": [],
       "col": [
+        "alg",
         "arg",
         "aus",
         "aut",
@@ -4398,30 +3482,28 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "kor",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
-      "cro": [],
       "eng": [
+        "alg",
         "arg",
         "aus",
         "aut",
@@ -4430,28 +3512,27 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "kor",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
-      "gha": [
+      "cro": [
+        "alg",
         "arg",
         "aus",
         "aut",
@@ -4460,7 +3541,6 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
         "ecu",
         "eng",
         "esp",
@@ -4472,70 +3552,69 @@ export const snapshots: Snapshot[] = [
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
-      "pan": [],
-      "crc": []
+      "gha": [],
+      "pan": []
     }
   },
   {
     "day": 13,
     "probabilities": {
-      "mex": 2.69,
+      "mex": 2.96,
       "rsa": 0,
       "kor": 0,
-      "den": 2.06,
-      "can": 0.8,
-      "qat": 0,
-      "sui": 2.24,
-      "ecu": 0.88,
-      "bra": 10,
-      "mar": 1.44,
+      "cze": 0,
+      "can": 2.03,
+      "bih": 0,
+      "qat": 1.83,
+      "sui": 4.1,
+      "bra": 4.57,
+      "mar": 3.96,
       "hai": 0,
-      "sco": 0.96,
-      "usa": 2.8,
-      "aus": 0,
+      "sco": 2.44,
+      "usa": 3.45,
       "par": 0,
-      "tur": 1.2,
-      "ger": 6.8,
+      "aus": 0,
+      "tur": 0,
+      "ger": 4.16,
       "cuw": 0,
-      "civ": 0.4,
-      "pol": 1.04,
-      "ned": 5.2,
-      "jpn": 1.76,
+      "civ": 2.13,
+      "ecu": 3.05,
+      "ned": 4.37,
+      "jpn": 3.56,
+      "swe": 0.91,
       "tun": 0,
-      "ukr": 0.8,
-      "bel": 4,
-      "egy": 0.4,
-      "irn": 1.12,
+      "bel": 4.27,
+      "egy": 2.74,
+      "irn": 3.25,
       "nzl": 0,
-      "esp": 7.6,
+      "esp": 4.98,
       "cpv": 0,
-      "ksa": 0.24,
-      "uru": 3.6,
-      "fra": 10.4,
-      "sen": 1.36,
-      "nor": 0,
-      "bol": 0,
-      "arg": 11.6,
+      "ksa": 1.73,
+      "uru": 3.76,
+      "fra": 4.77,
+      "sen": 3.35,
+      "irq": 0,
+      "nor": 2.74,
+      "arg": 4.88,
       "alg": 0,
-      "aut": 1.28,
+      "aut": 2.95,
       "jor": 0,
-      "por": 5.6,
+      "por": 4.47,
+      "cod": 0,
       "uzb": 0,
-      "col": 3.2,
-      "cro": 0,
-      "eng": 8,
-      "gha": 0.56,
-      "pan": 0,
-      "crc": 0
+      "col": 3.86,
+      "eng": 4.67,
+      "cro": 4.06,
+      "gha": 0,
+      "pan": 0
     },
     "possibleOpponents": {
       "mex": [
@@ -4546,56 +3625,27 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
       "rsa": [],
       "kor": [],
-      "den": [
-        "arg",
-        "aut",
-        "bel",
-        "bra",
-        "can",
-        "civ",
-        "col",
-        "ecu",
-        "eng",
-        "esp",
-        "fra",
-        "ger",
-        "gha",
-        "irn",
-        "jpn",
-        "mar",
-        "mex",
-        "ned",
-        "pol",
-        "sco",
-        "sen",
-        "sui",
-        "tur",
-        "ukr",
-        "uru",
-        "usa"
-      ],
+      "cze": [],
       "can": [
         "arg",
         "aut",
@@ -4603,27 +3653,26 @@ export const snapshots: Snapshot[] = [
         "bra",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
+      "bih": [],
       "qat": [],
       "sui": [
         "arg",
@@ -4633,51 +3682,21 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
-        "tur",
-        "ukr",
-        "uru",
-        "usa"
-      ],
-      "ecu": [
-        "arg",
-        "aut",
-        "bel",
-        "bra",
-        "can",
-        "civ",
-        "col",
-        "den",
-        "eng",
-        "esp",
-        "fra",
-        "ger",
-        "gha",
-        "irn",
-        "jpn",
-        "mar",
-        "mex",
-        "ned",
-        "pol",
-        "sco",
-        "sen",
-        "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
@@ -4688,24 +3707,22 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
@@ -4717,23 +3734,21 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
@@ -4746,23 +3761,21 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
@@ -4774,56 +3787,27 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru"
       ],
-      "aus": [],
       "par": [],
-      "tur": [
-        "arg",
-        "aut",
-        "bel",
-        "bra",
-        "can",
-        "civ",
-        "col",
-        "den",
-        "ecu",
-        "eng",
-        "esp",
-        "fra",
-        "ger",
-        "gha",
-        "irn",
-        "jpn",
-        "mar",
-        "mex",
-        "ned",
-        "pol",
-        "sco",
-        "sen",
-        "sui",
-        "ukr",
-        "uru",
-        "usa"
-      ],
+      "aus": [],
+      "tur": [],
       "ger": [
         "arg",
         "aut",
@@ -4832,23 +3816,21 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
@@ -4860,28 +3842,26 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
-      "pol": [
+      "ecu": [
         "arg",
         "aut",
         "bel",
@@ -4889,23 +3869,21 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
-        "ecu",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
@@ -4917,23 +3895,21 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
@@ -4945,28 +3921,25 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
-      "tun": [],
-      "ukr": [
+      "swe": [
         "arg",
         "aut",
         "bel",
@@ -4974,26 +3947,25 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
+      "tun": [],
       "bel": [
         "arg",
         "aut",
@@ -5001,24 +3973,22 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
@@ -5031,23 +4001,21 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "jpn",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
@@ -5060,23 +4028,21 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
@@ -5090,24 +4056,22 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "usa"
       ],
       "fra": [
@@ -5118,23 +4082,21 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
@@ -5146,28 +4108,51 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
-      "nor": [],
-      "bol": [],
+      "irq": [],
+      "nor": [
+        "arg",
+        "aut",
+        "bel",
+        "bra",
+        "can",
+        "civ",
+        "col",
+        "cro",
+        "ecu",
+        "eng",
+        "esp",
+        "fra",
+        "ger",
+        "irn",
+        "jpn",
+        "mar",
+        "mex",
+        "ned",
+        "sco",
+        "sen",
+        "sui",
+        "swe",
+        "uru",
+        "usa"
+      ],
       "arg": [
         "aut",
         "bel",
@@ -5175,24 +4160,22 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
@@ -5204,29 +4187,28 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
       "jor": [],
       "por": [],
+      "cod": [],
       "uzb": [],
       "col": [
         "arg",
@@ -5235,28 +4217,25 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
+        "cro",
         "ecu",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
-      "cro": [],
       "eng": [
         "arg",
         "aut",
@@ -5265,27 +4244,25 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "ecu",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
-      "gha": [
+      "cro": [
         "arg",
         "aut",
         "bel",
@@ -5293,7 +4270,6 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
         "ecu",
         "eng",
         "esp",
@@ -5304,70 +4280,69 @@ export const snapshots: Snapshot[] = [
         "mar",
         "mex",
         "ned",
-        "pol",
+        "nor",
         "sco",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
-      "pan": [],
-      "crc": []
+      "gha": [],
+      "pan": []
     }
   },
   {
     "day": 14,
     "probabilities": {
-      "mex": 2.45,
+      "mex": 2.78,
       "rsa": 0,
       "kor": 0,
-      "den": 1.88,
-      "can": 0.92,
-      "qat": 0,
-      "sui": 2.04,
-      "ecu": 0,
-      "bra": 11.44,
-      "mar": 1.65,
+      "cze": 0,
+      "can": 2.39,
+      "bih": 0,
+      "qat": 1.92,
+      "sui": 3.85,
+      "bra": 5.39,
+      "mar": 4.67,
       "hai": 0,
       "sco": 0,
-      "usa": 2.86,
-      "aus": 0,
+      "usa": 3.63,
       "par": 0,
-      "tur": 1.23,
-      "ger": 6.95,
+      "aus": 0,
+      "tur": 0,
+      "ger": 4.38,
       "cuw": 0,
-      "civ": 0.41,
-      "pol": 0,
-      "ned": 5.31,
-      "jpn": 1.8,
+      "civ": 2.24,
+      "ecu": 0,
+      "ned": 4.6,
+      "jpn": 3.74,
+      "swe": 0.96,
       "tun": 0,
-      "ukr": 0.82,
-      "bel": 4.09,
-      "egy": 0.41,
-      "irn": 1.14,
+      "bel": 4.49,
+      "egy": 2.89,
+      "irn": 3.42,
       "nzl": 0,
-      "esp": 7.77,
+      "esp": 5.24,
       "cpv": 0,
-      "ksa": 0.25,
-      "uru": 3.68,
-      "fra": 10.63,
-      "sen": 1.39,
-      "nor": 0,
-      "bol": 0,
-      "arg": 11.85,
+      "ksa": 1.82,
+      "uru": 3.96,
+      "fra": 5.02,
+      "sen": 3.53,
+      "irq": 0,
+      "nor": 2.89,
+      "arg": 5.13,
       "alg": 0,
-      "aut": 1.31,
+      "aut": 3.1,
       "jor": 0,
-      "por": 5.72,
+      "por": 4.7,
+      "cod": 0,
       "uzb": 0,
-      "col": 3.27,
-      "cro": 0,
-      "eng": 8.17,
-      "gha": 0.57,
-      "pan": 0,
-      "crc": 0
+      "col": 4.06,
+      "eng": 4.92,
+      "cro": 4.28,
+      "gha": 0,
+      "pan": 0
     },
     "possibleOpponents": {
       "mex": [
@@ -5378,50 +4353,25 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "ned",
+        "nor",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
       "rsa": [],
       "kor": [],
-      "den": [
-        "arg",
-        "aut",
-        "bel",
-        "bra",
-        "can",
-        "civ",
-        "col",
-        "eng",
-        "esp",
-        "fra",
-        "ger",
-        "gha",
-        "irn",
-        "jpn",
-        "mar",
-        "mex",
-        "ned",
-        "sen",
-        "sui",
-        "tur",
-        "ukr",
-        "uru",
-        "usa"
-      ],
+      "cze": [],
       "can": [
         "arg",
         "aut",
@@ -5429,24 +4379,24 @@ export const snapshots: Snapshot[] = [
         "bra",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
+        "nor",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
+      "bih": [],
       "qat": [],
       "sui": [
         "arg",
@@ -5456,24 +4406,22 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
+        "nor",
         "sen",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
-      "ecu": [],
       "bra": [
         "arg",
         "aut",
@@ -5481,21 +4429,20 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
+        "nor",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
@@ -5507,20 +4454,19 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mex",
         "ned",
+        "nor",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
@@ -5534,50 +4480,25 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
+        "nor",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru"
       ],
-      "aus": [],
       "par": [],
-      "tur": [
-        "arg",
-        "aut",
-        "bel",
-        "bra",
-        "can",
-        "civ",
-        "col",
-        "den",
-        "eng",
-        "esp",
-        "fra",
-        "ger",
-        "gha",
-        "irn",
-        "jpn",
-        "mar",
-        "mex",
-        "ned",
-        "sen",
-        "sui",
-        "ukr",
-        "uru",
-        "usa"
-      ],
+      "aus": [],
+      "tur": [],
       "ger": [
         "arg",
         "aut",
@@ -5586,20 +4507,19 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
+        "nor",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
@@ -5611,25 +4531,24 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
+        "nor",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
-      "pol": [],
+      "ecu": [],
       "ned": [
         "arg",
         "aut",
@@ -5638,20 +4557,19 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
+        "nor",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
@@ -5663,25 +4581,23 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "mar",
         "mex",
         "ned",
+        "nor",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
-      "tun": [],
-      "ukr": [
+      "swe": [
         "arg",
         "aut",
         "bel",
@@ -5689,23 +4605,23 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
+        "nor",
         "sen",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
+      "tun": [],
       "bel": [
         "arg",
         "aut",
@@ -5713,21 +4629,20 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
+        "nor",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
@@ -5740,20 +4655,19 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "jpn",
         "mar",
         "mex",
         "ned",
+        "nor",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
@@ -5766,20 +4680,19 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
+        "nor",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
@@ -5793,21 +4706,20 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
+        "nor",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "usa"
       ],
       "fra": [
@@ -5818,20 +4730,19 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
+        "nor",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
@@ -5843,38 +4754,36 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
+        "nor",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
-      "nor": [],
-      "bol": [],
-      "arg": [
+      "irq": [],
+      "nor": [
+        "arg",
         "aut",
         "bel",
         "bra",
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
@@ -5882,8 +4791,31 @@ export const snapshots: Snapshot[] = [
         "ned",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
+        "uru",
+        "usa"
+      ],
+      "arg": [
+        "aut",
+        "bel",
+        "bra",
+        "can",
+        "civ",
+        "col",
+        "cro",
+        "eng",
+        "esp",
+        "fra",
+        "ger",
+        "irn",
+        "jpn",
+        "mar",
+        "mex",
+        "ned",
+        "nor",
+        "sen",
+        "sui",
+        "swe",
         "uru",
         "usa"
       ],
@@ -5895,26 +4827,26 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
+        "nor",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
       "jor": [],
       "por": [],
+      "cod": [],
       "uzb": [],
       "col": [
         "arg",
@@ -5923,25 +4855,23 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
+        "nor",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
-      "cro": [],
       "eng": [
         "arg",
         "aut",
@@ -5950,24 +4880,23 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
+        "nor",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
-      "gha": [
+      "cro": [
         "arg",
         "aut",
         "bel",
@@ -5975,7 +4904,6 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
         "eng",
         "esp",
         "fra",
@@ -5985,68 +4913,68 @@ export const snapshots: Snapshot[] = [
         "mar",
         "mex",
         "ned",
+        "nor",
         "sen",
         "sui",
-        "tur",
-        "ukr",
+        "swe",
         "uru",
         "usa"
       ],
-      "pan": [],
-      "crc": []
+      "gha": [],
+      "pan": []
     }
   },
   {
     "day": 15,
     "probabilities": {
-      "mex": 2.5,
+      "mex": 2.92,
       "rsa": 0,
       "kor": 0,
-      "den": 1.92,
-      "can": 0.83,
-      "qat": 0,
-      "sui": 2.08,
-      "ecu": 0,
-      "bra": 10.41,
-      "mar": 1.5,
+      "cze": 0,
+      "can": 2.24,
+      "bih": 0,
+      "qat": 2.02,
+      "sui": 4.04,
+      "bra": 5.05,
+      "mar": 4.38,
       "hai": 0,
       "sco": 0,
-      "usa": 3.26,
-      "aus": 0,
+      "usa": 4.27,
       "par": 0,
-      "tur": 1.4,
-      "ger": 7.08,
+      "aus": 0,
+      "tur": 0,
+      "ger": 4.6,
       "cuw": 0,
-      "civ": 0.42,
-      "pol": 0,
-      "ned": 5.41,
-      "jpn": 1.83,
+      "civ": 2.36,
+      "ecu": 0,
+      "ned": 4.83,
+      "jpn": 3.93,
+      "swe": 0,
       "tun": 0,
-      "ukr": 0,
-      "bel": 4.16,
-      "egy": 0.42,
-      "irn": 1.17,
+      "bel": 4.71,
+      "egy": 3.03,
+      "irn": 3.59,
       "nzl": 0,
-      "esp": 7.91,
+      "esp": 5.5,
       "cpv": 0,
-      "ksa": 0.25,
-      "uru": 3.75,
-      "fra": 10.82,
-      "sen": 1.42,
+      "ksa": 1.91,
+      "uru": 4.15,
+      "fra": 5.27,
+      "sen": 3.7,
+      "irq": 0,
       "nor": 0,
-      "bol": 0,
-      "arg": 12.07,
+      "arg": 5.39,
       "alg": 0,
-      "aut": 1.33,
+      "aut": 3.25,
       "jor": 0,
-      "por": 5.83,
+      "por": 4.94,
+      "cod": 0,
       "uzb": 0,
-      "col": 3.33,
-      "cro": 0,
-      "eng": 8.33,
-      "gha": 0.58,
-      "pan": 0,
-      "crc": 0
+      "col": 4.26,
+      "eng": 5.16,
+      "cro": 4.49,
+      "gha": 0,
+      "pan": 0
     },
     "possibleOpponents": {
       "mex": [
@@ -6057,48 +4985,23 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "ned",
         "sen",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
       "rsa": [],
       "kor": [],
-      "den": [
-        "arg",
-        "aut",
-        "bel",
-        "bra",
-        "can",
-        "civ",
-        "col",
-        "eng",
-        "esp",
-        "fra",
-        "ger",
-        "gha",
-        "irn",
-        "jpn",
-        "mar",
-        "mex",
-        "ned",
-        "sen",
-        "sui",
-        "tur",
-        "uru",
-        "usa"
-      ],
+      "cze": [],
       "can": [
         "arg",
         "aut",
@@ -6106,12 +5009,11 @@ export const snapshots: Snapshot[] = [
         "bra",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
@@ -6119,10 +5021,10 @@ export const snapshots: Snapshot[] = [
         "ned",
         "sen",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
+      "bih": [],
       "qat": [],
       "sui": [
         "arg",
@@ -6132,23 +5034,20 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
         "sen",
-        "tur",
         "uru",
         "usa"
       ],
-      "ecu": [],
       "bra": [
         "arg",
         "aut",
@@ -6156,12 +5055,11 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
@@ -6169,7 +5067,6 @@ export const snapshots: Snapshot[] = [
         "ned",
         "sen",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -6181,19 +5078,17 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mex",
         "ned",
         "sen",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -6207,12 +5102,11 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
@@ -6220,35 +5114,11 @@ export const snapshots: Snapshot[] = [
         "ned",
         "sen",
         "sui",
-        "tur",
         "uru"
       ],
-      "aus": [],
       "par": [],
-      "tur": [
-        "arg",
-        "aut",
-        "bel",
-        "bra",
-        "can",
-        "civ",
-        "col",
-        "den",
-        "eng",
-        "esp",
-        "fra",
-        "ger",
-        "gha",
-        "irn",
-        "jpn",
-        "mar",
-        "mex",
-        "ned",
-        "sen",
-        "sui",
-        "uru",
-        "usa"
-      ],
+      "aus": [],
+      "tur": [],
       "ger": [
         "arg",
         "aut",
@@ -6257,11 +5127,10 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
-        "gha",
         "irn",
         "jpn",
         "mar",
@@ -6269,7 +5138,6 @@ export const snapshots: Snapshot[] = [
         "ned",
         "sen",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -6281,12 +5149,11 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
@@ -6294,11 +5161,10 @@ export const snapshots: Snapshot[] = [
         "ned",
         "sen",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
-      "pol": [],
+      "ecu": [],
       "ned": [
         "arg",
         "aut",
@@ -6307,19 +5173,17 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "sen",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -6331,24 +5195,22 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "mar",
         "mex",
         "ned",
         "sen",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
+      "swe": [],
       "tun": [],
-      "ukr": [],
       "bel": [
         "arg",
         "aut",
@@ -6356,12 +5218,11 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
@@ -6369,7 +5230,6 @@ export const snapshots: Snapshot[] = [
         "ned",
         "sen",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -6382,19 +5242,17 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "jpn",
         "mar",
         "mex",
         "ned",
         "sen",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -6407,11 +5265,10 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
@@ -6419,7 +5276,6 @@ export const snapshots: Snapshot[] = [
         "ned",
         "sen",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -6433,12 +5289,11 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
@@ -6446,7 +5301,6 @@ export const snapshots: Snapshot[] = [
         "ned",
         "sen",
         "sui",
-        "tur",
         "usa"
       ],
       "fra": [
@@ -6457,11 +5311,10 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
@@ -6469,7 +5322,6 @@ export const snapshots: Snapshot[] = [
         "ned",
         "sen",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -6481,24 +5333,22 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
+      "irq": [],
       "nor": [],
-      "bol": [],
       "arg": [
         "aut",
         "bel",
@@ -6506,12 +5356,11 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
@@ -6519,7 +5368,6 @@ export const snapshots: Snapshot[] = [
         "ned",
         "sen",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -6531,12 +5379,11 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
@@ -6544,12 +5391,12 @@ export const snapshots: Snapshot[] = [
         "ned",
         "sen",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
       "jor": [],
       "por": [],
+      "cod": [],
       "uzb": [],
       "col": [
         "arg",
@@ -6558,12 +5405,11 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
+        "cro",
         "eng",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
@@ -6571,11 +5417,9 @@ export const snapshots: Snapshot[] = [
         "ned",
         "sen",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
-      "cro": [],
       "eng": [
         "arg",
         "aut",
@@ -6584,11 +5428,10 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
+        "cro",
         "esp",
         "fra",
         "ger",
-        "gha",
         "irn",
         "jpn",
         "mar",
@@ -6596,11 +5439,10 @@ export const snapshots: Snapshot[] = [
         "ned",
         "sen",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
-      "gha": [
+      "cro": [
         "arg",
         "aut",
         "bel",
@@ -6608,7 +5450,6 @@ export const snapshots: Snapshot[] = [
         "can",
         "civ",
         "col",
-        "den",
         "eng",
         "esp",
         "fra",
@@ -6620,65 +5461,64 @@ export const snapshots: Snapshot[] = [
         "ned",
         "sen",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
-      "pan": [],
-      "crc": []
+      "gha": [],
+      "pan": []
     }
   },
   {
     "day": 16,
     "probabilities": {
-      "mex": 2.85,
+      "mex": 3.86,
       "rsa": 0,
       "kor": 0,
-      "den": 2.18,
-      "can": 0.95,
-      "qat": 0,
-      "sui": 2.37,
-      "ecu": 0,
-      "bra": 11.87,
-      "mar": 1.71,
+      "cze": 0,
+      "can": 2.97,
+      "bih": 0,
+      "qat": 2.67,
+      "sui": 5.35,
+      "bra": 6.68,
+      "mar": 5.79,
       "hai": 0,
       "sco": 0,
-      "usa": 3.32,
-      "aus": 0,
+      "usa": 5.05,
       "par": 0,
-      "tur": 1.42,
-      "ger": 9.04,
+      "aus": 0,
+      "tur": 0,
+      "ger": 6.82,
       "cuw": 0,
-      "civ": 0.53,
-      "pol": 0,
-      "ned": 6.91,
+      "civ": 3.49,
+      "ecu": 0,
+      "ned": 7.15,
       "jpn": 0,
+      "swe": 0,
       "tun": 0,
-      "ukr": 0,
-      "bel": 5.32,
-      "egy": 0.47,
+      "bel": 6.99,
+      "egy": 4.01,
       "irn": 0,
       "nzl": 0,
-      "esp": 10.1,
+      "esp": 8.15,
       "cpv": 0,
-      "ksa": 0.28,
-      "uru": 4.78,
-      "fra": 13.82,
+      "ksa": 2.52,
+      "uru": 6.15,
+      "fra": 7.82,
       "sen": 0,
+      "irq": 0,
       "nor": 0,
-      "bol": 0,
-      "arg": 15.42,
+      "arg": 7.98,
       "alg": 0,
       "aut": 0,
       "jor": 0,
-      "por": 6.65,
+      "por": 6.53,
+      "cod": 0,
       "uzb": 0,
       "col": 0,
-      "cro": 0,
       "eng": 0,
+      "cro": 0,
       "gha": 0,
-      "pan": 0,
-      "crc": 0
+      "pan": 0
     },
     "possibleOpponents": {
       "mex": [
@@ -6687,42 +5527,23 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
         "mar",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
       "rsa": [],
       "kor": [],
-      "den": [
-        "arg",
-        "bel",
-        "bra",
-        "can",
-        "civ",
-        "esp",
-        "fra",
-        "ger",
-        "mar",
-        "mex",
-        "ned",
-        "sui",
-        "tur",
-        "uru",
-        "usa"
-      ],
+      "cze": [],
       "can": [
         "arg",
         "bel",
         "bra",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -6730,10 +5551,10 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
+      "bih": [],
       "qat": [],
       "sui": [
         "arg",
@@ -6741,24 +5562,20 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
         "mar",
         "mex",
         "ned",
-        "tur",
         "uru",
         "usa"
       ],
-      "ecu": [],
       "bra": [
         "arg",
         "bel",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -6766,7 +5583,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -6776,14 +5592,12 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -6795,7 +5609,6 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -6803,42 +5616,23 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru"
       ],
-      "aus": [],
       "par": [],
-      "tur": [
-        "arg",
-        "bel",
-        "bra",
-        "can",
-        "civ",
-        "den",
-        "esp",
-        "fra",
-        "ger",
-        "mar",
-        "mex",
-        "ned",
-        "sui",
-        "uru",
-        "usa"
-      ],
+      "aus": [],
+      "tur": [],
       "ger": [
         "arg",
         "bel",
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "mar",
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -6848,7 +5642,6 @@ export const snapshots: Snapshot[] = [
         "bel",
         "bra",
         "can",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -6856,37 +5649,33 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
-      "pol": [],
+      "ecu": [],
       "ned": [
         "arg",
         "bel",
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
         "mar",
         "mex",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
       "jpn": [],
+      "swe": [],
       "tun": [],
-      "ukr": [],
       "bel": [
         "arg",
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -6894,7 +5683,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -6907,14 +5695,12 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "fra",
         "ger",
         "mar",
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -6926,7 +5712,6 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -6934,7 +5719,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "usa"
       ],
       "fra": [
@@ -6943,26 +5727,23 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "ger",
         "mar",
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
       "sen": [],
+      "irq": [],
       "nor": [],
-      "bol": [],
       "arg": [
         "bel",
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -6970,7 +5751,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -6978,66 +5758,66 @@ export const snapshots: Snapshot[] = [
       "aut": [],
       "jor": [],
       "por": [],
+      "cod": [],
       "uzb": [],
       "col": [],
-      "cro": [],
       "eng": [],
+      "cro": [],
       "gha": [],
-      "pan": [],
-      "crc": []
+      "pan": []
     }
   },
   {
     "day": 17,
     "probabilities": {
-      "mex": 3.06,
+      "mex": 4.1,
       "rsa": 0,
       "kor": 0,
-      "den": 2.35,
-      "can": 1.02,
-      "qat": 0,
-      "sui": 2.55,
-      "ecu": 0,
-      "bra": 12.77,
-      "mar": 1.84,
+      "cze": 0,
+      "can": 3.15,
+      "bih": 0,
+      "qat": 2.84,
+      "sui": 5.68,
+      "bra": 7.1,
+      "mar": 6.15,
       "hai": 0,
       "sco": 0,
-      "usa": 3.58,
-      "aus": 0,
+      "usa": 5.36,
       "par": 0,
-      "tur": 1.53,
-      "ger": 8.68,
+      "aus": 0,
+      "tur": 0,
+      "ger": 6.47,
       "cuw": 0,
-      "civ": 0.51,
-      "pol": 0,
-      "ned": 6.64,
+      "civ": 3.31,
+      "ecu": 0,
+      "ned": 6.78,
       "jpn": 0,
+      "swe": 0,
       "tun": 0,
-      "ukr": 0,
-      "bel": 5.11,
-      "egy": 0.51,
+      "bel": 6.62,
+      "egy": 4.26,
       "irn": 0,
       "nzl": 0,
-      "esp": 9.7,
+      "esp": 7.73,
       "cpv": 0,
-      "ksa": 0.31,
-      "uru": 4.6,
-      "fra": 13.28,
+      "ksa": 2.68,
+      "uru": 5.84,
+      "fra": 7.41,
       "sen": 0,
+      "irq": 0,
       "nor": 0,
-      "bol": 0,
-      "arg": 14.81,
+      "arg": 7.57,
       "alg": 0,
       "aut": 0,
       "jor": 0,
-      "por": 7.15,
+      "por": 6.94,
+      "cod": 0,
       "uzb": 0,
       "col": 0,
-      "cro": 0,
       "eng": 0,
+      "cro": 0,
       "gha": 0,
-      "pan": 0,
-      "crc": 0
+      "pan": 0
     },
     "possibleOpponents": {
       "mex": [
@@ -7046,42 +5826,23 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
         "mar",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
       "rsa": [],
       "kor": [],
-      "den": [
-        "arg",
-        "bel",
-        "bra",
-        "can",
-        "civ",
-        "esp",
-        "fra",
-        "ger",
-        "mar",
-        "mex",
-        "ned",
-        "sui",
-        "tur",
-        "uru",
-        "usa"
-      ],
+      "cze": [],
       "can": [
         "arg",
         "bel",
         "bra",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -7089,10 +5850,10 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
+      "bih": [],
       "qat": [],
       "sui": [
         "arg",
@@ -7100,24 +5861,20 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
         "mar",
         "mex",
         "ned",
-        "tur",
         "uru",
         "usa"
       ],
-      "ecu": [],
       "bra": [
         "arg",
         "bel",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -7125,7 +5882,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -7135,14 +5891,12 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -7154,7 +5908,6 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -7162,42 +5915,23 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru"
       ],
-      "aus": [],
       "par": [],
-      "tur": [
-        "arg",
-        "bel",
-        "bra",
-        "can",
-        "civ",
-        "den",
-        "esp",
-        "fra",
-        "ger",
-        "mar",
-        "mex",
-        "ned",
-        "sui",
-        "uru",
-        "usa"
-      ],
+      "aus": [],
+      "tur": [],
       "ger": [
         "arg",
         "bel",
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "mar",
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -7207,7 +5941,6 @@ export const snapshots: Snapshot[] = [
         "bel",
         "bra",
         "can",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -7215,37 +5948,33 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
-      "pol": [],
+      "ecu": [],
       "ned": [
         "arg",
         "bel",
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
         "mar",
         "mex",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
       "jpn": [],
+      "swe": [],
       "tun": [],
-      "ukr": [],
       "bel": [
         "arg",
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -7253,7 +5982,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -7266,14 +5994,12 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "fra",
         "ger",
         "mar",
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -7285,7 +6011,6 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -7293,7 +6018,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "usa"
       ],
       "fra": [
@@ -7302,26 +6026,23 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "ger",
         "mar",
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
       "sen": [],
+      "irq": [],
       "nor": [],
-      "bol": [],
       "arg": [
         "bel",
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -7329,7 +6050,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -7337,66 +6057,66 @@ export const snapshots: Snapshot[] = [
       "aut": [],
       "jor": [],
       "por": [],
+      "cod": [],
       "uzb": [],
       "col": [],
-      "cro": [],
       "eng": [],
+      "cro": [],
       "gha": [],
-      "pan": [],
-      "crc": []
+      "pan": []
     }
   },
   {
     "day": 18,
     "probabilities": {
-      "mex": 3.06,
+      "mex": 4.1,
       "rsa": 0,
       "kor": 0,
-      "den": 2.35,
-      "can": 1.02,
-      "qat": 0,
-      "sui": 2.55,
-      "ecu": 0,
-      "bra": 12.77,
-      "mar": 1.84,
+      "cze": 0,
+      "can": 3.15,
+      "bih": 0,
+      "qat": 2.84,
+      "sui": 5.68,
+      "bra": 7.1,
+      "mar": 6.15,
       "hai": 0,
       "sco": 0,
-      "usa": 3.58,
-      "aus": 0,
+      "usa": 5.36,
       "par": 0,
-      "tur": 1.53,
-      "ger": 8.68,
+      "aus": 0,
+      "tur": 0,
+      "ger": 6.47,
       "cuw": 0,
-      "civ": 0.51,
-      "pol": 0,
-      "ned": 6.64,
+      "civ": 3.31,
+      "ecu": 0,
+      "ned": 6.78,
       "jpn": 0,
+      "swe": 0,
       "tun": 0,
-      "ukr": 0,
-      "bel": 5.11,
-      "egy": 0.51,
+      "bel": 6.62,
+      "egy": 4.26,
       "irn": 0,
       "nzl": 0,
-      "esp": 9.7,
+      "esp": 7.73,
       "cpv": 0,
-      "ksa": 0.31,
-      "uru": 4.6,
-      "fra": 13.28,
+      "ksa": 2.68,
+      "uru": 5.84,
+      "fra": 7.41,
       "sen": 0,
+      "irq": 0,
       "nor": 0,
-      "bol": 0,
-      "arg": 14.81,
+      "arg": 7.57,
       "alg": 0,
       "aut": 0,
       "jor": 0,
-      "por": 7.15,
+      "por": 6.94,
+      "cod": 0,
       "uzb": 0,
       "col": 0,
-      "cro": 0,
       "eng": 0,
+      "cro": 0,
       "gha": 0,
-      "pan": 0,
-      "crc": 0
+      "pan": 0
     },
     "possibleOpponents": {
       "mex": [
@@ -7405,42 +6125,23 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
         "mar",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
       "rsa": [],
       "kor": [],
-      "den": [
-        "arg",
-        "bel",
-        "bra",
-        "can",
-        "civ",
-        "esp",
-        "fra",
-        "ger",
-        "mar",
-        "mex",
-        "ned",
-        "sui",
-        "tur",
-        "uru",
-        "usa"
-      ],
+      "cze": [],
       "can": [
         "arg",
         "bel",
         "bra",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -7448,10 +6149,10 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
+      "bih": [],
       "qat": [],
       "sui": [
         "arg",
@@ -7459,24 +6160,20 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
         "mar",
         "mex",
         "ned",
-        "tur",
         "uru",
         "usa"
       ],
-      "ecu": [],
       "bra": [
         "arg",
         "bel",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -7484,7 +6181,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -7494,14 +6190,12 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -7513,7 +6207,6 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -7521,42 +6214,23 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru"
       ],
-      "aus": [],
       "par": [],
-      "tur": [
-        "arg",
-        "bel",
-        "bra",
-        "can",
-        "civ",
-        "den",
-        "esp",
-        "fra",
-        "ger",
-        "mar",
-        "mex",
-        "ned",
-        "sui",
-        "uru",
-        "usa"
-      ],
+      "aus": [],
+      "tur": [],
       "ger": [
         "arg",
         "bel",
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "mar",
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -7566,7 +6240,6 @@ export const snapshots: Snapshot[] = [
         "bel",
         "bra",
         "can",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -7574,37 +6247,33 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
-      "pol": [],
+      "ecu": [],
       "ned": [
         "arg",
         "bel",
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
         "mar",
         "mex",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
       "jpn": [],
+      "swe": [],
       "tun": [],
-      "ukr": [],
       "bel": [
         "arg",
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -7612,7 +6281,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -7625,14 +6293,12 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "fra",
         "ger",
         "mar",
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -7644,7 +6310,6 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -7652,7 +6317,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "usa"
       ],
       "fra": [
@@ -7661,26 +6325,23 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "ger",
         "mar",
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
       "sen": [],
+      "irq": [],
       "nor": [],
-      "bol": [],
       "arg": [
         "bel",
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -7688,7 +6349,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -7696,66 +6356,66 @@ export const snapshots: Snapshot[] = [
       "aut": [],
       "jor": [],
       "por": [],
+      "cod": [],
       "uzb": [],
       "col": [],
-      "cro": [],
       "eng": [],
+      "cro": [],
       "gha": [],
-      "pan": [],
-      "crc": []
+      "pan": []
     }
   },
   {
     "day": 19,
     "probabilities": {
-      "mex": 3.06,
+      "mex": 4.1,
       "rsa": 0,
       "kor": 0,
-      "den": 2.35,
-      "can": 1.02,
-      "qat": 0,
-      "sui": 2.55,
-      "ecu": 0,
-      "bra": 12.77,
-      "mar": 1.84,
+      "cze": 0,
+      "can": 3.15,
+      "bih": 0,
+      "qat": 2.84,
+      "sui": 5.68,
+      "bra": 7.1,
+      "mar": 6.15,
       "hai": 0,
       "sco": 0,
-      "usa": 3.58,
-      "aus": 0,
+      "usa": 5.36,
       "par": 0,
-      "tur": 1.53,
-      "ger": 8.68,
+      "aus": 0,
+      "tur": 0,
+      "ger": 6.47,
       "cuw": 0,
-      "civ": 0.51,
-      "pol": 0,
-      "ned": 6.64,
+      "civ": 3.31,
+      "ecu": 0,
+      "ned": 6.78,
       "jpn": 0,
+      "swe": 0,
       "tun": 0,
-      "ukr": 0,
-      "bel": 5.11,
-      "egy": 0.51,
+      "bel": 6.62,
+      "egy": 4.26,
       "irn": 0,
       "nzl": 0,
-      "esp": 9.7,
+      "esp": 7.73,
       "cpv": 0,
-      "ksa": 0.31,
-      "uru": 4.6,
-      "fra": 13.28,
+      "ksa": 2.68,
+      "uru": 5.84,
+      "fra": 7.41,
       "sen": 0,
+      "irq": 0,
       "nor": 0,
-      "bol": 0,
-      "arg": 14.81,
+      "arg": 7.57,
       "alg": 0,
       "aut": 0,
       "jor": 0,
-      "por": 7.15,
+      "por": 6.94,
+      "cod": 0,
       "uzb": 0,
       "col": 0,
-      "cro": 0,
       "eng": 0,
+      "cro": 0,
       "gha": 0,
-      "pan": 0,
-      "crc": 0
+      "pan": 0
     },
     "possibleOpponents": {
       "mex": [
@@ -7764,42 +6424,23 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
         "mar",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
       "rsa": [],
       "kor": [],
-      "den": [
-        "arg",
-        "bel",
-        "bra",
-        "can",
-        "civ",
-        "esp",
-        "fra",
-        "ger",
-        "mar",
-        "mex",
-        "ned",
-        "sui",
-        "tur",
-        "uru",
-        "usa"
-      ],
+      "cze": [],
       "can": [
         "arg",
         "bel",
         "bra",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -7807,10 +6448,10 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
+      "bih": [],
       "qat": [],
       "sui": [
         "arg",
@@ -7818,24 +6459,20 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
         "mar",
         "mex",
         "ned",
-        "tur",
         "uru",
         "usa"
       ],
-      "ecu": [],
       "bra": [
         "arg",
         "bel",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -7843,7 +6480,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -7853,14 +6489,12 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -7872,7 +6506,6 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -7880,42 +6513,23 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru"
       ],
-      "aus": [],
       "par": [],
-      "tur": [
-        "arg",
-        "bel",
-        "bra",
-        "can",
-        "civ",
-        "den",
-        "esp",
-        "fra",
-        "ger",
-        "mar",
-        "mex",
-        "ned",
-        "sui",
-        "uru",
-        "usa"
-      ],
+      "aus": [],
+      "tur": [],
       "ger": [
         "arg",
         "bel",
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "mar",
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -7925,7 +6539,6 @@ export const snapshots: Snapshot[] = [
         "bel",
         "bra",
         "can",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -7933,37 +6546,33 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
-      "pol": [],
+      "ecu": [],
       "ned": [
         "arg",
         "bel",
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
         "mar",
         "mex",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
       "jpn": [],
+      "swe": [],
       "tun": [],
-      "ukr": [],
       "bel": [
         "arg",
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -7971,7 +6580,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -7984,14 +6592,12 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "fra",
         "ger",
         "mar",
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -8003,7 +6609,6 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -8011,7 +6616,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "usa"
       ],
       "fra": [
@@ -8020,26 +6624,23 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "ger",
         "mar",
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
       "sen": [],
+      "irq": [],
       "nor": [],
-      "bol": [],
       "arg": [
         "bel",
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -8047,7 +6648,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -8055,66 +6655,66 @@ export const snapshots: Snapshot[] = [
       "aut": [],
       "jor": [],
       "por": [],
+      "cod": [],
       "uzb": [],
       "col": [],
-      "cro": [],
       "eng": [],
+      "cro": [],
       "gha": [],
-      "pan": [],
-      "crc": []
+      "pan": []
     }
   },
   {
     "day": 20,
     "probabilities": {
-      "mex": 3.06,
+      "mex": 4.1,
       "rsa": 0,
       "kor": 0,
-      "den": 2.35,
-      "can": 1.02,
-      "qat": 0,
-      "sui": 2.55,
-      "ecu": 0,
-      "bra": 12.77,
-      "mar": 1.84,
+      "cze": 0,
+      "can": 3.15,
+      "bih": 0,
+      "qat": 2.84,
+      "sui": 5.68,
+      "bra": 7.1,
+      "mar": 6.15,
       "hai": 0,
       "sco": 0,
-      "usa": 3.58,
-      "aus": 0,
+      "usa": 5.36,
       "par": 0,
-      "tur": 1.53,
-      "ger": 8.68,
+      "aus": 0,
+      "tur": 0,
+      "ger": 6.47,
       "cuw": 0,
-      "civ": 0.51,
-      "pol": 0,
-      "ned": 6.64,
+      "civ": 3.31,
+      "ecu": 0,
+      "ned": 6.78,
       "jpn": 0,
+      "swe": 0,
       "tun": 0,
-      "ukr": 0,
-      "bel": 5.11,
-      "egy": 0.51,
+      "bel": 6.62,
+      "egy": 4.26,
       "irn": 0,
       "nzl": 0,
-      "esp": 9.7,
+      "esp": 7.73,
       "cpv": 0,
-      "ksa": 0.31,
-      "uru": 4.6,
-      "fra": 13.28,
+      "ksa": 2.68,
+      "uru": 5.84,
+      "fra": 7.41,
       "sen": 0,
+      "irq": 0,
       "nor": 0,
-      "bol": 0,
-      "arg": 14.81,
+      "arg": 7.57,
       "alg": 0,
       "aut": 0,
       "jor": 0,
-      "por": 7.15,
+      "por": 6.94,
+      "cod": 0,
       "uzb": 0,
       "col": 0,
-      "cro": 0,
       "eng": 0,
+      "cro": 0,
       "gha": 0,
-      "pan": 0,
-      "crc": 0
+      "pan": 0
     },
     "possibleOpponents": {
       "mex": [
@@ -8123,42 +6723,23 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
         "mar",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
       "rsa": [],
       "kor": [],
-      "den": [
-        "arg",
-        "bel",
-        "bra",
-        "can",
-        "civ",
-        "esp",
-        "fra",
-        "ger",
-        "mar",
-        "mex",
-        "ned",
-        "sui",
-        "tur",
-        "uru",
-        "usa"
-      ],
+      "cze": [],
       "can": [
         "arg",
         "bel",
         "bra",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -8166,10 +6747,10 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
+      "bih": [],
       "qat": [],
       "sui": [
         "arg",
@@ -8177,24 +6758,20 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
         "mar",
         "mex",
         "ned",
-        "tur",
         "uru",
         "usa"
       ],
-      "ecu": [],
       "bra": [
         "arg",
         "bel",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -8202,7 +6779,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -8212,14 +6788,12 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -8231,7 +6805,6 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -8239,42 +6812,23 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru"
       ],
-      "aus": [],
       "par": [],
-      "tur": [
-        "arg",
-        "bel",
-        "bra",
-        "can",
-        "civ",
-        "den",
-        "esp",
-        "fra",
-        "ger",
-        "mar",
-        "mex",
-        "ned",
-        "sui",
-        "uru",
-        "usa"
-      ],
+      "aus": [],
+      "tur": [],
       "ger": [
         "arg",
         "bel",
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "mar",
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -8284,7 +6838,6 @@ export const snapshots: Snapshot[] = [
         "bel",
         "bra",
         "can",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -8292,37 +6845,33 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
-      "pol": [],
+      "ecu": [],
       "ned": [
         "arg",
         "bel",
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
         "mar",
         "mex",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
       "jpn": [],
+      "swe": [],
       "tun": [],
-      "ukr": [],
       "bel": [
         "arg",
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -8330,7 +6879,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -8343,14 +6891,12 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "fra",
         "ger",
         "mar",
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -8362,7 +6908,6 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -8370,7 +6915,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "usa"
       ],
       "fra": [
@@ -8379,26 +6923,23 @@ export const snapshots: Snapshot[] = [
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "ger",
         "mar",
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
       "sen": [],
+      "irq": [],
       "nor": [],
-      "bol": [],
       "arg": [
         "bel",
         "bra",
         "can",
         "civ",
-        "den",
         "esp",
         "fra",
         "ger",
@@ -8406,7 +6947,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -8414,66 +6954,66 @@ export const snapshots: Snapshot[] = [
       "aut": [],
       "jor": [],
       "por": [],
+      "cod": [],
       "uzb": [],
       "col": [],
-      "cro": [],
       "eng": [],
+      "cro": [],
       "gha": [],
-      "pan": [],
-      "crc": []
+      "pan": []
     }
   },
   {
     "day": 21,
     "probabilities": {
-      "mex": 3.53,
+      "mex": 4.69,
       "rsa": 0,
       "kor": 0,
-      "den": 0,
+      "cze": 0,
       "can": 0,
-      "qat": 0,
-      "sui": 2.94,
-      "ecu": 0,
-      "bra": 13.12,
-      "mar": 1.89,
+      "bih": 0,
+      "qat": 2.9,
+      "sui": 6.49,
+      "bra": 7.24,
+      "mar": 6.28,
       "hai": 0,
       "sco": 0,
-      "usa": 3.67,
-      "aus": 0,
+      "usa": 5.47,
       "par": 0,
-      "tur": 1.57,
-      "ger": 8.92,
+      "aus": 0,
+      "tur": 0,
+      "ger": 6.6,
       "cuw": 0,
-      "civ": 0.52,
-      "pol": 0,
-      "ned": 6.82,
+      "civ": 3.38,
+      "ecu": 0,
+      "ned": 6.92,
       "jpn": 0,
+      "swe": 0,
       "tun": 0,
-      "ukr": 0,
-      "bel": 5.25,
-      "egy": 0.52,
+      "bel": 6.76,
+      "egy": 4.34,
       "irn": 0,
       "nzl": 0,
-      "esp": 9.97,
+      "esp": 7.88,
       "cpv": 0,
-      "ksa": 0.31,
-      "uru": 4.72,
-      "fra": 13.65,
+      "ksa": 2.74,
+      "uru": 5.95,
+      "fra": 7.56,
       "sen": 0,
+      "irq": 0,
       "nor": 0,
-      "bol": 0,
-      "arg": 15.22,
+      "arg": 7.72,
       "alg": 0,
       "aut": 0,
       "jor": 0,
-      "por": 7.35,
+      "por": 7.08,
+      "cod": 0,
       "uzb": 0,
       "col": 0,
-      "cro": 0,
       "eng": 0,
+      "cro": 0,
       "gha": 0,
-      "pan": 0,
-      "crc": 0
+      "pan": 0
     },
     "possibleOpponents": {
       "mex": [
@@ -8487,14 +7027,14 @@ export const snapshots: Snapshot[] = [
         "mar",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
       "rsa": [],
       "kor": [],
-      "den": [],
+      "cze": [],
       "can": [],
+      "bih": [],
       "qat": [],
       "sui": [
         "arg",
@@ -8507,11 +7047,9 @@ export const snapshots: Snapshot[] = [
         "mar",
         "mex",
         "ned",
-        "tur",
         "uru",
         "usa"
       ],
-      "ecu": [],
       "bra": [
         "arg",
         "bel",
@@ -8523,7 +7061,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -8538,7 +7075,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -8556,26 +7092,11 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru"
       ],
-      "aus": [],
       "par": [],
-      "tur": [
-        "arg",
-        "bel",
-        "bra",
-        "civ",
-        "esp",
-        "fra",
-        "ger",
-        "mar",
-        "mex",
-        "ned",
-        "sui",
-        "uru",
-        "usa"
-      ],
+      "aus": [],
+      "tur": [],
       "ger": [
         "arg",
         "bel",
@@ -8587,7 +7108,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -8603,11 +7123,10 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
-      "pol": [],
+      "ecu": [],
       "ned": [
         "arg",
         "bel",
@@ -8619,13 +7138,12 @@ export const snapshots: Snapshot[] = [
         "mar",
         "mex",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
       "jpn": [],
+      "swe": [],
       "tun": [],
-      "ukr": [],
       "bel": [
         "arg",
         "bra",
@@ -8637,7 +7155,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -8655,7 +7172,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -8673,7 +7189,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "usa"
       ],
       "fra": [
@@ -8687,13 +7202,12 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
       "sen": [],
+      "irq": [],
       "nor": [],
-      "bol": [],
       "arg": [
         "bel",
         "bra",
@@ -8705,7 +7219,6 @@ export const snapshots: Snapshot[] = [
         "mex",
         "ned",
         "sui",
-        "tur",
         "uru",
         "usa"
       ],
@@ -8713,66 +7226,66 @@ export const snapshots: Snapshot[] = [
       "aut": [],
       "jor": [],
       "por": [],
+      "cod": [],
       "uzb": [],
       "col": [],
-      "cro": [],
       "eng": [],
+      "cro": [],
       "gha": [],
-      "pan": [],
-      "crc": []
+      "pan": []
     }
   },
   {
     "day": 22,
     "probabilities": {
-      "mex": 3.22,
+      "mex": 4.45,
       "rsa": 0,
       "kor": 0,
-      "den": 0,
+      "cze": 0,
       "can": 0,
-      "qat": 0,
-      "sui": 2.68,
-      "ecu": 0,
-      "bra": 15.02,
+      "bih": 0,
+      "qat": 3.08,
+      "sui": 6.16,
+      "bra": 8.62,
       "mar": 0,
       "hai": 0,
       "sco": 0,
-      "usa": 4.21,
-      "aus": 0,
+      "usa": 6.52,
       "par": 0,
+      "aus": 0,
       "tur": 0,
-      "ger": 9.12,
+      "ger": 7.01,
       "cuw": 0,
-      "civ": 0.54,
-      "pol": 0,
-      "ned": 6.97,
+      "civ": 3.59,
+      "ecu": 0,
+      "ned": 7.36,
       "jpn": 0,
+      "swe": 0,
       "tun": 0,
-      "ukr": 0,
-      "bel": 5.36,
-      "egy": 0.54,
+      "bel": 7.19,
+      "egy": 4.62,
       "irn": 0,
       "nzl": 0,
-      "esp": 10.19,
+      "esp": 8.38,
       "cpv": 0,
-      "ksa": 0.32,
-      "uru": 4.83,
-      "fra": 13.95,
+      "ksa": 2.91,
+      "uru": 6.33,
+      "fra": 8.04,
       "sen": 0,
+      "irq": 0,
       "nor": 0,
-      "bol": 0,
-      "arg": 15.55,
+      "arg": 8.21,
       "alg": 0,
       "aut": 0,
       "jor": 0,
-      "por": 7.51,
+      "por": 7.53,
+      "cod": 0,
       "uzb": 0,
       "col": 0,
-      "cro": 0,
       "eng": 0,
+      "cro": 0,
       "gha": 0,
-      "pan": 0,
-      "crc": 0
+      "pan": 0
     },
     "possibleOpponents": {
       "mex": [
@@ -8790,8 +7303,9 @@ export const snapshots: Snapshot[] = [
       ],
       "rsa": [],
       "kor": [],
-      "den": [],
+      "cze": [],
       "can": [],
+      "bih": [],
       "qat": [],
       "sui": [
         "arg",
@@ -8806,7 +7320,6 @@ export const snapshots: Snapshot[] = [
         "uru",
         "usa"
       ],
-      "ecu": [],
       "bra": [
         "arg",
         "bel",
@@ -8836,8 +7349,8 @@ export const snapshots: Snapshot[] = [
         "sui",
         "uru"
       ],
-      "aus": [],
       "par": [],
+      "aus": [],
       "tur": [],
       "ger": [
         "arg",
@@ -8866,7 +7379,7 @@ export const snapshots: Snapshot[] = [
         "uru",
         "usa"
       ],
-      "pol": [],
+      "ecu": [],
       "ned": [
         "arg",
         "bel",
@@ -8881,8 +7394,8 @@ export const snapshots: Snapshot[] = [
         "usa"
       ],
       "jpn": [],
+      "swe": [],
       "tun": [],
-      "ukr": [],
       "bel": [
         "arg",
         "bra",
@@ -8941,8 +7454,8 @@ export const snapshots: Snapshot[] = [
         "usa"
       ],
       "sen": [],
+      "irq": [],
       "nor": [],
-      "bol": [],
       "arg": [
         "bel",
         "bra",
@@ -8960,66 +7473,66 @@ export const snapshots: Snapshot[] = [
       "aut": [],
       "jor": [],
       "por": [],
+      "cod": [],
       "uzb": [],
       "col": [],
-      "cro": [],
       "eng": [],
+      "cro": [],
       "gha": [],
-      "pan": [],
-      "crc": []
+      "pan": []
     }
   },
   {
     "day": 23,
     "probabilities": {
-      "mex": 3.42,
+      "mex": 4.98,
       "rsa": 0,
       "kor": 0,
-      "den": 0,
+      "cze": 0,
       "can": 0,
-      "qat": 0,
-      "sui": 2.85,
-      "ecu": 0,
-      "bra": 14.27,
+      "bih": 0,
+      "qat": 3.45,
+      "sui": 6.9,
+      "bra": 8.62,
       "mar": 0,
       "hai": 0,
       "sco": 0,
-      "usa": 4,
-      "aus": 0,
+      "usa": 6.51,
       "par": 0,
+      "aus": 0,
       "tur": 0,
-      "ger": 10.87,
+      "ger": 8.8,
       "cuw": 0,
       "civ": 0,
-      "pol": 0,
-      "ned": 8.31,
+      "ecu": 0,
+      "ned": 9.22,
       "jpn": 0,
+      "swe": 0,
       "tun": 0,
-      "ukr": 0,
       "bel": 0,
-      "egy": 0.57,
+      "egy": 5.17,
       "irn": 0,
       "nzl": 0,
-      "esp": 10.84,
+      "esp": 9.39,
       "cpv": 0,
-      "ksa": 0.34,
-      "uru": 5.14,
-      "fra": 14.84,
+      "ksa": 3.26,
+      "uru": 7.09,
+      "fra": 9,
       "sen": 0,
+      "irq": 0,
       "nor": 0,
-      "bol": 0,
-      "arg": 16.55,
+      "arg": 9.19,
       "alg": 0,
       "aut": 0,
       "jor": 0,
-      "por": 7.99,
+      "por": 8.43,
+      "cod": 0,
       "uzb": 0,
       "col": 0,
-      "cro": 0,
       "eng": 0,
+      "cro": 0,
       "gha": 0,
-      "pan": 0,
-      "crc": 0
+      "pan": 0
     },
     "possibleOpponents": {
       "mex": [
@@ -9035,8 +7548,9 @@ export const snapshots: Snapshot[] = [
       ],
       "rsa": [],
       "kor": [],
-      "den": [],
+      "cze": [],
       "can": [],
+      "bih": [],
       "qat": [],
       "sui": [
         "arg",
@@ -9049,7 +7563,6 @@ export const snapshots: Snapshot[] = [
         "uru",
         "usa"
       ],
-      "ecu": [],
       "bra": [
         "arg",
         "esp",
@@ -9075,8 +7588,8 @@ export const snapshots: Snapshot[] = [
         "sui",
         "uru"
       ],
-      "aus": [],
       "par": [],
+      "aus": [],
       "tur": [],
       "ger": [
         "arg",
@@ -9091,7 +7604,7 @@ export const snapshots: Snapshot[] = [
       ],
       "cuw": [],
       "civ": [],
-      "pol": [],
+      "ecu": [],
       "ned": [
         "arg",
         "bra",
@@ -9104,8 +7617,8 @@ export const snapshots: Snapshot[] = [
         "usa"
       ],
       "jpn": [],
+      "swe": [],
       "tun": [],
-      "ukr": [],
       "bel": [],
       "egy": [],
       "irn": [],
@@ -9146,8 +7659,8 @@ export const snapshots: Snapshot[] = [
         "usa"
       ],
       "sen": [],
+      "irq": [],
       "nor": [],
-      "bol": [],
       "arg": [
         "bra",
         "esp",
@@ -9163,66 +7676,66 @@ export const snapshots: Snapshot[] = [
       "aut": [],
       "jor": [],
       "por": [],
+      "cod": [],
       "uzb": [],
       "col": [],
-      "cro": [],
       "eng": [],
+      "cro": [],
       "gha": [],
-      "pan": [],
-      "crc": []
+      "pan": []
     }
   },
   {
     "day": 24,
     "probabilities": {
-      "mex": 4.21,
+      "mex": 5.91,
       "rsa": 0,
       "kor": 0,
-      "den": 0,
+      "cze": 0,
       "can": 0,
-      "qat": 0,
-      "sui": 3.51,
-      "ecu": 0,
-      "bra": 17.56,
+      "bih": 0,
+      "qat": 4.09,
+      "sui": 8.19,
+      "bra": 10.24,
       "mar": 0,
       "hai": 0,
       "sco": 0,
-      "usa": 4.92,
-      "aus": 0,
+      "usa": 7.73,
       "par": 0,
+      "aus": 0,
       "tur": 0,
-      "ger": 11.94,
+      "ger": 9.33,
       "cuw": 0,
       "civ": 0,
-      "pol": 0,
-      "ned": 9.13,
+      "ecu": 0,
+      "ned": 9.78,
       "jpn": 0,
+      "swe": 0,
       "tun": 0,
-      "ukr": 0,
       "bel": 0,
-      "egy": 0.7,
+      "egy": 6.14,
       "irn": 0,
       "nzl": 0,
-      "esp": 14.95,
+      "esp": 12.48,
       "cpv": 0,
-      "ksa": 0.42,
+      "ksa": 3.87,
       "uru": 0,
       "fra": 0,
       "sen": 0,
+      "irq": 0,
       "nor": 0,
-      "bol": 0,
-      "arg": 22.82,
+      "arg": 12.23,
       "alg": 0,
       "aut": 0,
       "jor": 0,
-      "por": 9.83,
+      "por": 10.01,
+      "cod": 0,
       "uzb": 0,
       "col": 0,
-      "cro": 0,
       "eng": 0,
+      "cro": 0,
       "gha": 0,
-      "pan": 0,
-      "crc": 0
+      "pan": 0
     },
     "possibleOpponents": {
       "mex": [
@@ -9236,8 +7749,9 @@ export const snapshots: Snapshot[] = [
       ],
       "rsa": [],
       "kor": [],
-      "den": [],
+      "cze": [],
       "can": [],
+      "bih": [],
       "qat": [],
       "sui": [
         "arg",
@@ -9248,7 +7762,6 @@ export const snapshots: Snapshot[] = [
         "ned",
         "usa"
       ],
-      "ecu": [],
       "bra": [
         "arg",
         "esp",
@@ -9270,8 +7783,8 @@ export const snapshots: Snapshot[] = [
         "ned",
         "sui"
       ],
-      "aus": [],
       "par": [],
+      "aus": [],
       "tur": [],
       "ger": [
         "arg",
@@ -9284,7 +7797,7 @@ export const snapshots: Snapshot[] = [
       ],
       "cuw": [],
       "civ": [],
-      "pol": [],
+      "ecu": [],
       "ned": [
         "arg",
         "bra",
@@ -9295,8 +7808,8 @@ export const snapshots: Snapshot[] = [
         "usa"
       ],
       "jpn": [],
+      "swe": [],
       "tun": [],
-      "ukr": [],
       "bel": [],
       "egy": [],
       "irn": [],
@@ -9315,8 +7828,8 @@ export const snapshots: Snapshot[] = [
       "uru": [],
       "fra": [],
       "sen": [],
+      "irq": [],
       "nor": [],
-      "bol": [],
       "arg": [
         "bra",
         "esp",
@@ -9330,66 +7843,66 @@ export const snapshots: Snapshot[] = [
       "aut": [],
       "jor": [],
       "por": [],
+      "cod": [],
       "uzb": [],
       "col": [],
-      "cro": [],
       "eng": [],
+      "cro": [],
       "gha": [],
-      "pan": [],
-      "crc": []
+      "pan": []
     }
   },
   {
     "day": 25,
     "probabilities": {
-      "mex": 4.39,
+      "mex": 6.07,
       "rsa": 0,
       "kor": 0,
-      "den": 0,
+      "cze": 0,
       "can": 0,
-      "qat": 0,
-      "sui": 3.66,
-      "ecu": 0,
-      "bra": 18.3,
+      "bih": 0,
+      "qat": 4.21,
+      "sui": 8.41,
+      "bra": 10.51,
       "mar": 0,
       "hai": 0,
       "sco": 0,
-      "usa": 5.12,
-      "aus": 0,
+      "usa": 7.94,
       "par": 0,
+      "aus": 0,
       "tur": 0,
-      "ger": 12.45,
+      "ger": 9.58,
       "cuw": 0,
       "civ": 0,
-      "pol": 0,
-      "ned": 9.52,
+      "ecu": 0,
+      "ned": 10.05,
       "jpn": 0,
+      "swe": 0,
       "tun": 0,
-      "ukr": 0,
       "bel": 0,
-      "egy": 0.73,
+      "egy": 6.31,
       "irn": 0,
       "nzl": 0,
-      "esp": 13.91,
+      "esp": 11.45,
       "cpv": 0,
-      "ksa": 0.44,
+      "ksa": 3.97,
       "uru": 0,
       "fra": 0,
       "sen": 0,
+      "irq": 0,
       "nor": 0,
-      "bol": 0,
-      "arg": 21.23,
+      "arg": 11.21,
       "alg": 0,
       "aut": 0,
       "jor": 0,
-      "por": 10.25,
+      "por": 10.28,
+      "cod": 0,
       "uzb": 0,
       "col": 0,
-      "cro": 0,
       "eng": 0,
+      "cro": 0,
       "gha": 0,
-      "pan": 0,
-      "crc": 0
+      "pan": 0
     },
     "possibleOpponents": {
       "mex": [
@@ -9403,8 +7916,9 @@ export const snapshots: Snapshot[] = [
       ],
       "rsa": [],
       "kor": [],
-      "den": [],
+      "cze": [],
       "can": [],
+      "bih": [],
       "qat": [],
       "sui": [
         "arg",
@@ -9415,7 +7929,6 @@ export const snapshots: Snapshot[] = [
         "ned",
         "usa"
       ],
-      "ecu": [],
       "bra": [
         "arg",
         "esp",
@@ -9437,8 +7950,8 @@ export const snapshots: Snapshot[] = [
         "ned",
         "sui"
       ],
-      "aus": [],
       "par": [],
+      "aus": [],
       "tur": [],
       "ger": [
         "arg",
@@ -9451,7 +7964,7 @@ export const snapshots: Snapshot[] = [
       ],
       "cuw": [],
       "civ": [],
-      "pol": [],
+      "ecu": [],
       "ned": [
         "arg",
         "bra",
@@ -9462,8 +7975,8 @@ export const snapshots: Snapshot[] = [
         "usa"
       ],
       "jpn": [],
+      "swe": [],
       "tun": [],
-      "ukr": [],
       "bel": [],
       "egy": [],
       "irn": [],
@@ -9482,8 +7995,8 @@ export const snapshots: Snapshot[] = [
       "uru": [],
       "fra": [],
       "sen": [],
+      "irq": [],
       "nor": [],
-      "bol": [],
       "arg": [
         "bra",
         "esp",
@@ -9497,66 +8010,66 @@ export const snapshots: Snapshot[] = [
       "aut": [],
       "jor": [],
       "por": [],
+      "cod": [],
       "uzb": [],
       "col": [],
-      "cro": [],
       "eng": [],
+      "cro": [],
       "gha": [],
-      "pan": [],
-      "crc": []
+      "pan": []
     }
   },
   {
     "day": 26,
     "probabilities": {
-      "mex": 4.39,
+      "mex": 6.07,
       "rsa": 0,
       "kor": 0,
-      "den": 0,
+      "cze": 0,
       "can": 0,
-      "qat": 0,
-      "sui": 3.66,
-      "ecu": 0,
-      "bra": 18.3,
+      "bih": 0,
+      "qat": 4.21,
+      "sui": 8.41,
+      "bra": 10.51,
       "mar": 0,
       "hai": 0,
       "sco": 0,
-      "usa": 5.12,
-      "aus": 0,
+      "usa": 7.94,
       "par": 0,
+      "aus": 0,
       "tur": 0,
-      "ger": 12.45,
+      "ger": 9.58,
       "cuw": 0,
       "civ": 0,
-      "pol": 0,
-      "ned": 9.52,
+      "ecu": 0,
+      "ned": 10.05,
       "jpn": 0,
+      "swe": 0,
       "tun": 0,
-      "ukr": 0,
       "bel": 0,
-      "egy": 0.73,
+      "egy": 6.31,
       "irn": 0,
       "nzl": 0,
-      "esp": 13.91,
+      "esp": 11.45,
       "cpv": 0,
-      "ksa": 0.44,
+      "ksa": 3.97,
       "uru": 0,
       "fra": 0,
       "sen": 0,
+      "irq": 0,
       "nor": 0,
-      "bol": 0,
-      "arg": 21.23,
+      "arg": 11.21,
       "alg": 0,
       "aut": 0,
       "jor": 0,
-      "por": 10.25,
+      "por": 10.28,
+      "cod": 0,
       "uzb": 0,
       "col": 0,
-      "cro": 0,
       "eng": 0,
+      "cro": 0,
       "gha": 0,
-      "pan": 0,
-      "crc": 0
+      "pan": 0
     },
     "possibleOpponents": {
       "mex": [
@@ -9570,8 +8083,9 @@ export const snapshots: Snapshot[] = [
       ],
       "rsa": [],
       "kor": [],
-      "den": [],
+      "cze": [],
       "can": [],
+      "bih": [],
       "qat": [],
       "sui": [
         "arg",
@@ -9582,7 +8096,6 @@ export const snapshots: Snapshot[] = [
         "ned",
         "usa"
       ],
-      "ecu": [],
       "bra": [
         "arg",
         "esp",
@@ -9604,8 +8117,8 @@ export const snapshots: Snapshot[] = [
         "ned",
         "sui"
       ],
-      "aus": [],
       "par": [],
+      "aus": [],
       "tur": [],
       "ger": [
         "arg",
@@ -9618,7 +8131,7 @@ export const snapshots: Snapshot[] = [
       ],
       "cuw": [],
       "civ": [],
-      "pol": [],
+      "ecu": [],
       "ned": [
         "arg",
         "bra",
@@ -9629,8 +8142,8 @@ export const snapshots: Snapshot[] = [
         "usa"
       ],
       "jpn": [],
+      "swe": [],
       "tun": [],
-      "ukr": [],
       "bel": [],
       "egy": [],
       "irn": [],
@@ -9649,8 +8162,8 @@ export const snapshots: Snapshot[] = [
       "uru": [],
       "fra": [],
       "sen": [],
+      "irq": [],
       "nor": [],
-      "bol": [],
       "arg": [
         "bra",
         "esp",
@@ -9664,66 +8177,66 @@ export const snapshots: Snapshot[] = [
       "aut": [],
       "jor": [],
       "por": [],
+      "cod": [],
       "uzb": [],
       "col": [],
-      "cro": [],
       "eng": [],
+      "cro": [],
       "gha": [],
-      "pan": [],
-      "crc": []
+      "pan": []
     }
   },
   {
     "day": 27,
     "probabilities": {
-      "mex": 5.24,
+      "mex": 7.94,
       "rsa": 0,
       "kor": 0,
-      "den": 0,
+      "cze": 0,
       "can": 0,
-      "qat": 0,
+      "bih": 0,
+      "qat": 4.91,
       "sui": 0,
-      "ecu": 0,
-      "bra": 21.82,
+      "bra": 13.75,
       "mar": 0,
       "hai": 0,
       "sco": 0,
       "usa": 0,
-      "aus": 0,
       "par": 0,
+      "aus": 0,
       "tur": 0,
-      "ger": 13.25,
+      "ger": 11.19,
       "cuw": 0,
       "civ": 0,
-      "pol": 0,
-      "ned": 10.13,
+      "ecu": 0,
+      "ned": 11.73,
       "jpn": 0,
+      "swe": 0,
       "tun": 0,
-      "ukr": 0,
       "bel": 0,
-      "egy": 0.78,
+      "egy": 7.37,
       "irn": 0,
       "nzl": 0,
-      "esp": 14.81,
+      "esp": 13.37,
       "cpv": 0,
-      "ksa": 0.47,
+      "ksa": 4.64,
       "uru": 0,
       "fra": 0,
       "sen": 0,
+      "irq": 0,
       "nor": 0,
-      "bol": 0,
-      "arg": 22.6,
+      "arg": 13.1,
       "alg": 0,
       "aut": 0,
       "jor": 0,
-      "por": 10.91,
+      "por": 12,
+      "cod": 0,
       "uzb": 0,
       "col": 0,
-      "cro": 0,
       "eng": 0,
+      "cro": 0,
       "gha": 0,
-      "pan": 0,
-      "crc": 0
+      "pan": 0
     },
     "possibleOpponents": {
       "mex": [
@@ -9735,11 +8248,11 @@ export const snapshots: Snapshot[] = [
       ],
       "rsa": [],
       "kor": [],
-      "den": [],
+      "cze": [],
       "can": [],
+      "bih": [],
       "qat": [],
       "sui": [],
-      "ecu": [],
       "bra": [
         "arg",
         "esp",
@@ -9751,8 +8264,8 @@ export const snapshots: Snapshot[] = [
       "hai": [],
       "sco": [],
       "usa": [],
-      "aus": [],
       "par": [],
+      "aus": [],
       "tur": [],
       "ger": [
         "arg",
@@ -9763,7 +8276,7 @@ export const snapshots: Snapshot[] = [
       ],
       "cuw": [],
       "civ": [],
-      "pol": [],
+      "ecu": [],
       "ned": [
         "arg",
         "bra",
@@ -9772,8 +8285,8 @@ export const snapshots: Snapshot[] = [
         "mex"
       ],
       "jpn": [],
+      "swe": [],
       "tun": [],
-      "ukr": [],
       "bel": [],
       "egy": [],
       "irn": [],
@@ -9790,8 +8303,8 @@ export const snapshots: Snapshot[] = [
       "uru": [],
       "fra": [],
       "sen": [],
+      "irq": [],
       "nor": [],
-      "bol": [],
       "arg": [
         "bra",
         "esp",
@@ -9803,66 +8316,66 @@ export const snapshots: Snapshot[] = [
       "aut": [],
       "jor": [],
       "por": [],
+      "cod": [],
       "uzb": [],
       "col": [],
-      "cro": [],
       "eng": [],
+      "cro": [],
       "gha": [],
-      "pan": [],
-      "crc": []
+      "pan": []
     }
   },
   {
     "day": 28,
     "probabilities": {
-      "mex": 6.41,
+      "mex": 9.32,
       "rsa": 0,
       "kor": 0,
-      "den": 0,
+      "cze": 0,
       "can": 0,
-      "qat": 0,
+      "bih": 0,
+      "qat": 6.45,
       "sui": 0,
-      "ecu": 0,
-      "bra": 26.7,
+      "bra": 16.13,
       "mar": 0,
       "hai": 0,
       "sco": 0,
       "usa": 0,
-      "aus": 0,
       "par": 0,
+      "aus": 0,
       "tur": 0,
       "ger": 0,
       "cuw": 0,
       "civ": 0,
-      "pol": 0,
-      "ned": 15.55,
+      "ecu": 0,
+      "ned": 17.27,
       "jpn": 0,
+      "swe": 0,
       "tun": 0,
-      "ukr": 0,
       "bel": 0,
-      "egy": 1.07,
+      "egy": 9.68,
       "irn": 0,
       "nzl": 0,
       "esp": 0,
       "cpv": 0,
-      "ksa": 0.64,
+      "ksa": 6.09,
       "uru": 0,
       "fra": 0,
       "sen": 0,
+      "irq": 0,
       "nor": 0,
-      "bol": 0,
-      "arg": 34.69,
+      "arg": 19.27,
       "alg": 0,
       "aut": 0,
       "jor": 0,
-      "por": 14.95,
+      "por": 15.78,
+      "cod": 0,
       "uzb": 0,
       "col": 0,
-      "cro": 0,
       "eng": 0,
+      "cro": 0,
       "gha": 0,
-      "pan": 0,
-      "crc": 0
+      "pan": 0
     },
     "possibleOpponents": {
       "mex": [
@@ -9872,11 +8385,11 @@ export const snapshots: Snapshot[] = [
       ],
       "rsa": [],
       "kor": [],
-      "den": [],
+      "cze": [],
       "can": [],
+      "bih": [],
       "qat": [],
       "sui": [],
-      "ecu": [],
       "bra": [
         "arg",
         "mex",
@@ -9886,21 +8399,21 @@ export const snapshots: Snapshot[] = [
       "hai": [],
       "sco": [],
       "usa": [],
-      "aus": [],
       "par": [],
+      "aus": [],
       "tur": [],
       "ger": [],
       "cuw": [],
       "civ": [],
-      "pol": [],
+      "ecu": [],
       "ned": [
         "arg",
         "bra",
         "mex"
       ],
       "jpn": [],
+      "swe": [],
       "tun": [],
-      "ukr": [],
       "bel": [],
       "egy": [],
       "irn": [],
@@ -9911,8 +8424,8 @@ export const snapshots: Snapshot[] = [
       "uru": [],
       "fra": [],
       "sen": [],
+      "irq": [],
       "nor": [],
-      "bol": [],
       "arg": [
         "bra",
         "mex",
@@ -9922,66 +8435,66 @@ export const snapshots: Snapshot[] = [
       "aut": [],
       "jor": [],
       "por": [],
+      "cod": [],
       "uzb": [],
       "col": [],
-      "cro": [],
       "eng": [],
+      "cro": [],
       "gha": [],
-      "pan": [],
-      "crc": []
+      "pan": []
     }
   },
   {
     "day": 29,
     "probabilities": {
-      "mex": 6.77,
+      "mex": 9.7,
       "rsa": 0,
       "kor": 0,
-      "den": 0,
+      "cze": 0,
       "can": 0,
-      "qat": 0,
+      "bih": 0,
+      "qat": 6.72,
       "sui": 0,
-      "ecu": 0,
-      "bra": 28.22,
+      "bra": 16.79,
       "mar": 0,
       "hai": 0,
       "sco": 0,
       "usa": 0,
-      "aus": 0,
       "par": 0,
+      "aus": 0,
       "tur": 0,
       "ger": 0,
       "cuw": 0,
       "civ": 0,
-      "pol": 0,
-      "ned": 14.67,
+      "ecu": 0,
+      "ned": 16.04,
       "jpn": 0,
+      "swe": 0,
       "tun": 0,
-      "ukr": 0,
       "bel": 0,
-      "egy": 1.13,
+      "egy": 10.07,
       "irn": 0,
       "nzl": 0,
       "esp": 0,
       "cpv": 0,
-      "ksa": 0.68,
+      "ksa": 6.34,
       "uru": 0,
       "fra": 0,
       "sen": 0,
+      "irq": 0,
       "nor": 0,
-      "bol": 0,
-      "arg": 32.73,
+      "arg": 17.91,
       "alg": 0,
       "aut": 0,
       "jor": 0,
-      "por": 15.8,
+      "por": 16.42,
+      "cod": 0,
       "uzb": 0,
       "col": 0,
-      "cro": 0,
       "eng": 0,
+      "cro": 0,
       "gha": 0,
-      "pan": 0,
-      "crc": 0
+      "pan": 0
     },
     "possibleOpponents": {
       "mex": [
@@ -9991,11 +8504,11 @@ export const snapshots: Snapshot[] = [
       ],
       "rsa": [],
       "kor": [],
-      "den": [],
+      "cze": [],
       "can": [],
+      "bih": [],
       "qat": [],
       "sui": [],
-      "ecu": [],
       "bra": [
         "arg",
         "mex",
@@ -10005,21 +8518,21 @@ export const snapshots: Snapshot[] = [
       "hai": [],
       "sco": [],
       "usa": [],
-      "aus": [],
       "par": [],
+      "aus": [],
       "tur": [],
       "ger": [],
       "cuw": [],
       "civ": [],
-      "pol": [],
+      "ecu": [],
       "ned": [
         "arg",
         "bra",
         "mex"
       ],
       "jpn": [],
+      "swe": [],
       "tun": [],
-      "ukr": [],
       "bel": [],
       "egy": [],
       "irn": [],
@@ -10030,8 +8543,8 @@ export const snapshots: Snapshot[] = [
       "uru": [],
       "fra": [],
       "sen": [],
+      "irq": [],
       "nor": [],
-      "bol": [],
       "arg": [
         "bra",
         "mex",
@@ -10041,66 +8554,66 @@ export const snapshots: Snapshot[] = [
       "aut": [],
       "jor": [],
       "por": [],
+      "cod": [],
       "uzb": [],
       "col": [],
-      "cro": [],
       "eng": [],
+      "cro": [],
       "gha": [],
-      "pan": [],
-      "crc": []
+      "pan": []
     }
   },
   {
     "day": 30,
     "probabilities": {
-      "mex": 6.77,
+      "mex": 9.7,
       "rsa": 0,
       "kor": 0,
-      "den": 0,
+      "cze": 0,
       "can": 0,
-      "qat": 0,
+      "bih": 0,
+      "qat": 6.72,
       "sui": 0,
-      "ecu": 0,
-      "bra": 28.22,
+      "bra": 16.79,
       "mar": 0,
       "hai": 0,
       "sco": 0,
       "usa": 0,
-      "aus": 0,
       "par": 0,
+      "aus": 0,
       "tur": 0,
       "ger": 0,
       "cuw": 0,
       "civ": 0,
-      "pol": 0,
-      "ned": 14.67,
+      "ecu": 0,
+      "ned": 16.04,
       "jpn": 0,
+      "swe": 0,
       "tun": 0,
-      "ukr": 0,
       "bel": 0,
-      "egy": 1.13,
+      "egy": 10.07,
       "irn": 0,
       "nzl": 0,
       "esp": 0,
       "cpv": 0,
-      "ksa": 0.68,
+      "ksa": 6.34,
       "uru": 0,
       "fra": 0,
       "sen": 0,
+      "irq": 0,
       "nor": 0,
-      "bol": 0,
-      "arg": 32.73,
+      "arg": 17.91,
       "alg": 0,
       "aut": 0,
       "jor": 0,
-      "por": 15.8,
+      "por": 16.42,
+      "cod": 0,
       "uzb": 0,
       "col": 0,
-      "cro": 0,
       "eng": 0,
+      "cro": 0,
       "gha": 0,
-      "pan": 0,
-      "crc": 0
+      "pan": 0
     },
     "possibleOpponents": {
       "mex": [
@@ -10110,11 +8623,11 @@ export const snapshots: Snapshot[] = [
       ],
       "rsa": [],
       "kor": [],
-      "den": [],
+      "cze": [],
       "can": [],
+      "bih": [],
       "qat": [],
       "sui": [],
-      "ecu": [],
       "bra": [
         "arg",
         "mex",
@@ -10124,21 +8637,21 @@ export const snapshots: Snapshot[] = [
       "hai": [],
       "sco": [],
       "usa": [],
-      "aus": [],
       "par": [],
+      "aus": [],
       "tur": [],
       "ger": [],
       "cuw": [],
       "civ": [],
-      "pol": [],
+      "ecu": [],
       "ned": [
         "arg",
         "bra",
         "mex"
       ],
       "jpn": [],
+      "swe": [],
       "tun": [],
-      "ukr": [],
       "bel": [],
       "egy": [],
       "irn": [],
@@ -10149,8 +8662,8 @@ export const snapshots: Snapshot[] = [
       "uru": [],
       "fra": [],
       "sen": [],
+      "irq": [],
       "nor": [],
-      "bol": [],
       "arg": [
         "bra",
         "mex",
@@ -10160,13 +8673,13 @@ export const snapshots: Snapshot[] = [
       "aut": [],
       "jor": [],
       "por": [],
+      "cod": [],
       "uzb": [],
       "col": [],
-      "cro": [],
       "eng": [],
+      "cro": [],
       "gha": [],
-      "pan": [],
-      "crc": []
+      "pan": []
     }
   },
   {
@@ -10175,61 +8688,61 @@ export const snapshots: Snapshot[] = [
       "mex": 0,
       "rsa": 0,
       "kor": 0,
-      "den": 0,
+      "cze": 0,
       "can": 0,
-      "qat": 0,
+      "bih": 0,
+      "qat": 7.28,
       "sui": 0,
-      "ecu": 0,
-      "bra": 32.71,
+      "bra": 20.37,
       "mar": 0,
       "hai": 0,
       "sco": 0,
       "usa": 0,
-      "aus": 0,
       "par": 0,
+      "aus": 0,
       "tur": 0,
       "ger": 0,
       "cuw": 0,
       "civ": 0,
-      "pol": 0,
-      "ned": 15.19,
+      "ecu": 0,
+      "ned": 17.38,
       "jpn": 0,
+      "swe": 0,
       "tun": 0,
-      "ukr": 0,
       "bel": 0,
-      "egy": 1.17,
+      "egy": 10.91,
       "irn": 0,
       "nzl": 0,
       "esp": 0,
       "cpv": 0,
-      "ksa": 0.7,
+      "ksa": 6.87,
       "uru": 0,
       "fra": 0,
       "sen": 0,
+      "irq": 0,
       "nor": 0,
-      "bol": 0,
-      "arg": 33.88,
+      "arg": 19.4,
       "alg": 0,
       "aut": 0,
       "jor": 0,
-      "por": 16.36,
+      "por": 17.78,
+      "cod": 0,
       "uzb": 0,
       "col": 0,
-      "cro": 0,
       "eng": 0,
+      "cro": 0,
       "gha": 0,
-      "pan": 0,
-      "crc": 0
+      "pan": 0
     },
     "possibleOpponents": {
       "mex": [],
       "rsa": [],
       "kor": [],
-      "den": [],
+      "cze": [],
       "can": [],
+      "bih": [],
       "qat": [],
       "sui": [],
-      "ecu": [],
       "bra": [
         "arg",
         "ned"
@@ -10238,20 +8751,20 @@ export const snapshots: Snapshot[] = [
       "hai": [],
       "sco": [],
       "usa": [],
-      "aus": [],
       "par": [],
+      "aus": [],
       "tur": [],
       "ger": [],
       "cuw": [],
       "civ": [],
-      "pol": [],
+      "ecu": [],
       "ned": [
         "arg",
         "bra"
       ],
       "jpn": [],
+      "swe": [],
       "tun": [],
-      "ukr": [],
       "bel": [],
       "egy": [],
       "irn": [],
@@ -10262,8 +8775,8 @@ export const snapshots: Snapshot[] = [
       "uru": [],
       "fra": [],
       "sen": [],
+      "irq": [],
       "nor": [],
-      "bol": [],
       "arg": [
         "bra",
         "ned"
@@ -10272,13 +8785,13 @@ export const snapshots: Snapshot[] = [
       "aut": [],
       "jor": [],
       "por": [],
+      "cod": [],
       "uzb": [],
       "col": [],
-      "cro": [],
       "eng": [],
+      "cro": [],
       "gha": [],
-      "pan": [],
-      "crc": []
+      "pan": []
     }
   },
   {
@@ -10287,61 +8800,61 @@ export const snapshots: Snapshot[] = [
       "mex": 0,
       "rsa": 0,
       "kor": 0,
-      "den": 0,
+      "cze": 0,
       "can": 0,
-      "qat": 0,
+      "bih": 0,
+      "qat": 8.79,
       "sui": 0,
-      "ecu": 0,
-      "bra": 34.21,
+      "bra": 21.98,
       "mar": 0,
       "hai": 0,
       "sco": 0,
       "usa": 0,
-      "aus": 0,
       "par": 0,
+      "aus": 0,
       "tur": 0,
       "ger": 0,
       "cuw": 0,
       "civ": 0,
-      "pol": 0,
+      "ecu": 0,
       "ned": 0,
       "jpn": 0,
+      "swe": 0,
       "tun": 0,
-      "ukr": 0,
       "bel": 0,
-      "egy": 1.37,
+      "egy": 13.19,
       "irn": 0,
       "nzl": 0,
       "esp": 0,
       "cpv": 0,
-      "ksa": 0.82,
+      "ksa": 8.3,
       "uru": 0,
       "fra": 0,
       "sen": 0,
+      "irq": 0,
       "nor": 0,
-      "bol": 0,
-      "arg": 44.44,
+      "arg": 26.26,
       "alg": 0,
       "aut": 0,
       "jor": 0,
-      "por": 19.16,
+      "por": 21.49,
+      "cod": 0,
       "uzb": 0,
       "col": 0,
-      "cro": 0,
       "eng": 0,
+      "cro": 0,
       "gha": 0,
-      "pan": 0,
-      "crc": 0
+      "pan": 0
     },
     "possibleOpponents": {
       "mex": [],
       "rsa": [],
       "kor": [],
-      "den": [],
+      "cze": [],
       "can": [],
+      "bih": [],
       "qat": [],
       "sui": [],
-      "ecu": [],
       "bra": [
         "arg"
       ],
@@ -10349,17 +8862,17 @@ export const snapshots: Snapshot[] = [
       "hai": [],
       "sco": [],
       "usa": [],
-      "aus": [],
       "par": [],
+      "aus": [],
       "tur": [],
       "ger": [],
       "cuw": [],
       "civ": [],
-      "pol": [],
+      "ecu": [],
       "ned": [],
       "jpn": [],
+      "swe": [],
       "tun": [],
-      "ukr": [],
       "bel": [],
       "egy": [],
       "irn": [],
@@ -10370,8 +8883,8 @@ export const snapshots: Snapshot[] = [
       "uru": [],
       "fra": [],
       "sen": [],
+      "irq": [],
       "nor": [],
-      "bol": [],
       "arg": [
         "bra"
       ],
@@ -10379,13 +8892,13 @@ export const snapshots: Snapshot[] = [
       "aut": [],
       "jor": [],
       "por": [],
+      "cod": [],
       "uzb": [],
       "col": [],
-      "cro": [],
       "eng": [],
+      "cro": [],
       "gha": [],
-      "pan": [],
-      "crc": []
+      "pan": []
     }
   },
   {
@@ -10394,61 +8907,61 @@ export const snapshots: Snapshot[] = [
       "mex": 0,
       "rsa": 0,
       "kor": 0,
-      "den": 0,
+      "cze": 0,
       "can": 0,
-      "qat": 0,
+      "bih": 0,
+      "qat": 9.05,
       "sui": 0,
-      "ecu": 0,
-      "bra": 35.92,
+      "bra": 22.61,
       "mar": 0,
       "hai": 0,
       "sco": 0,
       "usa": 0,
-      "aus": 0,
       "par": 0,
+      "aus": 0,
       "tur": 0,
       "ger": 0,
       "cuw": 0,
       "civ": 0,
-      "pol": 0,
+      "ecu": 0,
       "ned": 0,
       "jpn": 0,
+      "swe": 0,
       "tun": 0,
-      "ukr": 0,
       "bel": 0,
-      "egy": 1.44,
+      "egy": 13.57,
       "irn": 0,
       "nzl": 0,
       "esp": 0,
       "cpv": 0,
-      "ksa": 0.86,
+      "ksa": 8.54,
       "uru": 0,
       "fra": 0,
       "sen": 0,
+      "irq": 0,
       "nor": 0,
-      "bol": 0,
-      "arg": 41.67,
+      "arg": 24.12,
       "alg": 0,
       "aut": 0,
       "jor": 0,
-      "por": 20.11,
+      "por": 22.11,
+      "cod": 0,
       "uzb": 0,
       "col": 0,
-      "cro": 0,
       "eng": 0,
+      "cro": 0,
       "gha": 0,
-      "pan": 0,
-      "crc": 0
+      "pan": 0
     },
     "possibleOpponents": {
       "mex": [],
       "rsa": [],
       "kor": [],
-      "den": [],
+      "cze": [],
       "can": [],
+      "bih": [],
       "qat": [],
       "sui": [],
-      "ecu": [],
       "bra": [
         "arg"
       ],
@@ -10456,17 +8969,17 @@ export const snapshots: Snapshot[] = [
       "hai": [],
       "sco": [],
       "usa": [],
-      "aus": [],
       "par": [],
+      "aus": [],
       "tur": [],
       "ger": [],
       "cuw": [],
       "civ": [],
-      "pol": [],
+      "ecu": [],
       "ned": [],
       "jpn": [],
+      "swe": [],
       "tun": [],
-      "ukr": [],
       "bel": [],
       "egy": [],
       "irn": [],
@@ -10477,8 +8990,8 @@ export const snapshots: Snapshot[] = [
       "uru": [],
       "fra": [],
       "sen": [],
+      "irq": [],
       "nor": [],
-      "bol": [],
       "arg": [
         "bra"
       ],
@@ -10486,13 +8999,13 @@ export const snapshots: Snapshot[] = [
       "aut": [],
       "jor": [],
       "por": [],
+      "cod": [],
       "uzb": [],
       "col": [],
-      "cro": [],
       "eng": [],
+      "cro": [],
       "gha": [],
-      "pan": [],
-      "crc": []
+      "pan": []
     }
   },
   {
@@ -10501,61 +9014,61 @@ export const snapshots: Snapshot[] = [
       "mex": 0,
       "rsa": 0,
       "kor": 0,
-      "den": 0,
+      "cze": 0,
       "can": 0,
-      "qat": 0,
+      "bih": 0,
+      "qat": 9.05,
       "sui": 0,
-      "ecu": 0,
-      "bra": 35.92,
+      "bra": 22.61,
       "mar": 0,
       "hai": 0,
       "sco": 0,
       "usa": 0,
-      "aus": 0,
       "par": 0,
+      "aus": 0,
       "tur": 0,
       "ger": 0,
       "cuw": 0,
       "civ": 0,
-      "pol": 0,
+      "ecu": 0,
       "ned": 0,
       "jpn": 0,
+      "swe": 0,
       "tun": 0,
-      "ukr": 0,
       "bel": 0,
-      "egy": 1.44,
+      "egy": 13.57,
       "irn": 0,
       "nzl": 0,
       "esp": 0,
       "cpv": 0,
-      "ksa": 0.86,
+      "ksa": 8.54,
       "uru": 0,
       "fra": 0,
       "sen": 0,
+      "irq": 0,
       "nor": 0,
-      "bol": 0,
-      "arg": 41.67,
+      "arg": 24.12,
       "alg": 0,
       "aut": 0,
       "jor": 0,
-      "por": 20.11,
+      "por": 22.11,
+      "cod": 0,
       "uzb": 0,
       "col": 0,
-      "cro": 0,
       "eng": 0,
+      "cro": 0,
       "gha": 0,
-      "pan": 0,
-      "crc": 0
+      "pan": 0
     },
     "possibleOpponents": {
       "mex": [],
       "rsa": [],
       "kor": [],
-      "den": [],
+      "cze": [],
       "can": [],
+      "bih": [],
       "qat": [],
       "sui": [],
-      "ecu": [],
       "bra": [
         "arg"
       ],
@@ -10563,17 +9076,17 @@ export const snapshots: Snapshot[] = [
       "hai": [],
       "sco": [],
       "usa": [],
-      "aus": [],
       "par": [],
+      "aus": [],
       "tur": [],
       "ger": [],
       "cuw": [],
       "civ": [],
-      "pol": [],
+      "ecu": [],
       "ned": [],
       "jpn": [],
+      "swe": [],
       "tun": [],
-      "ukr": [],
       "bel": [],
       "egy": [],
       "irn": [],
@@ -10584,8 +9097,8 @@ export const snapshots: Snapshot[] = [
       "uru": [],
       "fra": [],
       "sen": [],
+      "irq": [],
       "nor": [],
-      "bol": [],
       "arg": [
         "bra"
       ],
@@ -10593,13 +9106,13 @@ export const snapshots: Snapshot[] = [
       "aut": [],
       "jor": [],
       "por": [],
+      "cod": [],
       "uzb": [],
       "col": [],
-      "cro": [],
       "eng": [],
+      "cro": [],
       "gha": [],
-      "pan": [],
-      "crc": []
+      "pan": []
     }
   },
   {
@@ -10608,27 +9121,27 @@ export const snapshots: Snapshot[] = [
       "mex": 0,
       "rsa": 0,
       "kor": 0,
-      "den": 0,
+      "cze": 0,
       "can": 0,
+      "bih": 0,
       "qat": 0,
       "sui": 0,
-      "ecu": 0,
       "bra": 0,
       "mar": 0,
       "hai": 0,
       "sco": 0,
       "usa": 0,
-      "aus": 0,
       "par": 0,
+      "aus": 0,
       "tur": 0,
       "ger": 0,
       "cuw": 0,
       "civ": 0,
-      "pol": 0,
+      "ecu": 0,
       "ned": 0,
       "jpn": 0,
+      "swe": 0,
       "tun": 0,
-      "ukr": 0,
       "bel": 0,
       "egy": 0,
       "irn": 0,
@@ -10639,46 +9152,46 @@ export const snapshots: Snapshot[] = [
       "uru": 0,
       "fra": 0,
       "sen": 0,
+      "irq": 0,
       "nor": 0,
-      "bol": 0,
       "arg": 100,
       "alg": 0,
       "aut": 0,
       "jor": 0,
       "por": 0,
+      "cod": 0,
       "uzb": 0,
       "col": 0,
-      "cro": 0,
       "eng": 0,
+      "cro": 0,
       "gha": 0,
-      "pan": 0,
-      "crc": 0
+      "pan": 0
     },
     "possibleOpponents": {
       "mex": [],
       "rsa": [],
       "kor": [],
-      "den": [],
+      "cze": [],
       "can": [],
+      "bih": [],
       "qat": [],
       "sui": [],
-      "ecu": [],
       "bra": [],
       "mar": [],
       "hai": [],
       "sco": [],
       "usa": [],
-      "aus": [],
       "par": [],
+      "aus": [],
       "tur": [],
       "ger": [],
       "cuw": [],
       "civ": [],
-      "pol": [],
+      "ecu": [],
       "ned": [],
       "jpn": [],
+      "swe": [],
       "tun": [],
-      "ukr": [],
       "bel": [],
       "egy": [],
       "irn": [],
@@ -10689,20 +9202,20 @@ export const snapshots: Snapshot[] = [
       "uru": [],
       "fra": [],
       "sen": [],
+      "irq": [],
       "nor": [],
-      "bol": [],
       "arg": [],
       "alg": [],
       "aut": [],
       "jor": [],
       "por": [],
+      "cod": [],
       "uzb": [],
       "col": [],
-      "cro": [],
       "eng": [],
+      "cro": [],
       "gha": [],
-      "pan": [],
-      "crc": []
+      "pan": []
     }
   }
 ] as Snapshot[];

@@ -1,99 +1,63 @@
 import type { Match, MatchStage } from "@/types";
-import { teams } from "./teams";
+import { teams, teamsById } from "./teams";
 
-const GROUP_MATCH_WINNERS: Record<string, string> = {
-  // Group A
-  "mex-rsa": "mex",
-  "kor-den": "den",
-  "mex-kor": "mex",
-  "rsa-den": "den",
-  "mex-den": "den",
-  "rsa-kor": "kor",
-  // Group B
-  "can-qat": "can",
-  "sui-ecu": "sui",
-  "can-sui": "sui",
-  "qat-ecu": "ecu",
-  "can-ecu": "ecu",
-  "qat-sui": "sui",
-  // Group C
-  "bra-mar": "bra",
-  "hai-sco": "sco",
-  "bra-hai": "bra",
-  "mar-sco": "mar",
-  "bra-sco": "bra",
-  "mar-hai": "mar",
-  // Group D
-  "usa-aus": "usa",
-  "par-tur": "tur",
-  "usa-par": "usa",
-  "aus-tur": "aus",
-  "usa-tur": "tur",
-  "aus-par": "par",
-  // Group E
-  "ger-cuw": "ger",
-  "civ-pol": "civ",
-  "ger-civ": "ger",
-  "cuw-pol": "pol",
-  "ger-pol": "ger",
-  "cuw-civ": "civ",
-  // Group F
-  "ned-jpn": "ned",
-  "tun-ukr": "ukr",
-  "ned-tun": "ned",
-  "jpn-ukr": "jpn",
-  "ned-ukr": "ned",
-  "jpn-tun": "jpn",
-  // Group G
-  "bel-egy": "bel",
-  "irn-nzl": "irn",
-  "bel-irn": "bel",
-  "egy-nzl": "egy",
-  "bel-nzl": "bel",
-  "egy-irn": "irn",
-  // Group H
-  "esp-cpv": "esp",
-  "ksa-uru": "uru",
-  "esp-ksa": "esp",
-  "cpv-uru": "uru",
-  "esp-uru": "esp",
-  "cpv-ksa": "ksa",
-  // Group I
-  "fra-sen": "fra",
-  "nor-bol": "nor",
-  "fra-nor": "fra",
-  "sen-bol": "sen",
-  "fra-bol": "fra",
-  "sen-nor": "sen",
-  // Group J
-  "arg-alg": "arg",
-  "aut-jor": "aut",
-  "arg-aut": "arg",
-  "alg-jor": "alg",
-  "arg-jor": "arg",
-  "alg-aut": "aut",
-  // Group K
-  "por-uzb": "por",
-  "col-cro": "col",
-  "por-col": "por",
-  "uzb-cro": "cro",
-  "por-cro": "por",
-  "uzb-col": "col",
-  // Group L
-  "eng-gha": "eng",
-  "pan-crc": "crc",
-  "eng-pan": "eng",
-  "gha-crc": "gha",
-  "eng-crc": "eng",
-  "pan-gha": "pan",
+type MatchResult = { homeScore: number; awayScore: number };
+
+const GROUP_MATCH_RESULTS: Record<string, MatchResult> = {
+  // Group A — MD1 (real)
+  "mex-rsa": { homeScore: 2, awayScore: 0 },
+  "kor-cze": { homeScore: 2, awayScore: 1 },
+  // Group B — MD1 (real)
+  "can-bih": { homeScore: 1, awayScore: 1 },
+  "sui-qat": { homeScore: 1, awayScore: 1 },
+  // Group C — MD1 (real)
+  "bra-mar": { homeScore: 1, awayScore: 1 },
+  "sco-hai": { homeScore: 1, awayScore: 0 },
+  // Group D — MD1 (real)
+  "usa-par": { homeScore: 4, awayScore: 1 },
+  "aus-tur": { homeScore: 2, awayScore: 0 },
+  // Group E — MD1 (real)
+  "ger-cuw": { homeScore: 7, awayScore: 1 },
+  "civ-ecu": { homeScore: 1, awayScore: 0 },
+  // Group F — MD1 (real)
+  "ned-jpn": { homeScore: 2, awayScore: 2 },
+  "swe-tun": { homeScore: 5, awayScore: 1 },
+  // Group G — MD1 (real)
+  "bel-egy": { homeScore: 1, awayScore: 1 },
+  "irn-nzl": { homeScore: 2, awayScore: 2 },
+  // Group H — MD1 (real)
+  "esp-cpv": { homeScore: 0, awayScore: 0 },
+  "uru-ksa": { homeScore: 1, awayScore: 1 },
 };
 
 function matchKey(home: string, away: string): string {
   return `${home}-${away}`;
 }
 
-function getWinner(home: string, away: string): string {
-  return GROUP_MATCH_WINNERS[matchKey(home, away)] ?? home;
+function getMockResult(home: string, away: string): MatchResult {
+  const homeTeam = teamsById[home];
+  const awayTeam = teamsById[away];
+  if (!homeTeam || !awayTeam) {
+    return { homeScore: 1, awayScore: 0 };
+  }
+
+  if (homeTeam.fifaRanking < awayTeam.fifaRanking) {
+    return { homeScore: 2, awayScore: 1 };
+  }
+  if (awayTeam.fifaRanking < homeTeam.fifaRanking) {
+    return { homeScore: 1, awayScore: 2 };
+  }
+  return { homeScore: 1, awayScore: 1 };
+}
+
+function getResult(home: string, away: string): MatchResult {
+  return GROUP_MATCH_RESULTS[matchKey(home, away)] ?? getMockResult(home, away);
+}
+
+function resultToWinner(home: string, away: string, result: MatchResult): string | undefined {
+  if (result.homeScore > result.awayScore) return home;
+  if (result.awayScore > result.homeScore) return away;
+  return undefined;
 }
 
 function buildGroupMatches(): Match[] {
@@ -104,6 +68,7 @@ function buildGroupMatches(): Match[] {
   groups.forEach((group, groupIndex) => {
     const groupTeams = teams
       .filter((team) => team.group === group)
+      .sort((a, b) => a.groupPosition - b.groupPosition)
       .map((team) => team.id);
     const [t1, t2, t3, t4] = groupTeams;
 
@@ -125,13 +90,16 @@ function buildGroupMatches(): Match[] {
     pairings.forEach((round, roundIndex) => {
       const day = matchdays[roundIndex] + Math.floor(groupIndex / 3);
       round.forEach(([home, away], matchIndex) => {
+        const result = getResult(home, away);
         matches.push({
           id: `grp-${group.toLowerCase()}-md${roundIndex + 1}-${matchIndex + 1}`,
           stage: "group",
           day,
           home,
           away,
-          winner: getWinner(home, away),
+          homeScore: result.homeScore,
+          awayScore: result.awayScore,
+          winner: resultToWinner(home, away, result),
         });
       });
     });
@@ -152,13 +120,13 @@ type KnockoutFixture = {
 const KNOCKOUT_FIXTURES: KnockoutFixture[] = [
   // Round of 32 — days 13–16
   { id: "r32-1", stage: "round-of-32", day: 13, home: "mex", away: "alg", winner: "mex" },
-  { id: "r32-2", stage: "round-of-32", day: 13, home: "den", away: "aus", winner: "den" },
+  { id: "r32-2", stage: "round-of-32", day: 13, home: "cze", away: "aus", winner: "cze" },
   { id: "r32-3", stage: "round-of-32", day: 13, home: "sui", away: "kor", winner: "sui" },
-  { id: "r32-4", stage: "round-of-32", day: 14, home: "can", away: "ecu", winner: "can" },
+  { id: "r32-4", stage: "round-of-32", day: 14, home: "can", away: "bih", winner: "can" },
   { id: "r32-5", stage: "round-of-32", day: 14, home: "bra", away: "sco", winner: "bra" },
-  { id: "r32-6", stage: "round-of-32", day: 14, home: "mar", away: "pol", winner: "mar" },
+  { id: "r32-6", stage: "round-of-32", day: 14, home: "mar", away: "ecu", winner: "mar" },
   { id: "r32-7", stage: "round-of-32", day: 15, home: "usa", away: "nor", winner: "usa" },
-  { id: "r32-8", stage: "round-of-32", day: 15, home: "tur", away: "ukr", winner: "tur" },
+  { id: "r32-8", stage: "round-of-32", day: 15, home: "tur", away: "swe", winner: "tur" },
   { id: "r32-9", stage: "round-of-32", day: 16, home: "ger", away: "irn", winner: "ger" },
   { id: "r32-10", stage: "round-of-32", day: 16, home: "civ", away: "sen", winner: "civ" },
   { id: "r32-11", stage: "round-of-32", day: 16, home: "ned", away: "aut", winner: "ned" },
@@ -168,7 +136,7 @@ const KNOCKOUT_FIXTURES: KnockoutFixture[] = [
   { id: "r32-15", stage: "round-of-32", day: 16, home: "fra", away: "cro", winner: "fra" },
   { id: "r32-16", stage: "round-of-32", day: 16, home: "arg", away: "eng", winner: "arg" },
   // Round of 16 — days 21–24
-  { id: "r16-1", stage: "round-of-16", day: 21, home: "mex", away: "den", winner: "mex" },
+  { id: "r16-1", stage: "round-of-16", day: 21, home: "mex", away: "cze", winner: "mex" },
   { id: "r16-2", stage: "round-of-16", day: 21, home: "sui", away: "can", winner: "sui" },
   { id: "r16-3", stage: "round-of-16", day: 22, home: "bra", away: "mar", winner: "bra" },
   { id: "r16-4", stage: "round-of-16", day: 22, home: "usa", away: "tur", winner: "usa" },
@@ -197,6 +165,8 @@ function buildKnockoutMatches(): Match[] {
     day,
     home,
     away,
+    homeScore: winner === home ? 2 : 1,
+    awayScore: winner === away ? 2 : 1,
     winner,
   }));
 }
@@ -214,3 +184,47 @@ export const matchesByDay: Record<number, Match[]> = matches.reduce<
   acc[match.day].push(match);
   return acc;
 }, {});
+
+const STAGE_PRIORITY: MatchStage[] = [
+  "group",
+  "round-of-32",
+  "round-of-16",
+  "quarter-final",
+  "semi-final",
+  "third-place",
+  "final",
+];
+
+const stagePriorityMap = STAGE_PRIORITY.reduce<Record<MatchStage, number>>(
+  (acc, stage, index) => {
+    acc[stage] = index;
+    return acc;
+  },
+  {} as Record<MatchStage, number>,
+);
+
+export type TimelineDay = {
+  day: number;
+  stage: MatchStage;
+};
+
+export const timelineDays: TimelineDay[] = Object.keys(matchesByDay)
+  .map(Number)
+  .sort((a, b) => a - b)
+  .map((day) => {
+    const stages = [...new Set(matchesByDay[day].map((match) => match.stage))];
+    stages.sort((a, b) => stagePriorityMap[a] - stagePriorityMap[b]);
+    return {
+      day,
+      stage: stages[0],
+    };
+  });
+
+export function getPlayedMatchesUpToDay(day: number): Match[] {
+  return matches.filter(
+    (match) =>
+      match.day <= day &&
+      match.homeScore !== undefined &&
+      match.awayScore !== undefined,
+  );
+}
