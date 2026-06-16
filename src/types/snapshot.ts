@@ -6,4 +6,7 @@ export type Snapshot = {
   possibleOpponents: {
     [teamId: string]: string[];
   };
+  bracketDepths?: {
+    [teamId: string]: number;
+  };
 };
