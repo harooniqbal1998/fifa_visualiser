@@ -4,12 +4,21 @@ import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import type { WinProbabilityChartProps } from "@/components/viz/types";
 import { getFlagUrl } from "@/lib/flags";
+import {
+  clamp,
+  createDeterministicRandomSource,
+  createRadiusScale,
+  estimateEffectiveMaxRadius,
+  getVizSizing,
+  seededRandom,
+} from "@/components/viz/viz-math";
 
-const MIN_RADIUS = 10;
-const MAX_RADIUS = 42;
 const MIN_OPACITY = 0.12;
 const MAX_OPACITY = 0.75;
-const PADDING = 48;
+const GROUP_LINK_STRENGTH = 0.95;
+const SNAPSHOT_LINK_STRENGTH = 0.22;
+const GROUP_LINK_OPACITY = 0.26;
+const SIMULATION_TICKS = 320;
 
 export type VizNode = {
   id: string;
@@ -26,17 +35,12 @@ export type VizLink = {
   sourceId: string;
   targetId: string;
   opacity: number;
+  strength: number;
 };
 
-function seededRandom(seed: string): number {
-  let hash = 0;
-  for (let i = 0; i < seed.length; i++) {
-    hash = (hash << 5) - hash + seed.charCodeAt(i);
-    hash |= 0;
-  }
-  const x = Math.sin(hash) * 10000;
-  return x - Math.floor(x);
-}
+type SimulationLink = d3.SimulationLinkDatum<VizNode> & {
+  strength: number;
+};
 
 function assignNodePositions(
   nodes: Omit<VizNode, "x" | "y" | "r">[],
@@ -45,7 +49,8 @@ function assignNodePositions(
   day: number,
   maxRadius: number,
 ): VizNode[] {
-  const pad = maxRadius + PADDING;
+  const { padding } = getVizSizing();
+  const pad = maxRadius + padding;
   const xRange = Math.max(width - pad * 2, 1);
   const yRange = Math.max(height - pad * 2, 1);
 
@@ -67,7 +72,7 @@ function buildNodes({ snapshot, teams }: WinProbabilityChartProps): Omit<VizNode
   }));
 }
 
-function buildLinks(
+function buildSnapshotLinks(
   snapshot: WinProbabilityChartProps["snapshot"],
   nodeById: Map<string, VizNode>,
 ): VizLink[] {
@@ -97,11 +102,50 @@ function buildLinks(
         sourceId: teamId,
         targetId: opponentId,
         opacity: opacityWeight,
+        strength: SNAPSHOT_LINK_STRENGTH,
       });
     }
   }
 
   return links;
+}
+
+function buildGroupLinks(nodes: VizNode[]): VizLink[] {
+  const links: VizLink[] = [];
+  const nodesByGroup = d3.group(nodes, (node) => node.group);
+
+  for (const groupNodes of nodesByGroup.values()) {
+    for (let i = 0; i < groupNodes.length; i++) {
+      for (let j = i + 1; j < groupNodes.length; j++) {
+        links.push({
+          sourceId: groupNodes[i].id,
+          targetId: groupNodes[j].id,
+          opacity: GROUP_LINK_OPACITY,
+          strength: GROUP_LINK_STRENGTH,
+        });
+      }
+    }
+  }
+
+  return links;
+}
+
+function mergeLinks(links: VizLink[]): VizLink[] {
+  const merged = new Map<string, VizLink>();
+
+  for (const link of links) {
+    const key = [link.sourceId, link.targetId].sort().join("::");
+    const existing = merged.get(key);
+    if (!existing) {
+      merged.set(key, link);
+      continue;
+    }
+
+    existing.opacity = Math.max(existing.opacity, link.opacity);
+    existing.strength = Math.max(existing.strength, link.strength);
+  }
+
+  return [...merged.values()];
 }
 
 function curvedLinkPath(
@@ -112,12 +156,12 @@ function curvedLinkPath(
 ): string {
   const dx = target.x - source.x;
   const dy = target.y - source.y;
-  const dist = Math.sqrt(dx * dx + dy * dy) || 1;
 
-  const x1 = source.x + (dx / dist) * source.r;
-  const y1 = source.y + (dy / dist) * source.r;
-  const x2 = target.x - (dx / dist) * target.r;
-  const y2 = target.y - (dy / dist) * target.r;
+  // Start/end at node centers so links originate inside the country circles.
+  const x1 = source.x;
+  const y1 = source.y;
+  const x2 = target.x;
+  const y2 = target.y;
 
   const mx = (x1 + x2) / 2;
   const my = (y1 + y2) / 2;
@@ -128,8 +172,36 @@ function curvedLinkPath(
   return `M${x1},${y1} Q${cx},${cy} ${x2},${y2}`;
 }
 
-function clamp(value: number, min: number, max: number): number {
-  return Math.max(min, Math.min(max, value));
+function clampNodeToViewport(node: VizNode, width: number, height: number) {
+  const { padding } = getVizSizing();
+  const xMin = padding + node.r;
+  const xMax = Math.max(width - padding - node.r, xMin);
+  const yMin = padding + node.r;
+  const yMax = Math.max(height - padding - node.r, yMin);
+  node.x = clamp(node.x, xMin, xMax);
+  node.y = clamp(node.y, yMin, yMax);
+}
+
+function verifyNoOverlaps(nodes: VizNode[]) {
+  const { nodePadding } = getVizSizing();
+  let overlaps = 0;
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const first = nodes[i];
+      const second = nodes[j];
+      const dx = first.x - second.x;
+      const dy = first.y - second.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      const minDistance = first.r + second.r + nodePadding;
+      if (distance < minDistance) {
+        overlaps++;
+      }
+    }
+  }
+
+  if (process.env.NODE_ENV !== "production" && overlaps > 0) {
+    console.warn(`TeamNetwork overlap check: ${overlaps} overlaps detected`);
+  }
 }
 
 export function TeamNetwork({ snapshot, teams }: WinProbabilityChartProps) {
@@ -149,24 +221,80 @@ export function TeamNetwork({ snapshot, teams }: WinProbabilityChartProps) {
 
       const baseNodes = buildNodes({ snapshot, teams });
       const maxProbability = d3.max(baseNodes, (d) => d.probability) ?? 1;
-      const radiusScale = d3
-        .scaleSqrt()
-        .domain([0, maxProbability])
-        .range([MIN_RADIUS, MAX_RADIUS]);
+      const effectiveMaxRadius = estimateEffectiveMaxRadius(width, height, baseNodes.length);
+      const radiusScale = createRadiusScale(maxProbability, effectiveMaxRadius);
+      const { minRadius, nodePadding } = getVizSizing();
 
       const positionedNodes = assignNodePositions(
         baseNodes,
         width,
         height,
         snapshot.day,
-        MAX_RADIUS,
+        effectiveMaxRadius,
       ).map((node) => ({
         ...node,
         r: radiusScale(node.probability),
       }));
 
       const nodeById = new Map(positionedNodes.map((node) => [node.id, node]));
-      const links = buildLinks(snapshot, nodeById);
+      const links = mergeLinks([
+        ...buildGroupLinks(positionedNodes),
+        ...buildSnapshotLinks(snapshot, nodeById),
+      ]);
+
+      const simulationLinks: SimulationLink[] = links.map((link) => ({
+        source: link.sourceId,
+        target: link.targetId,
+        strength: link.strength,
+      }));
+
+      const simulation = d3
+        .forceSimulation(positionedNodes)
+        .randomSource(createDeterministicRandomSource(`day:${snapshot.day}`))
+        .force(
+          "link",
+          d3
+            .forceLink<VizNode, SimulationLink>(simulationLinks)
+            .id((d) => d.id)
+            .strength((link) => link.strength)
+            .distance((link) => {
+              const sourceNode =
+                typeof link.source === "object"
+                  ? link.source
+                  : typeof link.source === "string"
+                    ? nodeById.get(link.source)
+                    : undefined;
+              const targetNode =
+                typeof link.target === "object"
+                  ? link.target
+                  : typeof link.target === "string"
+                    ? nodeById.get(link.target)
+                    : undefined;
+              const sourceRadius = sourceNode?.r ?? minRadius;
+              const targetRadius = targetNode?.r ?? minRadius;
+              const baseDistance = sourceRadius + targetRadius + nodePadding * 2.5;
+              return link.strength >= GROUP_LINK_STRENGTH * 0.7 ? baseDistance * 0.95 : baseDistance * 1.35;
+            }),
+        )
+        .force("charge", d3.forceManyBody().strength(-20))
+        .force(
+          "collide",
+          d3
+            .forceCollide<VizNode>()
+            .radius((d) => d.r + nodePadding)
+            .strength(1),
+        )
+        .force("x", d3.forceX(width / 2).strength(0.03))
+        .force("y", d3.forceY(height / 2).strength(0.03))
+        .force("center", d3.forceCenter(width / 2, height / 2))
+        .stop();
+
+      for (let tick = 0; tick < SIMULATION_TICKS; tick++) {
+        simulation.tick();
+        positionedNodes.forEach((node) => clampNodeToViewport(node, width, height));
+      }
+      simulation.stop();
+      verifyNoOverlaps(positionedNodes);
 
       const opacityScale = d3
         .scaleLinear()
@@ -191,13 +319,18 @@ export function TeamNetwork({ snapshot, teams }: WinProbabilityChartProps) {
         defs
           .append("clipPath")
           .attr("id", `flag-clip-${node.id}-${snapshot.day}`)
+          .attr("clipPathUnits", "objectBoundingBox")
           .append("circle")
-          .attr("r", Math.max(node.r - 2, 4));
+          .attr("cx", 0.5)
+          .attr("cy", 0.5)
+          .attr("r", 0.5);
       });
 
       const chart = svg.append("g");
+      const linksLayer = chart.append("g").attr("class", "links");
+      const nodesLayer = chart.append("g").attr("class", "nodes");
 
-      chart
+      linksLayer
         .append("g")
         .attr("clip-path", `url(#${clipId})`)
         .selectAll("path.link")
@@ -215,7 +348,7 @@ export function TeamNetwork({ snapshot, teams }: WinProbabilityChartProps) {
         .attr("stroke-width", 1.5)
         .attr("stroke-opacity", (link) => opacityScale(link.opacity));
 
-      const nodeGroups = chart
+      const nodeGroups = nodesLayer
         .selectAll("g.node")
         .data(positionedNodes)
         .join("g")
@@ -240,13 +373,6 @@ export function TeamNetwork({ snapshot, teams }: WinProbabilityChartProps) {
         .attr("clip-path", (d) => `url(#flag-clip-${d.id}-${snapshot.day})`)
         .attr("preserveAspectRatio", "xMidYMid slice");
 
-      nodeGroups
-        .append("text")
-        .attr("text-anchor", "middle")
-        .attr("dy", (d) => d.r + 12)
-        .attr("fill", "currentColor")
-        .attr("font-size", 10)
-        .text((d) => `${d.name} · ${d.group}`);
     }
 
     render();
