@@ -13,5 +13,7 @@ export type Match = {
   day: number;
   home: string;
   away: string;
+  homeScore?: number;
+  awayScore?: number;
   winner?: string;
 };
