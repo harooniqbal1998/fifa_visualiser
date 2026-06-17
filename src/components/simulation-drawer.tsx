@@ -1,12 +1,15 @@
 "use client";
 
 import { Timeline } from "@/components/timeline";
+import type { LayoutMode } from "@/components/tournament-view";
 
 type SimulationDrawerProps = {
   day: number;
   onDayChange: (day: number) => void;
   isSimulating: boolean;
   onStop: () => void;
+  layoutMode: LayoutMode;
+  onLayoutModeChange: (mode: LayoutMode) => void;
 };
 
 export function SimulationDrawer({
@@ -14,10 +17,21 @@ export function SimulationDrawer({
   onDayChange,
   isSimulating,
   onStop,
+  layoutMode,
+  onLayoutModeChange,
 }: SimulationDrawerProps) {
   return (
     <aside className="flex w-56 shrink-0 flex-col border-l border-zinc-200 dark:border-zinc-800">
-      <div className="shrink-0 border-b border-zinc-200 px-4 py-4 dark:border-zinc-800">
+      <div className="shrink-0 space-y-3 border-b border-zinc-200 px-4 py-4 dark:border-zinc-800">
+        <label className="flex cursor-pointer items-center gap-2 text-xs text-zinc-600 dark:text-zinc-400">
+          <input
+            type="checkbox"
+            checked={layoutMode === "petal"}
+            onChange={(e) => onLayoutModeChange(e.target.checked ? "petal" : "ring")}
+            className="rounded"
+          />
+          Petal layout (experimental)
+        </label>
         {!isSimulating ? (
           <button
             type="button"
