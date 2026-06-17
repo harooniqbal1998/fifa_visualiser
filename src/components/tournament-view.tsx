@@ -1,13 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   getDayRange,
   getSnapshotByDay,
   getTeams,
 } from "@/lib/tournament";
-import { Timeline } from "@/components/timeline";
-import { SimulationVisualization } from "@/components/simulation-visualization";
+import { SimulationDrawer } from "@/components/simulation-drawer";
+import {
+  SimulationVisualization,
+  type SimulationVisualizationRef,
+} from "@/components/simulation-visualization";
 
 export function TournamentView() {
   const { min } = getDayRange();
@@ -15,22 +18,23 @@ export function TournamentView() {
   const [day, setDay] = useState(min);
   const [isSimulating, setIsSimulating] = useState(false);
   const snapshot = getSnapshotByDay(day) ?? getSnapshotByDay(min)!;
+  const vizRef = useRef<SimulationVisualizationRef>(null);
 
   return (
-    <>
+    <div className="flex h-full w-full min-h-0">
       <SimulationVisualization
+        ref={vizRef}
         teams={teams}
         snapshot={snapshot}
-        day={day}
         isSimulating={isSimulating}
         onSimulatingChange={setIsSimulating}
-        onDayChange={setDay}
       />
-      <Timeline
+      <SimulationDrawer
         day={day}
         onDayChange={setDay}
         isSimulating={isSimulating}
+        onStop={() => vizRef.current?.stopSimulation()}
       />
-    </>
+    </div>
   );
 }
