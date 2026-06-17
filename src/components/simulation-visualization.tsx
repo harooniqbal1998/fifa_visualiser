@@ -4,7 +4,6 @@ import { useCallback, useRef, useState } from "react";
 import type { Snapshot, Team } from "@/types";
 import { TeamCanvas, type TeamCanvasRef } from "@/components/viz/team-canvas";
 import { DEFAULT_ANIMATION_PARAMS } from "@/lib/simulation/animation-params";
-import { runSimulation } from "@/lib/simulation/simulation-engine";
 
 type SimulationVisualizationProps = {
   teams: Team[];
@@ -24,7 +23,6 @@ export function SimulationVisualization({
   onDayChange,
 }: SimulationVisualizationProps) {
   const canvasRef = useRef<TeamCanvasRef>(null);
-  const abortRef = useRef(false);
   const [liveProbabilities, setLiveProbabilities] = useState<Record<string, number> | null>(
     null,
   );
@@ -49,59 +47,7 @@ export function SimulationVisualization({
 
   const seedKey = `day:${snapshot.day}`;
 
-  const handlePlay = useCallback(async () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    abortRef.current = false;
-    onSimulatingChange(true);
-    setLiveProbabilities(snapshot.probabilities);
-    setLiveOpponents(snapshot.possibleOpponents);
-    setLiveBracketDepths(snapshot.bracketDepths ?? {});
-
-    await runSimulation(
-      DEFAULT_ANIMATION_PARAMS,
-      {
-        onDayChange: (nextDay) => {
-          onDayChange(nextDay);
-        },
-        onCollision: async (event) => {
-          await canvas.playCollision(event);
-        },
-        onEliminations: async (event) => {
-          await canvas.eliminateTeams(event.teamIds);
-        },
-        onProbabilitiesUpdate: (probs) => {
-          setLiveProbabilities(probs);
-          canvas.setProbabilities(probs);
-        },
-        onBracketStateChange: ({ possibleOpponents, bracketDepths }) => {
-          setLiveOpponents(possibleOpponents);
-          setLiveBracketDepths(bracketDepths);
-          canvas.relayoutAnchors(bracketDepths);
-        },
-        onComplete: () => {
-          setLiveProbabilities(null);
-          setLiveOpponents(null);
-          setLiveBracketDepths(null);
-          onSimulatingChange(false);
-        },
-        shouldAbort: () => abortRef.current,
-      },
-      { startDay: day, snapshot },
-    );
-
-    if (abortRef.current) {
-      onSimulatingChange(false);
-      setLiveProbabilities(null);
-      setLiveOpponents(null);
-      setLiveBracketDepths(null);
-      canvas.setProbabilities(snapshot.probabilities);
-    }
-  }, [day, onDayChange, onSimulatingChange, snapshot]);
-
   const handleStop = useCallback(() => {
-    abortRef.current = true;
     onSimulatingChange(false);
     setLiveProbabilities(null);
     setLiveOpponents(null);
@@ -124,8 +70,9 @@ export function SimulationVisualization({
           {!isSimulating ? (
             <button
               type="button"
-              onClick={handlePlay}
-              className="rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+              disabled
+              title="Positioning pass — simulation coming next"
+              className="cursor-not-allowed rounded-md bg-zinc-400 px-4 py-2 text-sm font-medium text-white dark:bg-zinc-600"
             >
               Play simulation
             </button>
