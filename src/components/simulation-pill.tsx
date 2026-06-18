@@ -2,7 +2,6 @@
 
 import { forwardRef } from "react";
 import { Timeline } from "@/components/timeline";
-import { canStartSimulationFromDay } from "@/lib/simulation/advancement";
 import type { SimulationSessionPhase } from "@/components/viz/petal/petal-simulation-visualization";
 
 type SimulationPillProps = {
@@ -44,7 +43,6 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
     { day, onDayChange, sessionPhase, onPlay, onStop, onRestart },
     ref,
   ) {
-    const canPlay = canStartSimulationFromDay(day);
     const isRunning = sessionPhase === "running";
 
     return (
@@ -76,19 +74,10 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
         ) : (
           <button
             type="button"
-            disabled={!canPlay}
-            title={
-              !canPlay
-                ? "Simulation unavailable for this day"
-                : "Play simulation from selected day"
-            }
-            aria-label={
-              !canPlay
-                ? "Simulation unavailable for this day"
-                : "Play simulation from selected day"
-            }
+            title="Play simulation from selected day"
+            aria-label="Play simulation from selected day"
             onClick={onPlay}
-            className="flex h-7 shrink-0 items-center gap-1.5 rounded-full bg-zinc-900 px-2.5 text-xs font-medium text-white hover:bg-zinc-800 disabled:cursor-not-allowed disabled:bg-zinc-400 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 dark:disabled:bg-zinc-600"
+            className="flex h-7 shrink-0 items-center gap-1.5 rounded-full bg-zinc-900 px-2.5 text-xs font-medium text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
           >
             <PlayIcon />
             Play
