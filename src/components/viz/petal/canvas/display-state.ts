@@ -134,6 +134,8 @@ export type SetTargetsOptions = {
   deferTransition?: boolean;
   syncStandingRanks?: boolean;
   borderTeamIds?: Iterable<string>;
+  /** When set, only these teams receive new layout targets (avoids global radius rescale jitter). */
+  positionOnlyTeamIds?: Iterable<string>;
 };
 
 function shouldSyncStandingRankNow(
@@ -152,14 +154,34 @@ export function setTargetsFromLayout(
   options: SetTargetsOptions = {},
 ): void {
   const { deferTransition = false, syncStandingRanks = false } = options;
+  const positionOnlyIds = options.positionOnlyTeamIds
+    ? new Set(options.positionOnlyTeamIds)
+    : null;
   let shouldBeginTransition = false;
 
   for (const node of layout.teams) {
+    if (positionOnlyIds && !positionOnlyIds.has(node.id)) {
+      continue;
+    }
+
     const entry = state.teams.get(node.id);
     if (entry) {
       if (state.droppedTeamIds.has(node.id)) {
         entry.targetR = node.r;
         entry.r = node.r;
+        entry.targetStandingRank = node.standingRank;
+        if (shouldSyncStandingRankNow(node.id, options)) {
+          entry.standingRank = node.standingRank;
+          entry.rankBorderOpacity = 1;
+          entry.rankBorderOpacityStart = 1;
+          entry.rankBorderOpacityTarget = 1;
+        }
+        continue;
+      }
+
+      if (deferTransition && positionOnlyIds?.has(node.id)) {
+        entry.targetX = node.x;
+        entry.targetY = node.y;
         entry.targetStandingRank = node.standingRank;
         if (shouldSyncStandingRankNow(node.id, options)) {
           entry.standingRank = node.standingRank;
@@ -186,7 +208,9 @@ export function setTargetsFromLayout(
         entry.r = node.r;
         entry.startR = node.r;
       } else if (deferTransition && xyChanged && entry.r !== node.r) {
-        entry.startR = entry.r;
+        // Snap radius during rank shuffle — only animate x/y to avoid jitter.
+        entry.r = node.r;
+        entry.startR = node.r;
       }
       if (targetsChanged && !deferTransition) {
         markTransitionStart(state, entry);
@@ -216,12 +240,14 @@ export function startPositionTransitions(
     if (state.droppedTeamIds.has(id)) continue;
     if (ids && !ids.has(id)) continue;
 
-    if (
+    const xyUnsettled =
       Math.abs(entry.x - entry.targetX) > 0.5 ||
-      Math.abs(entry.y - entry.targetY) > 0.5 ||
-      Math.abs(entry.r - entry.targetR) > 0.5
-    ) {
+      Math.abs(entry.y - entry.targetY) > 0.5;
+
+    if (xyUnsettled) {
       markTransitionStart(state, entry);
+      entry.startR = entry.r;
+      entry.targetR = entry.r;
       shouldBeginTransition = true;
     }
   }

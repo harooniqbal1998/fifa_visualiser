@@ -5,7 +5,7 @@ import { getCumulativePullPct } from "@/components/viz/petal/petal-config";
 import {
   getTeamBracketHalf,
   type BracketHalf,
-} from "@/components/viz/petal/petal-routes";
+} from "@/data/tournament-paths";
 import {
   createRadiusScale,
   estimateEffectiveMaxRadius,
@@ -13,7 +13,8 @@ import {
   GROUP_IDS,
   type VizSizing,
 } from "@/components/viz/viz-math";
-import { getAdvancingThirdPlaceGroups } from "@/lib/simulation/r32-resolver";
+import { selectAdvancingThirdPlaceGroups } from "@/lib/simulation/group-advancement";
+import { createSeededRng } from "@/lib/simulation/animation-params";
 
 export type PetalPoint = { x: number; y: number };
 
@@ -211,7 +212,10 @@ export function computePetalPositions(
   const spreadRad = usableRadius * config.spreadRadRatio;
   const spreadTan = usableRadius * config.spreadTanRatio;
 
-  const advancingThirdGroups = getAdvancingThirdPlaceGroups(standings);
+  const advancingThirdGroups = selectAdvancingThirdPlaceGroups(
+    standings,
+    createSeededRng(42),
+  );
 
   const maxProbability = Math.max(
     ...teams.map((t) => probabilities[t.id] ?? 0),

@@ -29,7 +29,7 @@ function drawRankBorder(
   isEliminated: boolean,
   eliminatedOpacity: number,
 ) {
-  if (team.bracketDepth > 0 || team.rankBorderOpacity <= 0 || team.probability <= 0) {
+  if (team.bracketDepth > 0 || team.rankBorderOpacity <= 0 || isEliminated) {
     return;
   }
 
@@ -52,8 +52,8 @@ export function drawTeam(
   flags: Map<string, HTMLImageElement>,
   eliminatedOpacity: number,
 ) {
-  const { x, y, r, probability, opacity, isWinner, isParticipant } = team;
-  const isEliminated = probability <= 0 && !isParticipant;
+  const { x, y, r, opacity, isWinner, isParticipant } = team;
+  const isEliminated = team.isEliminated && !isParticipant;
 
   ctx.save();
 

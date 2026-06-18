@@ -18,10 +18,6 @@ export type PetalLayoutConfig = {
   eliminatedOpacity: number;
   bottomStripPaddingRatio: number;
   dropDurationMs: number;
-  /** @deprecated use spreadTanRatio */
-  laneSpreadRatio?: number;
-  /** @deprecated use spreadRadRatio */
-  outerSpreadRatio?: number;
 };
 
 export const DEFAULT_PETAL_CONFIG: PetalLayoutConfig = {
@@ -36,7 +32,7 @@ export const DEFAULT_PETAL_CONFIG: PetalLayoutConfig = {
   knockoutMinRadiusRatio: 0.08,
   groupStartAngle: -0.792,
   centerYOffsetRatio: 0,
-  matchHoldDurationMs: 1500,
+  matchHoldDurationMs: 1200,
   rankTransitionDurationMs: 200,
   rankBorderFadeMs: 80,
   spotlightDimOpacity: 0.25,
@@ -49,14 +45,7 @@ export const DEFAULT_PETAL_CONFIG: PetalLayoutConfig = {
 export function mergePetalConfig(
   overrides: Partial<PetalLayoutConfig>,
 ): PetalLayoutConfig {
-  const merged = { ...DEFAULT_PETAL_CONFIG, ...overrides };
-  if (overrides.laneSpreadRatio !== undefined && overrides.spreadTanRatio === undefined) {
-    merged.spreadTanRatio = overrides.laneSpreadRatio;
-  }
-  if (overrides.outerSpreadRatio !== undefined && overrides.spreadRadRatio === undefined) {
-    merged.spreadRadRatio = overrides.outerSpreadRatio;
-  }
-  return merged;
+  return { ...DEFAULT_PETAL_CONFIG, ...overrides };
 }
 
 export function getCumulativePullPct(

@@ -18,8 +18,11 @@ import { DEFAULT_ANIMATION_PARAMS } from "@/lib/simulation/animation-params";
 import {
   buildSimulationBootstrap,
   buildStandingsFromGroupResults,
+  getScriptedResultsUpToDay,
 } from "@/lib/simulation/advancement";
-import type { CollisionEvent } from "@/lib/simulation/types";
+import { getEliminatedFromResults } from "@/lib/simulation/bracket-state";
+import type { ProbabilityState } from "@/lib/probability/types";
+import type { CollisionEvent, SimMatchResult } from "@/lib/simulation/types";
 import { runSimulation } from "@/lib/simulation/simulation-engine";
 import { getVizSizing } from "@/components/viz/viz-math";
 
@@ -38,22 +41,28 @@ type PetalSimulationVisualizationProps = {
   onSimulatingChange: (simulating: boolean) => void;
   onSessionComplete: (winnerId: string) => void;
   onDayChange?: (day: number) => void;
+  onProbabilityStateUpdate?: (payload: {
+    state: ProbabilityState;
+    groupResults: SimMatchResult[];
+    knockoutResults: SimMatchResult[];
+  }) => void;
 };
 
-function getStaticEliminated(
-  teams: Team[],
-  probabilities: Record<string, number>,
-): Set<string> {
-  return new Set(
-    teams.filter((team) => (probabilities[team.id] ?? 0) === 0).map((team) => team.id),
-  );
+function getSnapshotEliminated(snapshot: Snapshot): Set<string> {
+  if (snapshot.eliminatedTeamIds) {
+    return new Set(snapshot.eliminatedTeamIds);
+  }
+  const results = getScriptedResultsUpToDay(snapshot.day);
+  const groupResults = results.filter((r) => r.stage === "group");
+  const knockoutResults = results.filter((r) => r.stage !== "group");
+  return getEliminatedFromResults(snapshot.day, knockoutResults, groupResults);
 }
 
 export const PetalSimulationVisualization = forwardRef<
   PetalSimulationVisualizationRef,
   PetalSimulationVisualizationProps
 >(function PetalSimulationVisualization(
-  { teams, snapshot, sessionPhase, onSimulatingChange, onSessionComplete, onDayChange },
+  { teams, snapshot, sessionPhase, onSimulatingChange, onSessionComplete, onDayChange, onProbabilityStateUpdate },
   ref,
 ) {
   const canvasRef = useRef<PetalCanvasRef>(null);
@@ -62,9 +71,9 @@ export const PetalSimulationVisualization = forwardRef<
   const probabilitiesRef = useRef(snapshot.probabilities);
   const standingsRef = useRef<Record<string, StandingRow[]>>(getGroupStandings(snapshot.day));
   const bracketDepthsRef = useRef<Record<string, number>>(snapshot.bracketDepths ?? {});
-  const eliminatedRef = useRef<Set<string>>(
-    getStaticEliminated(teams, snapshot.probabilities),
-  );
+  const eliminatedRef = useRef<Set<string>>(getSnapshotEliminated(snapshot));
+  const groupResultsRef = useRef<SimMatchResult[]>([]);
+  const knockoutResultsRef = useRef<SimMatchResult[]>([]);
 
   const [liveProbabilities, setLiveProbabilities] = useState<Record<string, number> | null>(
     null,
@@ -99,8 +108,8 @@ export const PetalSimulationVisualization = forwardRef<
 
   const eliminated = useMemo(() => {
     if (useLiveData && liveEliminated) return liveEliminated;
-    return getStaticEliminated(teams, snapshot.probabilities);
-  }, [useLiveData, liveEliminated, teams, snapshot.probabilities]);
+    return getSnapshotEliminated(snapshot);
+  }, [useLiveData, liveEliminated, snapshot]);
 
   const getCanvasSize = () => {
     const el = containerRef.current;
@@ -146,7 +155,7 @@ export const PetalSimulationVisualization = forwardRef<
     setLiveBracketDepths(null);
     setLiveEliminated(null);
 
-    const staticEliminated = getStaticEliminated(teams, snapshot.probabilities);
+    const staticEliminated = getSnapshotEliminated(snapshot);
     eliminatedRef.current = new Set(staticEliminated);
     probabilitiesRef.current = snapshot.probabilities;
     standingsRef.current = getGroupStandings(snapshot.day);
@@ -179,6 +188,8 @@ export const PetalSimulationVisualization = forwardRef<
     probabilitiesRef.current = { ...bootstrap.probabilities };
     standingsRef.current = bootstrap.standings;
     bracketDepthsRef.current = bootstrap.bracketDepths;
+    groupResultsRef.current = bootstrap.runState.groupResults;
+    knockoutResultsRef.current = bootstrap.runState.results;
     eliminatedRef.current = new Set(bootstrap.eliminated);
 
     setLiveProbabilities({ ...bootstrap.probabilities });
@@ -205,6 +216,7 @@ export const PetalSimulationVisualization = forwardRef<
         },
         onCollision: (event) => canvasRef.current!.playMatch(event),
         onMatchResolved: async (event: CollisionEvent, groupResults) => {
+          groupResultsRef.current = groupResults;
           if (event.isKnockout) {
             eliminatedRef.current.add(event.loser);
             setLiveEliminated(new Set(eliminatedRef.current));
@@ -234,8 +246,9 @@ export const PetalSimulationVisualization = forwardRef<
           const groupTeamIds = groupId
             ? teams.filter((team) => team.group === groupId).map((team) => team.id)
             : matchTeams;
-          canvasRef.current?.setLayoutTargets(layout, matchTeams);
+          canvasRef.current?.setLayoutTargets(layout, matchTeams, groupTeamIds);
           await canvasRef.current?.animateRankTransition(matchTeams, groupTeamIds);
+          canvasRef.current?.syncRadiusTargetsFromLayout(layout);
         },
         onEliminations: async ({ teamIds }) => {
           for (const id of teamIds) {
@@ -248,6 +261,19 @@ export const PetalSimulationVisualization = forwardRef<
           probabilitiesRef.current = probs;
           setLiveProbabilities(probs);
           canvasRef.current?.setProbabilities(probs);
+          const layout = computeLayout(
+            standingsRef.current,
+            bracketDepthsRef.current,
+            eliminatedRef.current,
+          );
+          canvasRef.current?.syncRadiusTargetsFromLayout(layout);
+        },
+        onProbabilityStateUpdate: (probState) => {
+          onProbabilityStateUpdate?.({
+            state: probState,
+            groupResults: groupResultsRef.current,
+            knockoutResults: knockoutResultsRef.current,
+          });
         },
         onBracketStateChange: (state) => {
           bracketDepthsRef.current = state.bracketDepths;
@@ -255,7 +281,9 @@ export const PetalSimulationVisualization = forwardRef<
         },
         onComplete: (finalState) => {
           onSimulatingChange(false);
-          const survivors = teams.filter((team) => !finalState.eliminated.has(team.id));
+          const survivors = teams.filter(
+            (team) => !finalState.probability.eliminated.has(team.id),
+          );
           if (survivors.length === 1) {
             onSessionComplete(survivors[0]!.id);
           }

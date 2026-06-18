@@ -131,6 +131,7 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
       matchController: matchControllerRef.current,
       flags: flagsRef.current,
       teamMeta,
+      eliminated: eliminatedRef.current,
     });
 
     renderFrame({
@@ -144,6 +145,7 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
       matchController: matchControllerRef.current,
       flags: flagsRef.current,
       teams: drawTeams,
+      eliminated: eliminatedRef.current,
     });
   };
 
@@ -292,12 +294,19 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
           markTeamsDropped(displayStateRef.current, teamIds);
         },
 
-        setLayoutTargets(layout, borderTeamIds?: string[]) {
+        setLayoutTargets(layout, borderTeamIds?: string[], positionOnlyTeamIds?: string[]) {
           layoutRef.current = layout;
           setTargetsFromLayout(displayStateRef.current, layout, {
             deferTransition: true,
             borderTeamIds,
+            positionOnlyTeamIds,
           });
+        },
+
+        syncRadiusTargetsFromLayout(layout) {
+          layoutRef.current = layout;
+          const radii = Object.fromEntries(layout.teams.map((n) => [n.id, n.r]));
+          setRadiusTargets(displayStateRef.current, radii);
         },
 
         resetDisplay(layout) {

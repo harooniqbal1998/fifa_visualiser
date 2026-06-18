@@ -31,8 +31,9 @@ export function renderFrame(frame: DrawFrameContext) {
 }
 
 export function buildTeamDrawItems(
-  frame: Omit<DrawFrameContext, "teams"> & {
+  frame: Omit<DrawFrameContext, "teams" | "eliminated"> & {
     teamMeta: Map<string, { isoCode: string; renderLayer: number; probability: number }>;
+    eliminated: Set<string>;
   },
 ) {
   const activeMatches = frame.matchController.getActiveMatches();
@@ -61,6 +62,7 @@ export function buildTeamDrawItems(
       standingRank: pos?.standingRank ?? 4,
       rankBorderOpacity: pos?.rankBorderOpacity ?? 1,
       bracketDepth: layoutNode?.bracketDepth ?? 0,
+      isEliminated: frame.eliminated.has(id),
     };
   });
 

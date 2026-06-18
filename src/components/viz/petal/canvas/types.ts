@@ -10,7 +10,12 @@ export type PetalCanvasRef = {
   eliminateTeams: (teamIds: string[]) => Promise<void>;
   setProbabilities: (probabilities: Record<string, number>) => void;
   markTeamsDropped: (teamIds: string[]) => void;
-  setLayoutTargets: (layout: PetalLayoutResult, borderTeamIds?: string[]) => void;
+  setLayoutTargets: (
+    layout: PetalLayoutResult,
+    borderTeamIds?: string[],
+    positionOnlyTeamIds?: string[],
+  ) => void;
+  syncRadiusTargetsFromLayout: (layout: PetalLayoutResult) => void;
   resetDisplay: (layout: PetalLayoutResult) => void;
   setEliminated: (eliminated: Set<string>) => void;
   clearEliminated: () => void;
@@ -34,6 +39,7 @@ export type TeamDrawItem = {
   standingRank: StandingRank;
   rankBorderOpacity: number;
   bracketDepth: number;
+  isEliminated: boolean;
 };
 
 export type DrawFrameContext = {
@@ -47,6 +53,7 @@ export type DrawFrameContext = {
   matchController: MatchController;
   flags: Map<string, HTMLImageElement>;
   teams: TeamDrawItem[];
+  eliminated: Set<string>;
 };
 
 export type RenderLoopCallbacks = {
