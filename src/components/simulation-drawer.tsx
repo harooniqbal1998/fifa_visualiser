@@ -1,7 +1,6 @@
 "use client";
 
 import { Timeline } from "@/components/timeline";
-import type { LayoutMode } from "@/components/tournament-view";
 import { canStartSimulationFromDay } from "@/lib/simulation/advancement";
 
 type SimulationDrawerProps = {
@@ -10,8 +9,6 @@ type SimulationDrawerProps = {
   isSimulating: boolean;
   onPlay: () => void;
   onStop: () => void;
-  layoutMode: LayoutMode;
-  onLayoutModeChange: (mode: LayoutMode) => void;
 };
 
 export function SimulationDrawer({
@@ -20,34 +17,19 @@ export function SimulationDrawer({
   isSimulating,
   onPlay,
   onStop,
-  layoutMode,
-  onLayoutModeChange,
 }: SimulationDrawerProps) {
-  const canPlayPetal = layoutMode === "petal" && canStartSimulationFromDay(day);
-  const canPlayRing = layoutMode === "ring";
-  const canPlay = canPlayPetal || canPlayRing;
+  const canPlay = canStartSimulationFromDay(day);
 
   return (
     <aside className="flex w-56 shrink-0 flex-col border-l border-zinc-200 dark:border-zinc-800">
       <div className="shrink-0 space-y-3 border-b border-zinc-200 px-4 py-4 dark:border-zinc-800">
-        <label className="flex cursor-pointer items-center gap-2 text-xs text-zinc-600 dark:text-zinc-400">
-          <input
-            type="checkbox"
-            checked={layoutMode === "petal"}
-            onChange={(e) => onLayoutModeChange(e.target.checked ? "petal" : "ring")}
-            className="rounded"
-          />
-          Petal layout (experimental)
-        </label>
         {!isSimulating ? (
           <button
             type="button"
             disabled={!canPlay}
             title={
               !canPlay
-                ? layoutMode === "petal"
-                  ? "Simulation unavailable for this day"
-                  : "Simulation coming soon for ring layout"
+                ? "Simulation unavailable for this day"
                 : "Play simulation from selected day"
             }
             onClick={onPlay}

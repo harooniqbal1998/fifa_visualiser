@@ -3,7 +3,6 @@
 import {
   forwardRef,
   useCallback,
-  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -13,14 +12,8 @@ import type { Snapshot, Team } from "@/types";
 import type { StandingRow } from "@/lib/standings";
 import { getGroupStandings } from "@/lib/tournament";
 import { PetalCanvas, type PetalCanvasRef } from "@/components/viz/petal/petal-canvas";
-import {
-  DEFAULT_PETAL_CONFIG,
-  loadPetalConfigFromStorage,
-  mergePetalConfig,
-  type PetalLayoutConfig,
-} from "@/components/viz/petal/petal-config";
+import { DEFAULT_PETAL_CONFIG } from "@/components/viz/petal/petal-config";
 import { computePetalPositions } from "@/components/viz/petal/petal-layout";
-import { PetalTuningPanel } from "@/components/viz/petal/petal-tuning-panel";
 import { DEFAULT_ANIMATION_PARAMS } from "@/lib/simulation/animation-params";
 import {
   buildSimulationBootstrap,
@@ -62,17 +55,13 @@ export const PetalSimulationVisualization = forwardRef<
   const canvasRef = useRef<PetalCanvasRef>(null);
   const containerRef = useRef<HTMLElement>(null);
   const abortRef = useRef(false);
-  const configRef = useRef<PetalLayoutConfig>(mergePetalConfig({}));
   const probabilitiesRef = useRef(snapshot.probabilities);
   const standingsRef = useRef<Record<string, StandingRow[]>>(getGroupStandings(snapshot.day));
   const bracketDepthsRef = useRef<Record<string, number>>(snapshot.bracketDepths ?? {});
   const eliminatedRef = useRef<Set<string>>(
     getStaticEliminated(teams, snapshot.probabilities),
   );
-  const lastSimDayRef = useRef(snapshot.day);
 
-  const [config, setConfig] = useState<PetalLayoutConfig>(() => mergePetalConfig({}));
-  const [panelCollapsed, setPanelCollapsed] = useState(false);
   const [liveProbabilities, setLiveProbabilities] = useState<Record<string, number> | null>(
     null,
   );
@@ -84,13 +73,7 @@ export const PetalSimulationVisualization = forwardRef<
   );
   const [liveEliminated, setLiveEliminated] = useState<Set<string> | null>(null);
 
-  configRef.current = config;
   probabilitiesRef.current = liveProbabilities ?? snapshot.probabilities;
-
-  useEffect(() => {
-    const stored = mergePetalConfig(loadPetalConfigFromStorage());
-    setConfig(stored);
-  }, []);
 
   const displayProbabilities = isSimulating
     ? (liveProbabilities ?? snapshot.probabilities)
@@ -132,7 +115,7 @@ export const PetalSimulationVisualization = forwardRef<
         depths,
         width,
         height,
-        configRef.current,
+        DEFAULT_PETAL_CONFIG,
         getVizSizing(),
         eliminatedSet,
       );
@@ -165,7 +148,6 @@ export const PetalSimulationVisualization = forwardRef<
     standingsRef.current = bootstrap.standings;
     bracketDepthsRef.current = bootstrap.bracketDepths;
     eliminatedRef.current = new Set(bootstrap.eliminated);
-    lastSimDayRef.current = startDay;
 
     setLiveProbabilities({ ...bootstrap.probabilities });
     setLiveStandings(bootstrap.standings);
@@ -184,7 +166,6 @@ export const PetalSimulationVisualization = forwardRef<
       DEFAULT_ANIMATION_PARAMS,
       {
         onDayChange: (day) => {
-          lastSimDayRef.current = day;
           onDayChange?.(day);
         },
         onCollision: (event) => canvasRef.current!.playMatch(event),
@@ -238,9 +219,6 @@ export const PetalSimulationVisualization = forwardRef<
           setLiveStandings(null);
           setLiveBracketDepths(null);
           setLiveEliminated(null);
-          if (configRef.current.autoAdvanceDay && onDayChange) {
-            onDayChange(lastSimDayRef.current + 1);
-          }
         },
         shouldAbort: () => abortRef.current,
       },
@@ -266,17 +244,9 @@ export const PetalSimulationVisualization = forwardRef<
         standings={standings}
         bracketDepths={bracketDepths}
         eliminated={eliminated}
-        config={config}
+        config={DEFAULT_PETAL_CONFIG}
         isSimulating={isSimulating}
-      />
-      <PetalTuningPanel
-        config={config}
-        onChange={setConfig}
-        collapsed={panelCollapsed}
-        onCollapsedChange={setPanelCollapsed}
       />
     </section>
   );
 });
-
-export { DEFAULT_PETAL_CONFIG };

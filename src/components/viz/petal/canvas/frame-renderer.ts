@@ -1,4 +1,3 @@
-import { drawDebugOverlay } from "@/components/viz/petal/canvas/draw-debug";
 import {
   computeTeamOpacity,
   drawConnectors,
@@ -11,15 +10,11 @@ import { drawTeams } from "@/components/viz/petal/canvas/draw-teams";
 import type { DrawFrameContext } from "@/components/viz/petal/canvas/types";
 
 export function renderFrame(frame: DrawFrameContext) {
-  const { ctx, width, height, dpr, config, layout, displayState, matchController, flags, teams } =
+  const { ctx, width, height, dpr, config, displayState, matchController, flags, teams } =
     frame;
 
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, width, height);
-
-  if (layout && config.showDebug) {
-    drawDebugOverlay(ctx, layout, config);
-  }
 
   const activeMatches = matchController.getActiveMatches();
   const backgroundTeams = teams.filter((t) => !t.isParticipant);
