@@ -4,12 +4,19 @@ import { useLayoutEffect, useRef } from "react";
 import type { MatchStage } from "@/types";
 import { getTimelineDays } from "@/lib/tournament";
 
-const VISIBLE_DAYS = 3;
+const VISIBLE_DAYS = 5;
 const SLOT_PX = 24;
 const GAP_PX = 6;
 const STEP_PX = SLOT_PX + GAP_PX;
 const VIEWPORT_PX = VISIBLE_DAYS * SLOT_PX + (VISIBLE_DAYS - 1) * GAP_PX;
 const TRACK_PADDING_PX = (VIEWPORT_PX - SLOT_PX) / 2;
+const CIRCLE_PX = 14;
+
+function circleVisuals(distance: number) {
+  if (distance === 0) return { scale: 1, blur: 0, opacity: 1 };
+  if (distance === 1) return { scale: 0.8, blur: 0.5, opacity: 0.65 };
+  return { scale: 0.65, blur: 1.5, opacity: 0.45 };
+}
 
 type TimelineProps = {
   day: number;
@@ -58,9 +65,12 @@ export function Timeline({ day, onDayChange, isSimulating = false }: TimelinePro
           className="flex flex-row items-center gap-1.5"
           style={{ paddingInline: TRACK_PADDING_PX }}
         >
-          {timelineDays.map((entry) => {
+          {timelineDays.map((entry, index) => {
             const isActive = entry.day === day;
             const stageStyle = stageStyles[entry.stage];
+            const distance =
+              activeIndex >= 0 ? Math.abs(index - activeIndex) : 0;
+            const { scale, blur, opacity } = circleVisuals(distance);
             return (
               <span
                 key={entry.day}
@@ -72,9 +82,16 @@ export function Timeline({ day, onDayChange, isSimulating = false }: TimelinePro
                   disabled={isSimulating}
                   aria-label={`Matchday ${entry.day}`}
                   aria-current={isActive ? "step" : undefined}
-                  className={`h-3.5 w-3.5 shrink-0 rounded-full border-2 transition-opacity outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-zinc-100 dark:focus-visible:ring-offset-zinc-900 ${stageStyle} ${
-                    isActive ? "opacity-100" : "opacity-60 hover:opacity-80"
+                  className={`shrink-0 rounded-full border-2 outline-none transition-[transform,filter,opacity] duration-200 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-zinc-100 dark:focus-visible:ring-offset-zinc-900 ${stageStyle} ${
+                    isActive ? "" : "hover:opacity-80"
                   }`}
+                  style={{
+                    width: CIRCLE_PX,
+                    height: CIRCLE_PX,
+                    transform: `scale(${scale})`,
+                    filter: blur > 0 ? `blur(${blur}px)` : undefined,
+                    opacity,
+                  }}
                 />
               </span>
             );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   getDayRange,
   getSnapshotByDay,
@@ -9,10 +9,22 @@ import {
 import { measurePillReserve } from "@/lib/viz-layout";
 import { SimulationPill } from "@/components/simulation-pill";
 import {
+  DebugToggleButton,
+  ProbabilityDebugPanel,
+} from "@/components/probability-debug-panel";
+import {
   PetalSimulationVisualization,
   type PetalSimulationVisualizationRef,
   type SimulationSessionPhase,
 } from "@/components/viz/petal/petal-simulation-visualization";
+import { replayTournamentToDay } from "@/lib/probability/replay-tournament";
+import { createSeededRng } from "@/lib/simulation/animation-params";
+import { DEFAULT_PROBABILITY_CONFIG } from "@/lib/probability/types";
+import type { ProbabilityState } from "@/lib/probability/types";
+import type { SimMatchResult } from "@/lib/simulation/types";
+import { getScriptedResultsUpToDay } from "@/lib/simulation/advancement";
+
+const isDev = process.env.NODE_ENV === "development";
 
 export function TournamentView() {
   const { min } = getDayRange();
@@ -20,9 +32,47 @@ export function TournamentView() {
   const [day, setDay] = useState(min);
   const [sessionPhase, setSessionPhase] = useState<SimulationSessionPhase>("idle");
   const [pillReserve, setPillReserve] = useState(0);
+  const [debugOpen, setDebugOpen] = useState(false);
+  const [liveProbabilityState, setLiveProbabilityState] = useState<ProbabilityState | null>(
+    null,
+  );
+  const [liveGroupResults, setLiveGroupResults] = useState<SimMatchResult[]>([]);
+  const [liveKnockoutResults, setLiveKnockoutResults] = useState<SimMatchResult[]>([]);
   const snapshot = getSnapshotByDay(day) ?? getSnapshotByDay(min)!;
   const petalVizRef = useRef<PetalSimulationVisualizationRef>(null);
   const pillRef = useRef<HTMLDivElement>(null);
+
+  const idleReplay = useMemo(() => {
+    if (!isDev || !debugOpen || sessionPhase !== "idle") return null;
+    const rng = createSeededRng(42 + day);
+    return replayTournamentToDay(day, rng, DEFAULT_PROBABILITY_CONFIG);
+  }, [debugOpen, sessionPhase, day]);
+
+  const debugProbabilityState = isDev
+    ? sessionPhase === "idle"
+      ? (idleReplay?.probability ?? null)
+      : liveProbabilityState
+    : null;
+
+  const debugGroupResults = isDev
+    ? sessionPhase === "idle"
+      ? (idleReplay?.groupResults ??
+        getScriptedResultsUpToDay(day).filter((r) => r.stage === "group"))
+      : liveGroupResults
+    : [];
+
+  const debugKnockoutResults = isDev
+    ? sessionPhase === "idle"
+      ? (idleReplay?.knockoutResults ??
+        getScriptedResultsUpToDay(day).filter((r) => r.stage !== "group"))
+      : liveKnockoutResults
+    : [];
+
+  const debugMethod: "opening" | "bracket_analytical" = isDev
+    ? day === 0 && debugGroupResults.length === 0
+      ? "opening"
+      : "bracket_analytical"
+    : "opening";
 
   useEffect(() => {
     const pill = pillRef.current;
@@ -54,6 +104,7 @@ export function TournamentView() {
   const handleRestart = () => {
     petalVizRef.current?.resetSimulation();
     setSessionPhase("idle");
+    setLiveProbabilityState(null);
   };
 
   const handleSimulatingChange = (simulating: boolean) => {
@@ -80,7 +131,28 @@ export function TournamentView() {
           onSimulatingChange={handleSimulatingChange}
           onSessionComplete={handleSessionComplete}
           onDayChange={setDay}
+          onProbabilityStateUpdate={({ state, groupResults, knockoutResults }) => {
+            setLiveProbabilityState(state);
+            setLiveGroupResults(groupResults);
+            setLiveKnockoutResults(knockoutResults);
+          }}
         />
+        {isDev ? (
+          <>
+            <div className="absolute right-4 top-4 z-40">
+              <DebugToggleButton open={debugOpen} onToggle={() => setDebugOpen((v) => !v)} />
+            </div>
+            <ProbabilityDebugPanel
+              open={debugOpen}
+              onClose={() => setDebugOpen(false)}
+              day={day}
+              probabilityState={debugProbabilityState}
+              groupResults={debugGroupResults}
+              knockoutResults={debugKnockoutResults}
+              method={debugMethod}
+            />
+          </>
+        ) : null}
       </div>
       <SimulationPill
         ref={pillRef}
