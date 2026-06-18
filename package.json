@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "build:snapshots": "npx tsx src/data/build-snapshots.ts"
+    "build:snapshots": "npx tsx src/data/build-snapshots.ts",
+    "fetch:opening-odds": "npx tsx scripts/fetch-opening-odds.ts"
   },
   "dependencies": {
     "d3": "^7.9.0",

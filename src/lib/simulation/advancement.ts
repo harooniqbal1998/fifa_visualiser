@@ -2,6 +2,7 @@ import type { Match, Snapshot } from "@/types";
 import { teams } from "@/data/teams";
 import { matches } from "@/data/matches";
 import { snapshotsByDay } from "@/data/snapshots";
+import { OPENING_PROBABILITIES } from "@/data/opening-probabilities";
 import { computeGroupStandings, type StandingRow } from "@/lib/standings";
 import type { SimMatchResult, SimulationRunState } from "@/lib/simulation/types";
 
@@ -62,25 +63,11 @@ export function rankingToPrior(rank: number): number {
 }
 
 export function buildInitialProbabilities(): Record<string, number> {
-  const raw: Record<string, number> = {};
-  let total = 0;
-
-  for (const team of teams) {
-    raw[team.id] = rankingToPrior(team.fifaRanking);
-    total += raw[team.id];
-  }
-
-  const probs: Record<string, number> = {};
-  for (const team of teams) {
-    probs[team.id] = Number(((raw[team.id] / total) * 100).toFixed(2));
-  }
-  return probs;
+  return { ...OPENING_PROBABILITIES };
 }
 
 export function buildInitialRawWeights(): Record<string, number> {
-  return Object.fromEntries(
-    teams.map((team) => [team.id, rankingToPrior(team.fifaRanking)]),
-  );
+  return { ...OPENING_PROBABILITIES };
 }
 
 function matchToSimResult(match: Match): SimMatchResult | null {

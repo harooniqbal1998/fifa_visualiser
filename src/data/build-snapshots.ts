@@ -1,16 +1,14 @@
 import type { Snapshot } from "@/types";
 import { teams } from "./teams";
 import { matches } from "./matches";
-import { rankingToPrior } from "@/lib/simulation/advancement";
+import { OPENING_PROBABILITIES } from "./opening-probabilities";
 import {
   buildBracketState,
   getEliminatedFromResults,
 } from "@/lib/simulation/bracket-state";
 import type { SimMatchResult } from "@/lib/simulation/types";
 
-const SEED_PRIORS: Record<string, number> = Object.fromEntries(
-  teams.map((team) => [team.id, rankingToPrior(team.fifaRanking)]),
-);
+const SEED_PRIORS: Record<string, number> = { ...OPENING_PROBABILITIES };
 
 function getScriptedResultsUpToDay(day: number): SimMatchResult[] {
   return matches
