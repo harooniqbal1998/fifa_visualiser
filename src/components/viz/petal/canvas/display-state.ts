@@ -64,25 +64,22 @@ export function setTargetsFromLayout(
   }
 }
 
-export function setDropTargets(
+export function setDropTargetsYOnly(
   state: DisplayState,
-  positions: Map<string, { x: number; y: number }>,
+  teamIds: string[],
+  bottomY: number,
+  width: number,
+  sizing: { padding: number },
 ): void {
-  for (const [id, pos] of positions) {
+  for (const id of teamIds) {
     const entry = state.teams.get(id);
-    if (entry) {
-      entry.targetX = pos.x;
-      entry.targetY = pos.y;
-    } else {
-      state.teams.set(id, {
-        x: pos.x,
-        y: pos.y,
-        r: 0,
-        targetX: pos.x,
-        targetY: pos.y,
-        targetR: 0,
-      });
-    }
+    if (!entry) continue;
+    const xMin = sizing.padding + entry.r;
+    const xMax = width - sizing.padding - entry.r;
+    const clampedX = Math.max(xMin, Math.min(xMax, entry.x));
+    entry.x = clampedX;
+    entry.targetX = clampedX;
+    entry.targetY = bottomY;
   }
 }
 

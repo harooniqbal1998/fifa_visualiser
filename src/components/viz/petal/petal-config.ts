@@ -2,19 +2,19 @@ export type PetalLayoutConfig = {
   groupRingRadiusRatio: number;
   spreadRadRatio: number;
   spreadTanRatio: number;
-  leftHubXRatio: number;
-  rightHubXRatio: number;
-  hubYRatio: number;
-  depthPullStrength: number;
+  pullPctKnockoutEntry: number;
+  pullPctR32: number;
+  pullPctR16: number;
+  pullPctQF: number;
+  pullPctSF: number;
+  knockoutMinRadiusRatio: number;
   groupStartAngle: number;
   centerYOffsetRatio: number;
-  showDebug: boolean;
   matchHoldDurationMs: number;
   rankTransitionDurationMs: number;
   spotlightDimOpacity: number;
   connectorWidth: number;
   eliminatedOpacity: number;
-  autoAdvanceDay: boolean;
   bottomStripPaddingRatio: number;
   dropDurationMs: number;
   /** @deprecated use spreadTanRatio */
@@ -27,45 +27,22 @@ export const DEFAULT_PETAL_CONFIG: PetalLayoutConfig = {
   groupRingRadiusRatio: 0.39,
   spreadRadRatio: 0.065,
   spreadTanRatio: 0.055,
-  leftHubXRatio: 0.38,
-  rightHubXRatio: 0.62,
-  hubYRatio: 0.5,
-  depthPullStrength: 0.8,
+  pullPctKnockoutEntry: 5,
+  pullPctR32: 8,
+  pullPctR16: 12,
+  pullPctQF: 20,
+  pullPctSF: 55,
+  knockoutMinRadiusRatio: 0.08,
   groupStartAngle: -0.792,
   centerYOffsetRatio: 0,
-  showDebug: false,
   matchHoldDurationMs: 1500,
   rankTransitionDurationMs: 800,
   spotlightDimOpacity: 0.25,
   connectorWidth: 2,
   eliminatedOpacity: 0.45,
-  autoAdvanceDay: false,
   bottomStripPaddingRatio: 0.04,
   dropDurationMs: 900,
 };
-
-export const PETAL_SIMULATION_KEYS = [
-  "groupRingRadiusRatio",
-  "spreadRadRatio",
-  "spreadTanRatio",
-  "leftHubXRatio",
-  "rightHubXRatio",
-  "hubYRatio",
-  "depthPullStrength",
-  "showDebug",
-  "matchHoldDurationMs",
-  "rankTransitionDurationMs",
-  "spotlightDimOpacity",
-  "connectorWidth",
-  "eliminatedOpacity",
-  "autoAdvanceDay",
-  "bottomStripPaddingRatio",
-  "dropDurationMs",
-] as const satisfies readonly (keyof PetalLayoutConfig)[];
-
-export type PetalSimulationKey = (typeof PETAL_SIMULATION_KEYS)[number];
-
-export const PETAL_CONFIG_STORAGE_KEY = "petal-simulation-config";
 
 export function mergePetalConfig(
   overrides: Partial<PetalLayoutConfig>,
@@ -80,29 +57,19 @@ export function mergePetalConfig(
   return merged;
 }
 
-export function loadPetalConfigFromStorage(): Partial<PetalLayoutConfig> {
-  if (typeof window === "undefined") return {};
-  try {
-    const raw = localStorage.getItem(PETAL_CONFIG_STORAGE_KEY);
-    if (!raw) return {};
-    const parsed = JSON.parse(raw) as Partial<PetalLayoutConfig>;
-    const simulationOnly: Partial<PetalLayoutConfig> = {};
-    for (const key of PETAL_SIMULATION_KEYS) {
-      if (parsed[key] !== undefined) {
-        (simulationOnly as Record<string, unknown>)[key] = parsed[key];
-      }
-    }
-    return simulationOnly;
-  } catch {
-    return {};
-  }
-}
-
-export function savePetalConfigToStorage(config: PetalLayoutConfig): void {
-  if (typeof window === "undefined") return;
-  const simulationOnly: Partial<PetalLayoutConfig> = {};
-  for (const key of PETAL_SIMULATION_KEYS) {
-    (simulationOnly as Record<string, unknown>)[key] = config[key];
-  }
-  localStorage.setItem(PETAL_CONFIG_STORAGE_KEY, JSON.stringify(simulationOnly));
+export function getCumulativePullPct(
+  depth: number,
+  config: PetalLayoutConfig,
+): number {
+  if (depth <= 0) return 0;
+  const increments = [
+    config.pullPctKnockoutEntry,
+    config.pullPctR32,
+    config.pullPctR16,
+    config.pullPctQF,
+    config.pullPctSF,
+  ];
+  const steps = Math.min(depth, increments.length);
+  const sum = increments.slice(0, steps).reduce((a, b) => a + b, 0);
+  return Math.min(Math.max(sum, 0), 100);
 }

@@ -3,14 +3,14 @@ import type { Team } from "@/types";
 import type { StandingRow } from "@/lib/standings";
 import type { PetalLayoutConfig } from "@/components/viz/petal/petal-config";
 import {
-  computeEliminatedStripPositions,
+  computeEliminatedBottomY,
   computePetalPositions,
   type PetalLayoutResult,
 } from "@/components/viz/petal/petal-layout";
 import {
   createDisplayState,
   resetDisplayFromLayout,
-  setDropTargets,
+  setDropTargetsYOnly,
   setRadiusTargets,
   setTargetsFromLayout,
   tickDisplayState,
@@ -231,9 +231,7 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
           }
 
           const { width, height } = sizeRef.current;
-          const stripPositions = computeEliminatedStripPositions(
-            [...eliminatedRef.current],
-            width,
+          const bottomY = computeEliminatedBottomY(
             height,
             configRef.current,
             sizingRef.current,
@@ -241,7 +239,13 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
 
           const savedDuration = displayStateRef.current.transitionDurationMs;
           displayStateRef.current.transitionDurationMs = configRef.current.dropDurationMs;
-          setDropTargets(displayStateRef.current, stripPositions);
+          setDropTargetsYOnly(
+            displayStateRef.current,
+            teamIds,
+            bottomY,
+            width,
+            sizingRef.current,
+          );
           await waitUntilSettled(displayStateRef.current);
           displayStateRef.current.transitionDurationMs = savedDuration;
         },

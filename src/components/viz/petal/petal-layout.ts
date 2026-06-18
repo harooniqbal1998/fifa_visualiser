@@ -1,6 +1,7 @@
 import type { Team } from "@/types";
 import type { StandingRow } from "@/lib/standings";
 import type { PetalLayoutConfig } from "@/components/viz/petal/petal-config";
+import { getCumulativePullPct } from "@/components/viz/petal/petal-config";
 import {
   getTeamBracketHalf,
   type BracketHalf,
@@ -31,11 +32,10 @@ export type PetalTeamPosition = {
 export type PetalLayoutResult = {
   teams: PetalTeamPosition[];
   canvasCenter: PetalPoint;
-  leftHub: PetalPoint;
-  rightHub: PetalPoint;
   groupCenters: Record<string, PetalPoint>;
   groupAngles: Record<string, number>;
   groupRingRadius: number;
+  innerRingRadius: number;
   spreadRad: number;
   spreadTan: number;
   usableRadius: number;
@@ -128,76 +128,69 @@ export function computeDiamondAnchor(
   };
 }
 
+const CHAMPION_BRACKET_DEPTH = 6;
+
+function pullTowardRadius(
+  pos: PetalPoint,
+  center: PetalPoint,
+  targetRadius: number,
+): PetalPoint {
+  const dx = pos.x - center.x;
+  const dy = pos.y - center.y;
+  const currentRadius = Math.hypot(dx, dy);
+  if (currentRadius < 1e-6) {
+    return { x: center.x, y: center.y };
+  }
+  const scale = targetRadius / currentRadius;
+  return {
+    x: center.x + dx * scale,
+    y: center.y + dy * scale,
+  };
+}
+
 function computeKnockoutPosition(
   groupStagePos: PetalPoint,
-  bracketHalf: BracketHalf | null,
   bracketDepth: number,
   canvasCenter: PetalPoint,
-  leftHub: PetalPoint,
-  rightHub: PetalPoint,
-  depthPullStrength: number,
+  usableRadius: number,
+  config: PetalLayoutConfig,
 ): PetalPoint {
-  if (bracketDepth <= 0 || bracketHalf === null) {
+  if (bracketDepth <= 0) {
     return groupStagePos;
   }
 
-  const hub = bracketHalf === "left" ? leftHub : rightHub;
-  const maxDepth = 6;
-  const rawT = Math.min(bracketDepth / maxDepth, 1);
-  const t = Math.min(rawT * depthPullStrength, 1);
-
-  if (bracketDepth >= maxDepth) {
-    return {
-      x: lerp(groupStagePos.x, canvasCenter.x, t),
-      y: lerp(groupStagePos.y, canvasCenter.y, t),
-    };
+  if (bracketDepth >= CHAMPION_BRACKET_DEPTH) {
+    return canvasCenter;
   }
 
-  const hubT = bracketDepth / (maxDepth - 1);
-  const pullT = Math.min(hubT * depthPullStrength, 1);
-  const viaHub = {
-    x: lerp(groupStagePos.x, hub.x, pullT),
-    y: lerp(groupStagePos.y, hub.y, pullT),
-  };
-
-  if (bracketDepth >= maxDepth - 1) {
-    const finalT = (bracketDepth - (maxDepth - 1)) * depthPullStrength;
-    return {
-      x: lerp(viaHub.x, canvasCenter.x, Math.min(finalT, 1)),
-      y: lerp(viaHub.y, canvasCenter.y, Math.min(finalT, 1)),
-    };
-  }
-
-  return viaHub;
+  const dx = groupStagePos.x - canvasCenter.x;
+  const dy = groupStagePos.y - canvasCenter.y;
+  const groupStageRadius = Math.hypot(dx, dy);
+  const minRadius = usableRadius * config.knockoutMinRadiusRatio;
+  const cumulativePct = getCumulativePullPct(bracketDepth, config);
+  const targetRadius = lerp(groupStageRadius, minRadius, cumulativePct / 100);
+  return pullTowardRadius(groupStagePos, canvasCenter, targetRadius);
 }
 
-export function computeEliminatedStripPositions(
-  eliminatedIds: string[],
+function clampTeamX(
+  x: number,
   width: number,
+  r: number,
+  sizing: VizSizing,
+): number {
+  const xMin = sizing.padding + r;
+  const xMax = width - sizing.padding - r;
+  return Math.max(xMin, Math.min(xMax, x));
+}
+
+export function computeEliminatedBottomY(
   height: number,
   config: PetalLayoutConfig,
   sizing: VizSizing = getVizSizing(),
-): Map<string, { x: number; y: number }> {
-  const sorted = [...eliminatedIds].sort();
-  const positions = new Map<string, { x: number; y: number }>();
-  if (sorted.length === 0) return positions;
-
+): number {
   const r = sizing.minRadius;
   const bottomPadding = height * config.bottomStripPaddingRatio;
-  const y = height - bottomPadding - r;
-  const xMin = sizing.padding + r;
-  const xMax = width - sizing.padding - r;
-  const span = Math.max(xMax - xMin, 0);
-
-  sorted.forEach((id, index) => {
-    const x =
-      sorted.length === 1
-        ? (xMin + xMax) / 2
-        : xMin + (span * index) / (sorted.length - 1);
-    positions.set(id, { x, y });
-  });
-
-  return positions;
+  return height - bottomPadding - r;
 }
 
 export function computePetalPositions(
@@ -214,17 +207,9 @@ export function computePetalPositions(
   const usableRadius = Math.min(width, height);
   const canvasCenter = computeCanvasCenter(width, height, config);
   const groupRingRadius = usableRadius * config.groupRingRadiusRatio;
+  const innerRingRadius = usableRadius * config.knockoutMinRadiusRatio;
   const spreadRad = usableRadius * config.spreadRadRatio;
   const spreadTan = usableRadius * config.spreadTanRatio;
-
-  const leftHub: PetalPoint = {
-    x: width * config.leftHubXRatio,
-    y: height * config.hubYRatio,
-  };
-  const rightHub: PetalPoint = {
-    x: width * config.rightHubXRatio,
-    y: height * config.hubYRatio,
-  };
 
   const advancingThirdGroups = getAdvancingThirdPlaceGroups(standings);
 
@@ -275,12 +260,10 @@ export function computePetalPositions(
 
     const { x, y } = computeKnockoutPosition(
       groupStagePos,
-      bracketHalf,
       bracketDepth,
       canvasCenter,
-      leftHub,
-      rightHub,
-      config.depthPullStrength,
+      usableRadius,
+      config,
     );
 
     return {
@@ -297,18 +280,11 @@ export function computePetalPositions(
   });
 
   if (eliminated.size > 0) {
-    const stripPositions = computeEliminatedStripPositions(
-      [...eliminated],
-      width,
-      height,
-      config,
-      sizing,
-    );
+    const bottomY = computeEliminatedBottomY(height, config, sizing);
     for (const team of positionedTeams) {
-      const stripPos = stripPositions.get(team.id);
-      if (stripPos) {
-        team.x = stripPos.x;
-        team.y = stripPos.y;
+      if (eliminated.has(team.id)) {
+        team.x = clampTeamX(team.x, width, team.r, sizing);
+        team.y = bottomY;
       }
     }
   }
@@ -316,11 +292,10 @@ export function computePetalPositions(
   return {
     teams: positionedTeams,
     canvasCenter,
-    leftHub,
-    rightHub,
     groupCenters,
     groupAngles,
     groupRingRadius,
+    innerRingRadius,
     spreadRad,
     spreadTan,
     usableRadius,
