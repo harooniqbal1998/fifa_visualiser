@@ -27,6 +27,10 @@ export type EliminationEvent = {
 export type SimulationCallbacks = {
   onDayChange: (day: number) => void;
   onCollision: (event: CollisionEvent) => Promise<void>;
+  onMatchResolved?: (
+    event: CollisionEvent,
+    groupResults: SimMatchResult[],
+  ) => Promise<void>;
   onEliminations: (event: EliminationEvent) => Promise<void>;
   onProbabilitiesUpdate: (probabilities: Record<string, number>) => void;
   onBracketStateChange: (state: {

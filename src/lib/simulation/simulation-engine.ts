@@ -9,7 +9,7 @@ import {
   getAdvancingTeamIds,
 } from "@/lib/simulation/advancement";
 import {
-  batchMatchesByTeams,
+  scheduleMatchBatches,
   resolveGroupMatchesForDay,
   resolveKnockoutMatchesForDay,
 } from "@/lib/simulation/bracket-resolver";
@@ -98,6 +98,8 @@ export function createInitialRunState(): SimulationRunState {
 export type SimulationOptions = {
   startDay: number;
   snapshot: Snapshot;
+  stopAfterDay?: number;
+  groupStageOnly?: boolean;
 };
 
 export async function runSimulation(
@@ -164,8 +166,11 @@ export async function runSimulation(
       if (callbacks.shouldAbort()) break;
     }
 
-    const dayMatches =
-      entry.day < 12
+    const dayMatches = options.groupStageOnly
+      ? entry.day < 12
+        ? resolveGroupMatchesForDay(entry.day, state.groupResults)
+        : []
+      : entry.day < 12
         ? resolveGroupMatchesForDay(entry.day, state.groupResults)
         : resolveKnockoutMatchesForDay(
             entry.day,
@@ -174,7 +179,7 @@ export async function runSimulation(
             state.eliminated,
           );
 
-    const batches = batchMatchesByTeams(dayMatches);
+    const batches = scheduleMatchBatches(entry.day, dayMatches);
 
     for (const batch of batches) {
       if (callbacks.shouldAbort()) break;
@@ -233,9 +238,17 @@ export async function runSimulation(
             state.eliminated,
           ),
         );
+
+        if (callbacks.onMatchResolved) {
+          await callbacks.onMatchResolved(event, state.groupResults);
+        }
       }
 
       await delay(params.batchPauseMs, callbacks.shouldAbort);
+    }
+
+    if (options.stopAfterDay !== undefined && entry.day >= options.stopAfterDay) {
+      break;
     }
   }
 

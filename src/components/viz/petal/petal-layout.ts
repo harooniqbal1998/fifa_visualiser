@@ -36,8 +36,8 @@ export type PetalLayoutResult = {
   groupCenters: Record<string, PetalPoint>;
   groupAngles: Record<string, number>;
   groupRingRadius: number;
-  laneSpread: number;
-  outerSpread: number;
+  spreadRad: number;
+  spreadTan: number;
   usableRadius: number;
 };
 
@@ -70,9 +70,7 @@ function computeCanvasCenter(
 }
 
 function computeGroupAngle(groupIndex: number, config: PetalLayoutConfig): number {
-  return (
-    config.groupStartAngle + (groupIndex / GROUP_IDS.length) * Math.PI * 2
-  );
+  return config.groupStartAngle + (groupIndex / GROUP_IDS.length) * Math.PI * 2;
 }
 
 function computeGroupCenter(
@@ -88,36 +86,45 @@ function computeGroupCenter(
   };
 }
 
-function getLaneTangentialSign(standingRank: 1 | 2 | 3 | 4): number {
-  if (standingRank === 1) return 1;
-  if (standingRank === 2) return -1;
-  return 0;
-}
-
-function computeGroupStagePosition(
+/**
+ * Center-oriented diamond per group wedge:
+ * - 1st: radial inward toward canvas center
+ * - 2nd / 3rd: tangential wings
+ * - 4th: radial outward away from canvas center
+ */
+export function computeDiamondAnchor(
   groupCenter: PetalPoint,
   angle: number,
   standingRank: 1 | 2 | 3 | 4,
-  laneSpread: number,
-  outerSpread: number,
+  spreadRad: number,
+  spreadTan: number,
 ): PetalPoint {
   const radialX = Math.cos(angle);
   const radialY = Math.sin(angle);
   const tangentialX = -Math.sin(angle);
   const tangentialY = Math.cos(angle);
 
-  const tangentialSign = getLaneTangentialSign(standingRank);
-  const radialExtra = standingRank === 4 ? outerSpread : 0;
-
+  if (standingRank === 1) {
+    return {
+      x: groupCenter.x - radialX * spreadRad,
+      y: groupCenter.y - radialY * spreadRad,
+    };
+  }
+  if (standingRank === 2) {
+    return {
+      x: groupCenter.x + tangentialX * spreadTan,
+      y: groupCenter.y + tangentialY * spreadTan,
+    };
+  }
+  if (standingRank === 3) {
+    return {
+      x: groupCenter.x - tangentialX * spreadTan,
+      y: groupCenter.y - tangentialY * spreadTan,
+    };
+  }
   return {
-    x:
-      groupCenter.x +
-      tangentialX * tangentialSign * laneSpread +
-      radialX * radialExtra,
-    y:
-      groupCenter.y +
-      tangentialY * tangentialSign * laneSpread +
-      radialY * radialExtra,
+    x: groupCenter.x + radialX * spreadRad,
+    y: groupCenter.y + radialY * spreadRad,
   };
 }
 
@@ -177,8 +184,8 @@ export function computePetalPositions(
   const usableRadius = Math.min(width, height);
   const canvasCenter = computeCanvasCenter(width, height, config);
   const groupRingRadius = usableRadius * config.groupRingRadiusRatio;
-  const laneSpread = usableRadius * config.laneSpreadRatio;
-  const outerSpread = usableRadius * config.outerSpreadRatio;
+  const spreadRad = usableRadius * config.spreadRadRatio;
+  const spreadTan = usableRadius * config.spreadTanRatio;
 
   const leftHub: PetalPoint = {
     x: width * config.leftHubXRatio,
@@ -228,12 +235,12 @@ export function computePetalPositions(
     const groupCenter = groupCenters[team.group] ?? canvasCenter;
     const angle = groupAngles[team.group] ?? 0;
 
-    const groupStagePos = computeGroupStagePosition(
+    const groupStagePos = computeDiamondAnchor(
       groupCenter,
       angle,
       standingRank,
-      laneSpread,
-      outerSpread,
+      spreadRad,
+      spreadTan,
     );
 
     const { x, y } = computeKnockoutPosition(
@@ -267,8 +274,8 @@ export function computePetalPositions(
     groupCenters,
     groupAngles,
     groupRingRadius,
-    laneSpread,
-    outerSpread,
+    spreadRad,
+    spreadTan,
     usableRadius,
   };
 }
@@ -277,14 +284,14 @@ export function computePetalLaneAnchor(
   groupCenter: PetalPoint,
   angle: number,
   standingRank: 1 | 2 | 3 | 4,
-  laneSpread: number,
-  outerSpread: number,
+  spreadRad: number,
+  spreadTan: number,
 ): PetalPoint {
-  return computeGroupStagePosition(
+  return computeDiamondAnchor(
     groupCenter,
     angle,
     standingRank,
-    laneSpread,
-    outerSpread,
+    spreadRad,
+    spreadTan,
   );
 }

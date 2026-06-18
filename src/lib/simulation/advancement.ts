@@ -1,7 +1,7 @@
 import type { Match, Snapshot } from "@/types";
 import { teams } from "@/data/teams";
 import { matches } from "@/data/matches";
-import { computeGroupStandings } from "@/lib/standings";
+import { computeGroupStandings, type StandingRow } from "@/lib/standings";
 import type { SimMatchResult, SimulationRunState } from "@/lib/simulation/types";
 
 export function simResultToMatch(result: SimMatchResult): Match {
@@ -40,7 +40,7 @@ export function getAdvancingTeamIds(groupResults: SimMatchResult[]): Set<string>
 
 export function buildStandingsFromGroupResults(
   groupResults: SimMatchResult[],
-): Record<string, { teamId: string; points: number; gd: number }[]> {
+): Record<string, StandingRow[]> {
   return computeGroupStandings(groupResults.map(simResultToMatch));
 }
 

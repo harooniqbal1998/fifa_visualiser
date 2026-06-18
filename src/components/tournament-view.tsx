@@ -11,7 +11,10 @@ import {
   SimulationVisualization,
   type SimulationVisualizationRef,
 } from "@/components/simulation-visualization";
-import { PetalVisualization } from "@/components/viz/petal/petal-visualization";
+import {
+  PetalSimulationVisualization,
+  type PetalSimulationVisualizationRef,
+} from "@/components/viz/petal/petal-simulation-visualization";
 
 export type LayoutMode = "ring" | "petal";
 
@@ -20,17 +23,41 @@ export function TournamentView() {
   const teams = getTeams();
   const [day, setDay] = useState(min);
   const [isSimulating, setIsSimulating] = useState(false);
-  const [layoutMode, setLayoutMode] = useState<LayoutMode>("ring");
+  const [layoutMode, setLayoutMode] = useState<LayoutMode>("petal");
   const snapshot = getSnapshotByDay(day) ?? getSnapshotByDay(min)!;
-  const vizRef = useRef<SimulationVisualizationRef>(null);
+  const ringVizRef = useRef<SimulationVisualizationRef>(null);
+  const petalVizRef = useRef<PetalSimulationVisualizationRef>(null);
+
+  const handlePlay = () => {
+    if (layoutMode === "petal") {
+      petalVizRef.current?.startSimulation();
+    } else {
+      setIsSimulating(true);
+    }
+  };
+
+  const handleStop = () => {
+    if (layoutMode === "petal") {
+      petalVizRef.current?.stopSimulation();
+    } else {
+      ringVizRef.current?.stopSimulation();
+    }
+  };
 
   return (
     <div className="flex h-full w-full min-h-0">
       {layoutMode === "petal" ? (
-        <PetalVisualization teams={teams} snapshot={snapshot} />
+        <PetalSimulationVisualization
+          ref={petalVizRef}
+          teams={teams}
+          snapshot={snapshot}
+          isSimulating={isSimulating}
+          onSimulatingChange={setIsSimulating}
+          onDayChange={setDay}
+        />
       ) : (
         <SimulationVisualization
-          ref={vizRef}
+          ref={ringVizRef}
           teams={teams}
           snapshot={snapshot}
           isSimulating={isSimulating}
@@ -41,7 +68,8 @@ export function TournamentView() {
         day={day}
         onDayChange={setDay}
         isSimulating={isSimulating}
-        onStop={() => vizRef.current?.stopSimulation()}
+        onPlay={handlePlay}
+        onStop={handleStop}
         layoutMode={layoutMode}
         onLayoutModeChange={setLayoutMode}
       />

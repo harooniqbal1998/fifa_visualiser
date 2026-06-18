@@ -1,7 +1,7 @@
 export type PetalLayoutConfig = {
   groupRingRadiusRatio: number;
-  laneSpreadRatio: number;
-  outerSpreadRatio: number;
+  spreadRadRatio: number;
+  spreadTanRatio: number;
   leftHubXRatio: number;
   rightHubXRatio: number;
   hubYRatio: number;
@@ -9,12 +9,22 @@ export type PetalLayoutConfig = {
   groupStartAngle: number;
   centerYOffsetRatio: number;
   showDebug: boolean;
+  matchHoldDurationMs: number;
+  rankTransitionDurationMs: number;
+  spotlightDimOpacity: number;
+  connectorWidth: number;
+  eliminatedOpacity: number;
+  autoAdvanceDay: boolean;
+  /** @deprecated use spreadTanRatio */
+  laneSpreadRatio?: number;
+  /** @deprecated use spreadRadRatio */
+  outerSpreadRatio?: number;
 };
 
 export const DEFAULT_PETAL_CONFIG: PetalLayoutConfig = {
   groupRingRadiusRatio: 0.39,
-  laneSpreadRatio: 0.055,
-  outerSpreadRatio: 0.065,
+  spreadRadRatio: 0.065,
+  spreadTanRatio: 0.055,
   leftHubXRatio: 0.38,
   rightHubXRatio: 0.62,
   hubYRatio: 0.5,
@@ -22,15 +32,29 @@ export const DEFAULT_PETAL_CONFIG: PetalLayoutConfig = {
   groupStartAngle: -0.792,
   centerYOffsetRatio: 0,
   showDebug: false,
+  matchHoldDurationMs: 1500,
+  rankTransitionDurationMs: 800,
+  spotlightDimOpacity: 0.25,
+  connectorWidth: 2,
+  eliminatedOpacity: 0.45,
+  autoAdvanceDay: false,
 };
 
-/** Persisted in localStorage — knockout convergence only; layout is fixed in defaults. */
 export const PETAL_SIMULATION_KEYS = [
+  "groupRingRadiusRatio",
+  "spreadRadRatio",
+  "spreadTanRatio",
   "leftHubXRatio",
   "rightHubXRatio",
   "hubYRatio",
   "depthPullStrength",
   "showDebug",
+  "matchHoldDurationMs",
+  "rankTransitionDurationMs",
+  "spotlightDimOpacity",
+  "connectorWidth",
+  "eliminatedOpacity",
+  "autoAdvanceDay",
 ] as const satisfies readonly (keyof PetalLayoutConfig)[];
 
 export type PetalSimulationKey = (typeof PETAL_SIMULATION_KEYS)[number];
@@ -40,7 +64,14 @@ export const PETAL_CONFIG_STORAGE_KEY = "petal-simulation-config";
 export function mergePetalConfig(
   overrides: Partial<PetalLayoutConfig>,
 ): PetalLayoutConfig {
-  return { ...DEFAULT_PETAL_CONFIG, ...overrides };
+  const merged = { ...DEFAULT_PETAL_CONFIG, ...overrides };
+  if (overrides.laneSpreadRatio !== undefined && overrides.spreadTanRatio === undefined) {
+    merged.spreadTanRatio = overrides.laneSpreadRatio;
+  }
+  if (overrides.outerSpreadRatio !== undefined && overrides.spreadRadRatio === undefined) {
+    merged.spreadRadRatio = overrides.outerSpreadRatio;
+  }
+  return merged;
 }
 
 export function loadPetalConfigFromStorage(): Partial<PetalLayoutConfig> {

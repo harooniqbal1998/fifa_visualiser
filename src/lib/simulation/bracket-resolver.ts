@@ -1,5 +1,5 @@
 import type { Match, MatchStage } from "@/types";
-import { matches } from "@/data/matches";
+import { matches, matchesByDay } from "@/data/matches";
 import type { BracketNode } from "@/data/knockout-bracket";
 import { KNOCKOUT_TREE, THIRD_PLACE_NODE } from "@/data/knockout-bracket";
 import { teamsById } from "@/data/teams";
@@ -126,48 +126,51 @@ export function resolveGroupMatchesForDay(
     }));
 }
 
-export function batchMatchesByTeams(matchesToBatch: ResolvedMatch[]): ResolvedMatch[][] {
-  const batches: ResolvedMatch[][] = [];
-  const scheduled = new Set<string>();
+export function orderMatchesByFixture(
+  day: number,
+  matchesToOrder: ResolvedMatch[],
+): ResolvedMatch[] {
+  const fixtureIndex = new Map(
+    (matchesByDay[day] ?? []).map((match, index) => [match.id, index]),
+  );
+  return [...matchesToOrder].sort(
+    (a, b) => (fixtureIndex.get(a.matchId) ?? 0) - (fixtureIndex.get(b.matchId) ?? 0),
+  );
+}
 
-  const remaining = [...matchesToBatch];
+export function scheduleMatchBatches(
+  day: number,
+  matchesToSchedule: ResolvedMatch[],
+): ResolvedMatch[][] {
+  if (matchesToSchedule.length === 0) return [];
 
-  function matchGroups(match: ResolvedMatch): Set<string> {
-    const groups = new Set<string>();
-    const homeGroup = teamsById[match.home]?.group;
-    const awayGroup = teamsById[match.away]?.group;
-    if (homeGroup) groups.add(homeGroup);
-    if (awayGroup) groups.add(awayGroup);
-    return groups;
+  const ordered = orderMatchesByFixture(day, matchesToSchedule);
+
+  if (ordered.some((match) => match.stage !== "group")) {
+    return ordered.map((match) => [match]);
   }
 
-  while (remaining.length > 0) {
+  const queues = new Map<string, ResolvedMatch[]>();
+  for (const match of ordered) {
+    const groupId = teamsById[match.home]?.group;
+    if (!groupId) continue;
+    const queue = queues.get(groupId) ?? [];
+    queue.push(match);
+    queues.set(groupId, queue);
+  }
+
+  const batches: ResolvedMatch[][] = [];
+  while (queues.size > 0) {
     const batch: ResolvedMatch[] = [];
-    const usedTeams = new Set<string>();
-    const usedGroups = new Set<string>();
-
-    for (let i = remaining.length - 1; i >= 0; i--) {
-      const match = remaining[i];
-      if (usedTeams.has(match.home) || usedTeams.has(match.away)) continue;
-      if (scheduled.has(match.matchId)) continue;
-
-      const groups = matchGroups(match);
-      if ([...groups].some((group) => usedGroups.has(group))) continue;
-
-      batch.push(match);
-      usedTeams.add(match.home);
-      usedTeams.add(match.away);
-      for (const group of groups) {
-        usedGroups.add(group);
+    for (const groupId of [...queues.keys()]) {
+      const queue = queues.get(groupId)!;
+      if (queue.length > 0) {
+        batch.push(queue.shift()!);
       }
-      scheduled.add(match.matchId);
-      remaining.splice(i, 1);
+      if (queue.length === 0) {
+        queues.delete(groupId);
+      }
     }
-
-    if (batch.length === 0 && remaining.length > 0) {
-      batch.push(remaining.shift()!);
-    }
-
     if (batch.length > 0) {
       batches.push(batch);
     }
