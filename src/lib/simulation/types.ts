@@ -37,7 +37,7 @@ export type SimulationCallbacks = {
     possibleOpponents: Record<string, string[]>;
     bracketDepths: Record<string, number>;
   }) => void;
-  onComplete: () => void;
+  onComplete: (finalState: SimulationRunState) => void;
   shouldAbort: () => boolean;
 };
 

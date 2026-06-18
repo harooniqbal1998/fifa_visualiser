@@ -1,7 +1,15 @@
 "use client";
 
+import { useLayoutEffect, useRef } from "react";
 import type { MatchStage } from "@/types";
-import { getDayRange, getTimelineDays } from "@/lib/tournament";
+import { getTimelineDays } from "@/lib/tournament";
+
+const VISIBLE_DAYS = 3;
+const SLOT_PX = 24;
+const GAP_PX = 6;
+const STEP_PX = SLOT_PX + GAP_PX;
+const VIEWPORT_PX = VISIBLE_DAYS * SLOT_PX + (VISIBLE_DAYS - 1) * GAP_PX;
+const TRACK_PADDING_PX = (VIEWPORT_PX - SLOT_PX) / 2;
 
 type TimelineProps = {
   day: number;
@@ -10,8 +18,17 @@ type TimelineProps = {
 };
 
 export function Timeline({ day, onDayChange, isSimulating = false }: TimelineProps) {
-  const { max } = getDayRange();
   const timelineDays = getTimelineDays();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const activeIndex = timelineDays.findIndex((entry) => entry.day === day);
+
+  useLayoutEffect(() => {
+    if (activeIndex < 0 || !scrollRef.current) return;
+    scrollRef.current.scrollTo({
+      left: activeIndex * STEP_PX,
+      behavior: isSimulating ? "smooth" : "auto",
+    });
+  }, [activeIndex, isSimulating]);
 
   const stageStyles: Record<MatchStage, string> = {
     group: "border-sky-500 bg-sky-500/20",
@@ -24,31 +41,45 @@ export function Timeline({ day, onDayChange, isSimulating = false }: TimelinePro
   };
 
   return (
-    <div className="flex flex-col items-center gap-3 px-4 py-2 text-center">
-      <p className="text-sm text-zinc-600 dark:text-zinc-400">
-        Day {day} of {max}
-      </p>
-      <div className="flex flex-col items-center gap-2">
-        {timelineDays.map((entry) => {
-          const isActive = entry.day === day;
-          const stageStyle = stageStyles[entry.stage];
-          return (
-            <span key={entry.day} className="inline-flex p-1">
-              <button
-                type="button"
-                onClick={() => !isSimulating && onDayChange(entry.day)}
-                disabled={isSimulating}
-                aria-label={`Matchday ${entry.day}`}
-                aria-current={isActive ? "step" : undefined}
-                className={`h-4 w-4 shrink-0 rounded-full border-2 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-zinc-100 dark:focus-visible:ring-offset-zinc-900 ${stageStyle} ${
-                  isActive
-                    ? "ring-2 ring-zinc-900 ring-offset-2 dark:ring-zinc-100 dark:ring-offset-zinc-900"
-                    : "opacity-70 hover:opacity-100"
-                }`}
-              />
-            </span>
-          );
-        })}
+    <div
+      className="relative shrink-0 overflow-x-hidden py-1"
+      style={{ width: VIEWPORT_PX }}
+    >
+      <div
+        aria-hidden
+        className="pointer-events-none absolute top-1/2 left-1/2 z-10 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 ring-zinc-900 ring-offset-2 ring-offset-white dark:ring-zinc-100 dark:ring-offset-zinc-900"
+      />
+
+      <div
+        ref={scrollRef}
+        className="overflow-x-auto overflow-y-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+      >
+        <div
+          className="flex flex-row items-center gap-1.5"
+          style={{ paddingInline: TRACK_PADDING_PX }}
+        >
+          {timelineDays.map((entry) => {
+            const isActive = entry.day === day;
+            const stageStyle = stageStyles[entry.stage];
+            return (
+              <span
+                key={entry.day}
+                className="inline-flex w-6 shrink-0 items-center justify-center"
+              >
+                <button
+                  type="button"
+                  onClick={() => !isSimulating && onDayChange(entry.day)}
+                  disabled={isSimulating}
+                  aria-label={`Matchday ${entry.day}`}
+                  aria-current={isActive ? "step" : undefined}
+                  className={`h-3.5 w-3.5 shrink-0 rounded-full border-2 transition-opacity outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-zinc-100 dark:focus-visible:ring-offset-zinc-900 ${stageStyle} ${
+                    isActive ? "opacity-100" : "opacity-60 hover:opacity-80"
+                  }`}
+                />
+              </span>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

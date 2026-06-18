@@ -251,7 +251,7 @@ export async function runSimulation(
   }
 
   if (!callbacks.shouldAbort()) {
-    callbacks.onComplete();
+    callbacks.onComplete(state);
   }
 
   return state;
