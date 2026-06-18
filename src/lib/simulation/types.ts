@@ -6,7 +6,9 @@ export type SimMatchResult = {
   day: number;
   home: string;
   away: string;
-  winner: string;
+  winner?: string;
+  homeScore?: number;
+  awayScore?: number;
 };
 
 export type CollisionEvent = {
@@ -33,6 +35,8 @@ export type SimulationCallbacks = {
   ) => Promise<void>;
   onEliminations: (event: EliminationEvent) => Promise<void>;
   onProbabilitiesUpdate: (probabilities: Record<string, number>) => void;
+  onProbabilityDeltas?: (deltas: import("@/lib/probability/types").ProbUpdateEvent[]) => void;
+  onProbabilityStateUpdate?: (state: import("@/lib/probability/types").ProbabilityState) => void;
   onBracketStateChange: (state: {
     possibleOpponents: Record<string, string[]>;
     bracketDepths: Record<string, number>;
@@ -43,9 +47,9 @@ export type SimulationCallbacks = {
 
 export type SimulationRunState = {
   day: number;
-  probabilities: Record<string, number>;
-  rawWeights: Record<string, number>;
-  eliminated: Set<string>;
+  probability: import("@/lib/probability/types").ProbabilityState;
   results: SimMatchResult[];
   groupResults: SimMatchResult[];
+  /** Locked at day-12 cut; must match R32 bracket resolution. */
+  advancingThirdGroups?: string[];
 };

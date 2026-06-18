@@ -1,9 +1,14 @@
-import type { Match, Snapshot } from "@/types";
-import { teams } from "@/data/teams";
+import type { Match } from "@/types";
 import { matches } from "@/data/matches";
-import { snapshotsByDay } from "@/data/snapshots";
-import { OPENING_PROBABILITIES } from "@/data/opening-probabilities";
-import { computeGroupStandings, type StandingRow } from "@/lib/standings";
+import type { StandingRow } from "@/lib/standings";
+import { replayTournamentToDay } from "@/lib/probability/replay-tournament";
+import { createSeededRng } from "@/lib/simulation/animation-params";
+import { buildBracketState } from "@/lib/simulation/bracket-state";
+import {
+  buildStandingsFromGroupResults,
+  getAdvancingTeamIds,
+  selectAdvancingThirdPlaceGroups,
+} from "@/lib/simulation/group-advancement";
 import type { SimMatchResult, SimulationRunState } from "@/lib/simulation/types";
 
 export type SimulationBootstrap = {
@@ -14,64 +19,10 @@ export type SimulationBootstrap = {
   eliminated: Set<string>;
 };
 
-export function canStartSimulationFromDay(_day: number): boolean {
-  return true;
-}
-
-export function simResultToMatch(result: SimMatchResult): Match {
-  return {
-    id: result.matchId,
-    stage: result.stage,
-    day: result.day,
-    home: result.home,
-    away: result.away,
-    homeScore: result.winner === result.home ? 2 : 1,
-    awayScore: result.winner === result.away ? 2 : 1,
-    winner: result.winner,
-  };
-}
-
-export function getAdvancingTeamIds(groupResults: SimMatchResult[]): Set<string> {
-  const groupMatches = groupResults.map(simResultToMatch);
-  const standings = computeGroupStandings(groupMatches);
-  const advancing = new Set<string>();
-  const thirdPlace: { teamId: string; points: number; gd: number }[] = [];
-
-  for (const group of Object.keys(standings).sort()) {
-    const table = standings[group];
-    advancing.add(table[0].teamId);
-    advancing.add(table[1].teamId);
-    thirdPlace.push(table[2]);
-  }
-
-  thirdPlace
-    .sort((a, b) => b.points - a.points || b.gd - a.gd)
-    .slice(0, 8)
-    .forEach((entry) => advancing.add(entry.teamId));
-
-  return advancing;
-}
-
-export function buildStandingsFromGroupResults(
-  groupResults: SimMatchResult[],
-): Record<string, StandingRow[]> {
-  return computeGroupStandings(groupResults.map(simResultToMatch));
-}
-
-export function rankingToPrior(rank: number): number {
-  return Math.max(0.3, (50 - rank) * 0.35);
-}
-
-export function buildInitialProbabilities(): Record<string, number> {
-  return { ...OPENING_PROBABILITIES };
-}
-
-export function buildInitialRawWeights(): Record<string, number> {
-  return { ...OPENING_PROBABILITIES };
-}
+export { buildStandingsFromGroupResults, getAdvancingTeamIds };
 
 function matchToSimResult(match: Match): SimMatchResult | null {
-  if (!match.winner) return null;
+  if (match.homeScore === undefined || match.awayScore === undefined) return null;
   return {
     matchId: match.id,
     stage: match.stage,
@@ -79,84 +30,54 @@ function matchToSimResult(match: Match): SimMatchResult | null {
     home: match.home,
     away: match.away,
     winner: match.winner,
+    homeScore: match.homeScore,
+    awayScore: match.awayScore,
   };
 }
 
 export function getScriptedResultsBeforeDay(startDay: number): SimMatchResult[] {
   return matches
-    .filter((match) => match.day < startDay && match.winner)
+    .filter((match) => match.day < startDay && match.homeScore !== undefined)
     .map(matchToSimResult)
     .filter((result): result is SimMatchResult => result !== null);
 }
 
-export function getEliminatedBeforeDay(startDay: number): Set<string> {
-  const eliminated = new Set<string>();
-
-  if (startDay > 12) {
-    const groupResults = getScriptedResultsBeforeDay(startDay).filter(
-      (r) => r.stage === "group",
-    );
-    const advancing = getAdvancingTeamIds(groupResults);
-    for (const team of teams) {
-      if (!advancing.has(team.id)) {
-        eliminated.add(team.id);
-      }
-    }
-  }
-
-  for (const match of matches) {
-    if (
-      match.day >= startDay ||
-      !match.winner ||
-      match.stage === "group"
-    ) {
-      continue;
-    }
-    const loser = match.winner === match.home ? match.away : match.home;
-    eliminated.add(loser);
-  }
-
-  return eliminated;
+export function getScriptedResultsUpToDay(day: number): SimMatchResult[] {
+  return matches
+    .filter((match) => match.day <= day && match.homeScore !== undefined)
+    .map(matchToSimResult)
+    .filter((result): result is SimMatchResult => result !== null);
 }
 
 export function buildSimulationBootstrap(startDay: number): SimulationBootstrap {
-  const scripted = getScriptedResultsBeforeDay(startDay);
-  const eliminated = getEliminatedBeforeDay(startDay);
-  const groupResults = scripted.filter((r) => r.stage === "group");
-  const knockoutResults = scripted.filter((r) => r.stage !== "group");
+  const replay = replayTournamentToDay(startDay - 1);
+  const { probability, groupResults, knockoutResults } = replay;
 
-  const priorDay = Math.max(0, startDay - 1);
-  const priorSnapshot = snapshotsByDay[priorDay] ?? snapshotsByDay[0]!;
-  const probabilities = { ...priorSnapshot.probabilities };
-  const bracketDepths = priorSnapshot.bracketDepths ?? {};
-
-  const rawWeights: Record<string, number> = {};
-  for (const team of teams) {
-    const prob = probabilities[team.id] ?? 0;
-    rawWeights[team.id] = eliminated.has(team.id) || prob === 0 ? 0 : prob;
-  }
+  const { bracketDepths } = buildBracketState(
+    startDay,
+    knockoutResults,
+    groupResults,
+    probability.eliminated,
+  );
 
   const runState: SimulationRunState = {
     day: startDay,
-    probabilities: { ...probabilities },
-    rawWeights,
-    eliminated: new Set(eliminated),
+    probability,
     results: [...knockoutResults],
     groupResults: [...groupResults],
   };
+
+  if (startDay > 12 && groupResults.length > 0) {
+    const standings = buildStandingsFromGroupResults(groupResults);
+    const thirdRng = createSeededRng(42 + 12);
+    runState.advancingThirdGroups = selectAdvancingThirdPlaceGroups(standings, thirdRng);
+  }
 
   return {
     runState,
     standings: buildStandingsFromGroupResults(groupResults),
     bracketDepths,
-    probabilities,
-    eliminated: new Set(eliminated),
+    probabilities: { ...probability.probabilities },
+    eliminated: new Set(probability.eliminated),
   };
-}
-
-export function createRunStateFromSnapshot(
-  _snapshot: Snapshot,
-  startDay: number,
-): SimulationRunState {
-  return buildSimulationBootstrap(startDay).runState;
 }

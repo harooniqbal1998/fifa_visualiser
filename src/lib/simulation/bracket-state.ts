@@ -2,7 +2,8 @@ import type { MatchStage } from "@/types";
 import { teams } from "@/data/teams";
 import type { BracketNode } from "@/data/knockout-bracket";
 import { KNOCKOUT_TREE } from "@/data/knockout-bracket";
-import { getAdvancingTeamIds } from "@/lib/simulation/advancement";
+import { getAdvancingTeamIds } from "@/lib/simulation/group-advancement";
+import { createSeededRng } from "@/lib/simulation/animation-params";
 import { resolveR32Match } from "@/lib/simulation/r32-resolver";
 import type { SimMatchResult } from "@/lib/simulation/types";
 
@@ -183,7 +184,7 @@ export function getEliminatedFromResults(
   const eliminated = new Set<string>();
 
   if (day >= 12) {
-    const advancing = getAdvancingTeamIds(groupResults);
+    const advancing = getAdvancingTeamIds(groupResults, createSeededRng(42 + day));
     for (const team of teams) {
       if (!advancing.has(team.id)) {
         eliminated.add(team.id);

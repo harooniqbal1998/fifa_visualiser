@@ -1,18 +1,27 @@
 import { getTimelineDays } from "@/lib/tournament";
 import type { AnimationParams } from "@/lib/simulation/animation-params";
 import { createSeededRng } from "@/lib/simulation/animation-params";
-import {
-  buildInitialProbabilities,
-  buildInitialRawWeights,
-  buildSimulationBootstrap,
-  getAdvancingTeamIds,
-} from "@/lib/simulation/advancement";
+import { buildSimulationBootstrap } from "@/lib/simulation/advancement";
 import {
   scheduleMatchBatches,
   resolveGroupMatchesForDay,
   resolveKnockoutMatchesForDay,
 } from "@/lib/simulation/bracket-resolver";
 import { buildBracketState } from "@/lib/simulation/bracket-state";
+import {
+  applyGroupStageCut,
+  applyKnownMatchResult,
+  finalizeKnockoutDay,
+  initProbabilityState,
+  recomputeTournamentProbabilities,
+  resolveMatchWinnerOnly,
+  toVizFeed,
+} from "@/lib/probability";
+import {
+  buildStandingsFromGroupResults,
+  selectAdvancingThirdPlaceGroups,
+} from "@/lib/simulation/group-advancement";
+import { DEFAULT_PROBABILITY_CONFIG } from "@/lib/probability/types";
 import type {
   CollisionEvent,
   SimulationCallbacks,
@@ -38,57 +47,22 @@ function delay(ms: number, shouldAbort: () => boolean): Promise<void> {
   });
 }
 
-function normalizeProbabilities(
-  rawWeights: Record<string, number>,
-  eliminated: Set<string>,
-): Record<string, number> {
-  let total = 0;
-  for (const [teamId, weight] of Object.entries(rawWeights)) {
-    if (eliminated.has(teamId) || weight <= 0) continue;
-    total += weight;
-  }
-
-  const probs: Record<string, number> = {};
-  for (const teamId of Object.keys(rawWeights)) {
-    if (eliminated.has(teamId) || rawWeights[teamId] <= 0 || total === 0) {
-      probs[teamId] = 0;
-    } else {
-      probs[teamId] = Number(((rawWeights[teamId] / total) * 100).toFixed(2));
-    }
-  }
-  return probs;
-}
-
-function pickWinner(
-  home: string,
-  away: string,
-  probabilities: Record<string, number>,
-  rng: () => number,
-): string {
-  const homeProb = probabilities[home] ?? 0;
-  const awayProb = probabilities[away] ?? 0;
-  const total = homeProb + awayProb;
-  if (total <= 0) return rng() < 0.5 ? home : away;
-  return rng() < homeProb / total ? home : away;
-}
-
-function applyMatchOutcome(
+function emitProbabilityUpdate(
   state: SimulationRunState,
-  winner: string,
-  loser: string,
-  params: AnimationParams,
+  callbacks: SimulationCallbacks,
 ): void {
-  state.rawWeights[winner] = (state.rawWeights[winner] ?? 1) * params.winnerBoost;
-  state.rawWeights[loser] = (state.rawWeights[loser] ?? 1) * params.loserPenalty;
-  state.probabilities = normalizeProbabilities(state.rawWeights, state.eliminated);
+  const feed = toVizFeed(state.probability, state.day);
+  callbacks.onProbabilitiesUpdate(feed.probabilities);
+  if (feed.lastDeltas && callbacks.onProbabilityDeltas) {
+    callbacks.onProbabilityDeltas(feed.lastDeltas);
+  }
+  callbacks.onProbabilityStateUpdate?.(state.probability);
 }
 
 export function createInitialRunState(): SimulationRunState {
   return {
     day: 0,
-    probabilities: buildInitialProbabilities(),
-    rawWeights: buildInitialRawWeights(),
-    eliminated: new Set(),
+    probability: initProbabilityState(DEFAULT_PROBABILITY_CONFIG),
     results: [],
     groupResults: [],
   };
@@ -107,15 +81,16 @@ export async function runSimulation(
 ): Promise<SimulationRunState> {
   const state = buildSimulationBootstrap(options.startDay).runState;
   const rng = createSeededRng(params.simulationSeed);
+  const config = params.probabilityConfig;
   const timelineDays = getTimelineDays().filter((entry) => entry.day >= options.startDay);
 
-  callbacks.onProbabilitiesUpdate({ ...state.probabilities });
+  emitProbabilityUpdate(state, callbacks);
   callbacks.onBracketStateChange(
     buildBracketState(
       state.day,
       state.results,
       state.groupResults,
-      state.eliminated,
+      state.probability.eliminated,
     ),
   );
 
@@ -129,32 +104,36 @@ export async function runSimulation(
         entry.day,
         state.results,
         state.groupResults,
-        state.eliminated,
+        state.probability.eliminated,
       ),
     );
     await delay(params.dayPauseMs, callbacks.shouldAbort);
     if (callbacks.shouldAbort()) break;
 
     if (entry.day === 12 && options.startDay <= 12) {
-      const advancing = getAdvancingTeamIds(state.groupResults);
-      const toEliminate: string[] = [];
+      const beforeEliminated = new Set(state.probability.eliminated);
+      const standings = buildStandingsFromGroupResults(state.groupResults);
+      const thirdRng = createSeededRng(params.simulationSeed + 12);
+      state.advancingThirdGroups = selectAdvancingThirdPlaceGroups(standings, thirdRng);
+      state.probability = applyGroupStageCut(
+        state.probability,
+        state.groupResults,
+        state.results,
+        config,
+        state.advancingThirdGroups,
+      );
 
-      for (const teamId of Object.keys(state.rawWeights)) {
-        if (!advancing.has(teamId) && !state.eliminated.has(teamId)) {
-          state.eliminated.add(teamId);
-          state.rawWeights[teamId] = 0;
-          toEliminate.push(teamId);
-        }
-      }
+      const toEliminate = [...state.probability.eliminated].filter(
+        (id) => !beforeEliminated.has(id),
+      );
 
-      state.probabilities = normalizeProbabilities(state.rawWeights, state.eliminated);
-      callbacks.onProbabilitiesUpdate({ ...state.probabilities });
+      emitProbabilityUpdate(state, callbacks);
       callbacks.onBracketStateChange(
         buildBracketState(
           entry.day,
           state.results,
           state.groupResults,
-          state.eliminated,
+          state.probability.eliminated,
         ),
       );
 
@@ -174,18 +153,47 @@ export async function runSimulation(
             entry.day,
             state.results,
             state.groupResults,
-            state.eliminated,
+            state.probability.eliminated,
+            state.advancingThirdGroups,
           );
 
     const batches = scheduleMatchBatches(entry.day, dayMatches);
+    let hadKnockoutOnDay = false;
 
     for (const batch of batches) {
       if (callbacks.shouldAbort()) break;
 
-      const events = batch.map((match) => {
-        const winner = pickWinner(match.home, match.away, state.probabilities, rng);
-        const loser = winner === match.home ? match.away : match.home;
-        return {
+      const events: { match: (typeof batch)[number]; event: CollisionEvent }[] = [];
+
+      for (const match of batch) {
+        const winnerId = resolveMatchWinnerOnly(state.probability, match, config, rng);
+        state.probability = applyKnownMatchResult(
+          state.probability,
+          match,
+          winnerId,
+          state.groupResults,
+          state.results,
+          config,
+        );
+
+        const loser = winnerId === match.home ? match.away : match.home;
+        const result: SimMatchResult = {
+          matchId: match.matchId,
+          stage: match.stage,
+          day: match.day,
+          home: match.home,
+          away: match.away,
+          winner: winnerId,
+        };
+
+        state.results.push(result);
+        if (match.stage === "group") {
+          state.groupResults.push(result);
+        } else {
+          hadKnockoutOnDay = true;
+        }
+
+        events.push({
           match,
           event: {
             matchId: match.matchId,
@@ -193,47 +201,38 @@ export async function runSimulation(
             day: match.day,
             home: match.home,
             away: match.away,
-            winner,
+            winner: winnerId,
             loser,
             isKnockout: match.stage !== "group",
-          } satisfies CollisionEvent,
-        };
-      });
+          },
+        });
+      }
 
-      await Promise.all(events.map(({ event }) => callbacks.onCollision(event)));
+      const recomputePromise = Promise.resolve().then(() =>
+        recomputeTournamentProbabilities(
+          state.probability,
+          state.groupResults,
+          state.results,
+          entry.day,
+        ),
+      );
 
-      for (const { match, event } of events) {
-        const result: SimMatchResult = {
-          matchId: match.matchId,
-          stage: match.stage,
-          day: match.day,
-          home: match.home,
-          away: match.away,
-          winner: event.winner,
-        };
+      await Promise.all([
+        ...events.map(({ event }) => callbacks.onCollision(event)),
+        recomputePromise,
+      ]);
 
-        state.results.push(result);
-        if (match.stage === "group") {
-          state.groupResults.push(result);
-        }
+      state.probability = await recomputePromise;
 
-        applyMatchOutcome(state, event.winner, event.loser, params);
+      for (const { event } of events) {
 
-        if (event.isKnockout) {
-          state.eliminated.add(event.loser);
-          state.rawWeights[event.loser] = 0;
-          state.probabilities = normalizeProbabilities(state.rawWeights, state.eliminated);
-        } else {
-          state.probabilities = normalizeProbabilities(state.rawWeights, state.eliminated);
-        }
-
-        callbacks.onProbabilitiesUpdate({ ...state.probabilities });
+        emitProbabilityUpdate(state, callbacks);
         callbacks.onBracketStateChange(
           buildBracketState(
             entry.day,
             state.results,
             state.groupResults,
-            state.eliminated,
+            state.probability.eliminated,
           ),
         );
 
@@ -243,6 +242,17 @@ export async function runSimulation(
       }
 
       await delay(params.batchPauseMs, callbacks.shouldAbort);
+    }
+
+    if (hadKnockoutOnDay && entry.day >= 12 && config.knockoutRecomputeTrigger === "each_knockout_day") {
+      state.probability = finalizeKnockoutDay(
+        state.probability,
+        state.groupResults,
+        state.results,
+        config,
+        entry.day,
+      );
+      emitProbabilityUpdate(state, callbacks);
     }
 
     if (options.stopAfterDay !== undefined && entry.day >= options.stopAfterDay) {

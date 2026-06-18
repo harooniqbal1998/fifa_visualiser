@@ -34,9 +34,10 @@ function resolveNodeParticipants(
   node: BracketNode,
   results: SimMatchResult[],
   groupResults: SimMatchResult[],
+  advancingThirdGroups?: string[],
 ): { home?: string; away?: string } {
   if (node.matchId.startsWith("r32-")) {
-    return resolveR32Match(node.matchId, groupResults);
+    return resolveR32Match(node.matchId, groupResults, advancingThirdGroups);
   }
 
   const home = node.homeSource ? getWinner(results, node.homeSource.matchId) : undefined;
@@ -66,6 +67,7 @@ export function resolveKnockoutMatchesForDay(
   results: SimMatchResult[],
   groupResults: SimMatchResult[],
   eliminated: Set<string>,
+  advancingThirdGroups?: string[],
 ): ResolvedMatch[] {
   const resolved: ResolvedMatch[] = [];
 
@@ -73,7 +75,12 @@ export function resolveKnockoutMatchesForDay(
     const meta = knockoutMetaById.get(node.matchId);
     if (!meta || meta.day !== day) continue;
 
-    const { home, away } = resolveNodeParticipants(node, results, groupResults);
+    const { home, away } = resolveNodeParticipants(
+      node,
+      results,
+      groupResults,
+      advancingThirdGroups,
+    );
     if (!home || !away) continue;
     if (eliminated.has(home) || eliminated.has(away)) continue;
     if (results.some((r) => r.matchId === node.matchId)) continue;
@@ -90,13 +97,8 @@ export function resolveKnockoutMatchesForDay(
   const tpMeta = knockoutMetaById.get("tp-1");
   if (tpMeta && tpMeta.day === day) {
     const { home, away } = resolveThirdPlaceParticipants(results);
-    if (
-      home &&
-      away &&
-      !eliminated.has(home) &&
-      !eliminated.has(away) &&
-      !results.some((r) => r.matchId === "tp-1")
-    ) {
+    // SF losers are eliminated from the trophy but still contest third place.
+    if (home && away && !results.some((r) => r.matchId === "tp-1")) {
       resolved.push({
         matchId: "tp-1",
         stage: tpMeta.stage,

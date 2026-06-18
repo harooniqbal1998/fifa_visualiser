@@ -1,3 +1,6 @@
+import type { ProbabilityConfig } from "@/lib/probability/types";
+import { DEFAULT_PROBABILITY_CONFIG } from "@/lib/probability/types";
+
 export type AnimationParams = {
   approachDurationMs: number;
   collisionDurationMs: number;
@@ -7,13 +10,12 @@ export type AnimationParams = {
   anchorTransitionMs: number;
   dayPauseMs: number;
   batchPauseMs: number;
-  loserPenalty: number;
-  winnerBoost: number;
   floatSpeed: number;
   repulsionStrength: number;
   timelineDropOffset: number;
   eliminatedGrayOpacity: number;
   simulationSeed: number;
+  probabilityConfig: ProbabilityConfig;
 };
 
 export const DEFAULT_ANIMATION_PARAMS: AnimationParams = {
@@ -25,13 +27,12 @@ export const DEFAULT_ANIMATION_PARAMS: AnimationParams = {
   anchorTransitionMs: 1200,
   dayPauseMs: 600,
   batchPauseMs: 300,
-  loserPenalty: 0.75,
-  winnerBoost: 1.12,
   floatSpeed: 0.3,
   repulsionStrength: 120,
   timelineDropOffset: 12,
   eliminatedGrayOpacity: 0.45,
   simulationSeed: 42,
+  probabilityConfig: DEFAULT_PROBABILITY_CONFIG,
 };
 
 export function createSeededRng(seed: number): () => number {
