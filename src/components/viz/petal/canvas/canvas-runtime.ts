@@ -2,10 +2,15 @@ import type { MutableRefObject } from "react";
 import type { Team } from "@/types";
 import type { StandingRow } from "@/lib/standings";
 import type { PetalLayoutConfig } from "@/components/viz/petal/petal-config";
-import { computePetalPositions, type PetalLayoutResult } from "@/components/viz/petal/petal-layout";
+import {
+  computeEliminatedStripPositions,
+  computePetalPositions,
+  type PetalLayoutResult,
+} from "@/components/viz/petal/petal-layout";
 import {
   createDisplayState,
   resetDisplayFromLayout,
+  setDropTargets,
   setRadiusTargets,
   setTargetsFromLayout,
   tickDisplayState,
@@ -31,6 +36,7 @@ export type PetalCanvasRuntime = {
     bracketDepths: Record<string, number>;
     config: PetalLayoutConfig;
     isSimulating: boolean;
+    eliminated?: Set<string>;
   }) => void;
   updateSize: (width: number, height: number) => void;
   resetLayout: () => void;
@@ -59,6 +65,7 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
   const standingsRef: MutableRefObject<Record<string, StandingRow[]>> = { current: {} };
   const bracketDepthsRef: MutableRefObject<Record<string, number>> = { current: {} };
   const isSimulatingRef: MutableRefObject<boolean> = { current: false };
+  const eliminatedRef: MutableRefObject<Set<string>> = { current: new Set() };
 
   const displayStateRef = { current: createDisplayState(800) };
   const matchControllerRef = {
@@ -78,6 +85,7 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
       height,
       configRef.current,
       sizingRef.current,
+      eliminatedRef.current,
     );
     return layoutRef.current;
   };
@@ -170,6 +178,9 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
       configRef.current = props.config;
       isSimulatingRef.current = props.isSimulating;
       displayStateRef.current.transitionDurationMs = props.config.rankTransitionDurationMs;
+      if (!props.isSimulating && props.eliminated) {
+        eliminatedRef.current = new Set(props.eliminated);
+      }
     },
 
     updateSize(width, height) {
@@ -207,24 +218,60 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
         playMatch(event) {
           return matchControllerRef.current.playMatch(event);
         },
+
         animateRankTransition() {
+          displayStateRef.current.transitionDurationMs =
+            configRef.current.rankTransitionDurationMs;
           return waitUntilSettled(displayStateRef.current);
         },
+
+        async eliminateTeams(teamIds) {
+          for (const id of teamIds) {
+            eliminatedRef.current.add(id);
+          }
+
+          const { width, height } = sizeRef.current;
+          const stripPositions = computeEliminatedStripPositions(
+            [...eliminatedRef.current],
+            width,
+            height,
+            configRef.current,
+            sizingRef.current,
+          );
+
+          const savedDuration = displayStateRef.current.transitionDurationMs;
+          displayStateRef.current.transitionDurationMs = configRef.current.dropDurationMs;
+          setDropTargets(displayStateRef.current, stripPositions);
+          await waitUntilSettled(displayStateRef.current);
+          displayStateRef.current.transitionDurationMs = savedDuration;
+        },
+
         setProbabilities(probs) {
           probabilitiesRef.current = probs;
           const layout = recomputeLayout();
           const radii = Object.fromEntries(layout.teams.map((n) => [n.id, n.r]));
           setRadiusTargets(displayStateRef.current, radii);
         },
+
         setLayoutTargets(layout) {
           layoutRef.current = layout;
           setTargetsFromLayout(displayStateRef.current, layout);
         },
+
         resetDisplay(layout) {
           layoutRef.current = layout;
           resetDisplayFromLayout(displayStateRef.current, layout);
           paint();
         },
+
+        setEliminated(eliminated) {
+          eliminatedRef.current = new Set(eliminated);
+        },
+
+        clearEliminated() {
+          eliminatedRef.current = new Set();
+        },
+
         stop() {
           matchControllerRef.current.clear();
         },

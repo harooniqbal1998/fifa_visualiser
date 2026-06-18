@@ -7,9 +7,12 @@ import type { DisplayState } from "@/components/viz/petal/canvas/display-state";
 export type PetalCanvasRef = {
   playMatch: (event: CollisionEvent) => Promise<void>;
   animateRankTransition: () => Promise<void>;
+  eliminateTeams: (teamIds: string[]) => Promise<void>;
   setProbabilities: (probabilities: Record<string, number>) => void;
   setLayoutTargets: (layout: PetalLayoutResult) => void;
   resetDisplay: (layout: PetalLayoutResult) => void;
+  setEliminated: (eliminated: Set<string>) => void;
+  clearEliminated: () => void;
   stop: () => void;
 };
 

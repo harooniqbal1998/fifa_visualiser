@@ -1,11 +1,10 @@
 import { getTimelineDays } from "@/lib/tournament";
-import type { Snapshot } from "@/types";
 import type { AnimationParams } from "@/lib/simulation/animation-params";
 import { createSeededRng } from "@/lib/simulation/animation-params";
 import {
   buildInitialProbabilities,
   buildInitialRawWeights,
-  createRunStateFromSnapshot,
+  buildSimulationBootstrap,
   getAdvancingTeamIds,
 } from "@/lib/simulation/advancement";
 import {
@@ -97,7 +96,6 @@ export function createInitialRunState(): SimulationRunState {
 
 export type SimulationOptions = {
   startDay: number;
-  snapshot: Snapshot;
   stopAfterDay?: number;
   groupStageOnly?: boolean;
 };
@@ -107,7 +105,7 @@ export async function runSimulation(
   callbacks: SimulationCallbacks,
   options: SimulationOptions,
 ): Promise<SimulationRunState> {
-  const state = createRunStateFromSnapshot(options.snapshot, options.startDay);
+  const state = buildSimulationBootstrap(options.startDay).runState;
   const rng = createSeededRng(params.simulationSeed);
   const timelineDays = getTimelineDays().filter((entry) => entry.day >= options.startDay);
 

@@ -15,6 +15,8 @@ export type PetalLayoutConfig = {
   connectorWidth: number;
   eliminatedOpacity: number;
   autoAdvanceDay: boolean;
+  bottomStripPaddingRatio: number;
+  dropDurationMs: number;
   /** @deprecated use spreadTanRatio */
   laneSpreadRatio?: number;
   /** @deprecated use spreadRadRatio */
@@ -38,6 +40,8 @@ export const DEFAULT_PETAL_CONFIG: PetalLayoutConfig = {
   connectorWidth: 2,
   eliminatedOpacity: 0.45,
   autoAdvanceDay: false,
+  bottomStripPaddingRatio: 0.04,
+  dropDurationMs: 900,
 };
 
 export const PETAL_SIMULATION_KEYS = [
@@ -55,6 +59,8 @@ export const PETAL_SIMULATION_KEYS = [
   "connectorWidth",
   "eliminatedOpacity",
   "autoAdvanceDay",
+  "bottomStripPaddingRatio",
+  "dropDurationMs",
 ] as const satisfies readonly (keyof PetalLayoutConfig)[];
 
 export type PetalSimulationKey = (typeof PETAL_SIMULATION_KEYS)[number];

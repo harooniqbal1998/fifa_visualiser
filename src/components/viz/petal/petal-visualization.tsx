@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Snapshot, Team } from "@/types";
 import { getGroupStandings } from "@/lib/tournament";
 import { PetalCanvas } from "@/components/viz/petal/petal-canvas";
@@ -18,10 +18,12 @@ type PetalVisualizationProps = {
 };
 
 export function PetalVisualization({ teams, snapshot }: PetalVisualizationProps) {
-  const [config, setConfig] = useState<PetalLayoutConfig>(() =>
-    mergePetalConfig(loadPetalConfigFromStorage()),
-  );
+  const [config, setConfig] = useState<PetalLayoutConfig>(() => mergePetalConfig({}));
   const [panelCollapsed, setPanelCollapsed] = useState(false);
+
+  useEffect(() => {
+    setConfig(mergePetalConfig(loadPetalConfigFromStorage()));
+  }, []);
 
   const standings = useMemo(
     () => getGroupStandings(snapshot.day),

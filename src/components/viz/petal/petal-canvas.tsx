@@ -15,14 +15,22 @@ type PetalCanvasProps = {
   probabilities: Record<string, number>;
   standings: Record<string, StandingRow[]>;
   bracketDepths: Record<string, number>;
+  eliminated?: Set<string>;
   config: PetalLayoutConfig;
   isSimulating?: boolean;
 };
 
 export const PetalCanvas = forwardRef<PetalCanvasRef, PetalCanvasProps>(
   function PetalCanvas(props, ref) {
-    const { teams, probabilities, standings, bracketDepths, config, isSimulating = false } =
-      props;
+    const {
+      teams,
+      probabilities,
+      standings,
+      bracketDepths,
+      eliminated,
+      config,
+      isSimulating = false,
+    } = props;
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const runtimeRef = useRef(createPetalCanvasRuntime());
@@ -41,6 +49,7 @@ export const PetalCanvas = forwardRef<PetalCanvasRef, PetalCanvasProps>(
         bracketDepths,
         config,
         isSimulating,
+        eliminated,
       });
       runtimeRef.current.resetLayout();
     }, [teams]);
@@ -53,11 +62,12 @@ export const PetalCanvas = forwardRef<PetalCanvasRef, PetalCanvasProps>(
         bracketDepths,
         config,
         isSimulating,
+        eliminated,
       });
       if (!isSimulating) {
         runtimeRef.current.syncLayoutTargets();
       }
-    }, [standings, bracketDepths, config, probabilities, isSimulating, teams]);
+    }, [standings, bracketDepths, config, probabilities, isSimulating, teams, eliminated]);
 
     useEffect(() => {
       const flags = runtimeRef.current.flagsRef.current;

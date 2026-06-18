@@ -1,8 +1,21 @@
 import type { Match, Snapshot } from "@/types";
 import { teams } from "@/data/teams";
 import { matches } from "@/data/matches";
+import { snapshotsByDay } from "@/data/snapshots";
 import { computeGroupStandings, type StandingRow } from "@/lib/standings";
 import type { SimMatchResult, SimulationRunState } from "@/lib/simulation/types";
+
+export type SimulationBootstrap = {
+  runState: SimulationRunState;
+  standings: Record<string, StandingRow[]>;
+  bracketDepths: Record<string, number>;
+  probabilities: Record<string, number>;
+  eliminated: Set<string>;
+};
+
+export function canStartSimulationFromDay(_day: number): boolean {
+  return true;
+}
 
 export function simResultToMatch(result: SimMatchResult): Match {
   return {
@@ -119,25 +132,44 @@ export function getEliminatedBeforeDay(startDay: number): Set<string> {
   return eliminated;
 }
 
-export function createRunStateFromSnapshot(
-  snapshot: Snapshot,
-  startDay: number,
-): SimulationRunState {
+export function buildSimulationBootstrap(startDay: number): SimulationBootstrap {
   const scripted = getScriptedResultsBeforeDay(startDay);
   const eliminated = getEliminatedBeforeDay(startDay);
+  const groupResults = scripted.filter((r) => r.stage === "group");
+  const knockoutResults = scripted.filter((r) => r.stage !== "group");
+
+  const priorDay = Math.max(0, startDay - 1);
+  const priorSnapshot = snapshotsByDay[priorDay] ?? snapshotsByDay[0]!;
+  const probabilities = { ...priorSnapshot.probabilities };
+  const bracketDepths = priorSnapshot.bracketDepths ?? {};
 
   const rawWeights: Record<string, number> = {};
   for (const team of teams) {
-    const prob = snapshot.probabilities[team.id] ?? 0;
+    const prob = probabilities[team.id] ?? 0;
     rawWeights[team.id] = eliminated.has(team.id) || prob === 0 ? 0 : prob;
   }
 
-  return {
+  const runState: SimulationRunState = {
     day: startDay,
-    probabilities: { ...snapshot.probabilities },
+    probabilities: { ...probabilities },
     rawWeights,
-    eliminated,
-    results: scripted.filter((r) => r.stage !== "group"),
-    groupResults: scripted.filter((r) => r.stage === "group"),
+    eliminated: new Set(eliminated),
+    results: [...knockoutResults],
+    groupResults: [...groupResults],
   };
+
+  return {
+    runState,
+    standings: buildStandingsFromGroupResults(groupResults),
+    bracketDepths,
+    probabilities,
+    eliminated: new Set(eliminated),
+  };
+}
+
+export function createRunStateFromSnapshot(
+  _snapshot: Snapshot,
+  startDay: number,
+): SimulationRunState {
+  return buildSimulationBootstrap(startDay).runState;
 }

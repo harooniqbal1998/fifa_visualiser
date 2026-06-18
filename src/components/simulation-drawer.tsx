@@ -2,6 +2,7 @@
 
 import { Timeline } from "@/components/timeline";
 import type { LayoutMode } from "@/components/tournament-view";
+import { canStartSimulationFromDay } from "@/lib/simulation/advancement";
 
 type SimulationDrawerProps = {
   day: number;
@@ -22,7 +23,7 @@ export function SimulationDrawer({
   layoutMode,
   onLayoutModeChange,
 }: SimulationDrawerProps) {
-  const canPlayPetal = layoutMode === "petal" && day < 12;
+  const canPlayPetal = layoutMode === "petal" && canStartSimulationFromDay(day);
   const canPlayRing = layoutMode === "ring";
   const canPlay = canPlayPetal || canPlayRing;
 
@@ -45,9 +46,9 @@ export function SimulationDrawer({
             title={
               !canPlay
                 ? layoutMode === "petal"
-                  ? "Group-stage matchdays only (days 1–11)"
+                  ? "Simulation unavailable for this day"
                   : "Simulation coming soon for ring layout"
-                : "Play current matchday"
+                : "Play simulation from selected day"
             }
             onClick={onPlay}
             className="w-full rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 disabled:cursor-not-allowed disabled:bg-zinc-400 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 dark:disabled:bg-zinc-600"

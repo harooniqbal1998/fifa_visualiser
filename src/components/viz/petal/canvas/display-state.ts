@@ -64,6 +64,28 @@ export function setTargetsFromLayout(
   }
 }
 
+export function setDropTargets(
+  state: DisplayState,
+  positions: Map<string, { x: number; y: number }>,
+): void {
+  for (const [id, pos] of positions) {
+    const entry = state.teams.get(id);
+    if (entry) {
+      entry.targetX = pos.x;
+      entry.targetY = pos.y;
+    } else {
+      state.teams.set(id, {
+        x: pos.x,
+        y: pos.y,
+        r: 0,
+        targetX: pos.x,
+        targetY: pos.y,
+        targetR: 0,
+      });
+    }
+  }
+}
+
 export function setRadiusTargets(
   state: DisplayState,
   radii: Record<string, number>,

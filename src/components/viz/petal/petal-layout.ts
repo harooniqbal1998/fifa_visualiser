@@ -171,6 +171,35 @@ function computeKnockoutPosition(
   return viaHub;
 }
 
+export function computeEliminatedStripPositions(
+  eliminatedIds: string[],
+  width: number,
+  height: number,
+  config: PetalLayoutConfig,
+  sizing: VizSizing = getVizSizing(),
+): Map<string, { x: number; y: number }> {
+  const sorted = [...eliminatedIds].sort();
+  const positions = new Map<string, { x: number; y: number }>();
+  if (sorted.length === 0) return positions;
+
+  const r = sizing.minRadius;
+  const bottomPadding = height * config.bottomStripPaddingRatio;
+  const y = height - bottomPadding - r;
+  const xMin = sizing.padding + r;
+  const xMax = width - sizing.padding - r;
+  const span = Math.max(xMax - xMin, 0);
+
+  sorted.forEach((id, index) => {
+    const x =
+      sorted.length === 1
+        ? (xMin + xMax) / 2
+        : xMin + (span * index) / (sorted.length - 1);
+    positions.set(id, { x, y });
+  });
+
+  return positions;
+}
+
 export function computePetalPositions(
   teams: Team[],
   probabilities: Record<string, number>,
@@ -180,6 +209,7 @@ export function computePetalPositions(
   height: number,
   config: PetalLayoutConfig,
   sizing: VizSizing = getVizSizing(),
+  eliminated: Set<string> = new Set(),
 ): PetalLayoutResult {
   const usableRadius = Math.min(width, height);
   const canvasCenter = computeCanvasCenter(width, height, config);
@@ -265,6 +295,23 @@ export function computePetalPositions(
       bracketDepth,
     };
   });
+
+  if (eliminated.size > 0) {
+    const stripPositions = computeEliminatedStripPositions(
+      [...eliminated],
+      width,
+      height,
+      config,
+      sizing,
+    );
+    for (const team of positionedTeams) {
+      const stripPos = stripPositions.get(team.id);
+      if (stripPos) {
+        team.x = stripPos.x;
+        team.y = stripPos.y;
+      }
+    }
+  }
 
   return {
     teams: positionedTeams,

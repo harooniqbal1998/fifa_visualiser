@@ -3,7 +3,9 @@
 import {
   forwardRef,
   useCallback,
+  useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -21,9 +23,10 @@ import { computePetalPositions } from "@/components/viz/petal/petal-layout";
 import { PetalTuningPanel } from "@/components/viz/petal/petal-tuning-panel";
 import { DEFAULT_ANIMATION_PARAMS } from "@/lib/simulation/animation-params";
 import {
+  buildSimulationBootstrap,
   buildStandingsFromGroupResults,
-  getScriptedResultsBeforeDay,
 } from "@/lib/simulation/advancement";
+import type { CollisionEvent } from "@/lib/simulation/types";
 import { runSimulation } from "@/lib/simulation/simulation-engine";
 import { getVizSizing } from "@/components/viz/viz-math";
 
@@ -40,6 +43,15 @@ type PetalSimulationVisualizationProps = {
   onDayChange?: (day: number) => void;
 };
 
+function getStaticEliminated(
+  teams: Team[],
+  probabilities: Record<string, number>,
+): Set<string> {
+  return new Set(
+    teams.filter((team) => (probabilities[team.id] ?? 0) === 0).map((team) => team.id),
+  );
+}
+
 export const PetalSimulationVisualization = forwardRef<
   PetalSimulationVisualizationRef,
   PetalSimulationVisualizationProps
@@ -50,10 +62,16 @@ export const PetalSimulationVisualization = forwardRef<
   const canvasRef = useRef<PetalCanvasRef>(null);
   const containerRef = useRef<HTMLElement>(null);
   const abortRef = useRef(false);
-  const configRef = useRef<PetalLayoutConfig>(mergePetalConfig(loadPetalConfigFromStorage()));
+  const configRef = useRef<PetalLayoutConfig>(mergePetalConfig({}));
   const probabilitiesRef = useRef(snapshot.probabilities);
+  const standingsRef = useRef<Record<string, StandingRow[]>>(getGroupStandings(snapshot.day));
+  const bracketDepthsRef = useRef<Record<string, number>>(snapshot.bracketDepths ?? {});
+  const eliminatedRef = useRef<Set<string>>(
+    getStaticEliminated(teams, snapshot.probabilities),
+  );
+  const lastSimDayRef = useRef(snapshot.day);
 
-  const [config, setConfig] = useState<PetalLayoutConfig>(() => configRef.current);
+  const [config, setConfig] = useState<PetalLayoutConfig>(() => mergePetalConfig({}));
   const [panelCollapsed, setPanelCollapsed] = useState(false);
   const [liveProbabilities, setLiveProbabilities] = useState<Record<string, number> | null>(
     null,
@@ -61,9 +79,18 @@ export const PetalSimulationVisualization = forwardRef<
   const [liveStandings, setLiveStandings] = useState<Record<string, StandingRow[]> | null>(
     null,
   );
+  const [liveBracketDepths, setLiveBracketDepths] = useState<Record<string, number> | null>(
+    null,
+  );
+  const [liveEliminated, setLiveEliminated] = useState<Set<string> | null>(null);
 
   configRef.current = config;
   probabilitiesRef.current = liveProbabilities ?? snapshot.probabilities;
+
+  useEffect(() => {
+    const stored = mergePetalConfig(loadPetalConfigFromStorage());
+    setConfig(stored);
+  }, []);
 
   const displayProbabilities = isSimulating
     ? (liveProbabilities ?? snapshot.probabilities)
@@ -72,7 +99,15 @@ export const PetalSimulationVisualization = forwardRef<
   const standings =
     isSimulating && liveStandings ? liveStandings : getGroupStandings(snapshot.day);
 
-  const bracketDepths = snapshot.bracketDepths ?? {};
+  const bracketDepths =
+    isSimulating && liveBracketDepths
+      ? liveBracketDepths
+      : (snapshot.bracketDepths ?? {});
+
+  const eliminated = useMemo(() => {
+    if (isSimulating && liveEliminated) return liveEliminated;
+    return getStaticEliminated(teams, snapshot.probabilities);
+  }, [isSimulating, liveEliminated, teams, snapshot.probabilities]);
 
   const getCanvasSize = () => {
     const el = containerRef.current;
@@ -83,18 +118,23 @@ export const PetalSimulationVisualization = forwardRef<
     };
   };
 
-  const recomputeAndSetLayout = useCallback(
-    (standingsTable: Record<string, StandingRow[]>) => {
+  const computeLayout = useCallback(
+    (
+      standingsTable: Record<string, StandingRow[]>,
+      depths: Record<string, number>,
+      eliminatedSet: Set<string>,
+    ) => {
       const { width, height } = getCanvasSize();
       return computePetalPositions(
         teams,
         probabilitiesRef.current,
         standingsTable,
-        {},
+        depths,
         width,
         height,
         configRef.current,
         getVizSizing(),
+        eliminatedSet,
       );
     },
     [teams],
@@ -105,62 +145,108 @@ export const PetalSimulationVisualization = forwardRef<
     onSimulatingChange(false);
     setLiveProbabilities(null);
     setLiveStandings(null);
+    setLiveBracketDepths(null);
+    setLiveEliminated(null);
     canvasRef.current?.stop();
+    canvasRef.current?.clearEliminated();
     canvasRef.current?.setProbabilities(snapshot.probabilities);
   }, [snapshot.probabilities, onSimulatingChange]);
 
   const startSimulation = useCallback(async () => {
     if (isSimulating) return;
+
+    const startDay = snapshot.day;
+    const bootstrap = buildSimulationBootstrap(startDay);
+
     abortRef.current = false;
     onSimulatingChange(true);
-    setLiveProbabilities({ ...snapshot.probabilities });
 
-    const scriptedGroup = getScriptedResultsBeforeDay(snapshot.day).filter(
-      (r) => r.stage === "group",
+    probabilitiesRef.current = { ...bootstrap.probabilities };
+    standingsRef.current = bootstrap.standings;
+    bracketDepthsRef.current = bootstrap.bracketDepths;
+    eliminatedRef.current = new Set(bootstrap.eliminated);
+    lastSimDayRef.current = startDay;
+
+    setLiveProbabilities({ ...bootstrap.probabilities });
+    setLiveStandings(bootstrap.standings);
+    setLiveBracketDepths(bootstrap.bracketDepths);
+    setLiveEliminated(new Set(bootstrap.eliminated));
+
+    canvasRef.current?.setEliminated(bootstrap.eliminated);
+    const initialLayout = computeLayout(
+      bootstrap.standings,
+      bootstrap.bracketDepths,
+      bootstrap.eliminated,
     );
-    setLiveStandings(buildStandingsFromGroupResults(scriptedGroup));
+    canvasRef.current?.resetDisplay(initialLayout);
 
     await runSimulation(
       DEFAULT_ANIMATION_PARAMS,
       {
-        onDayChange: () => {},
+        onDayChange: (day) => {
+          lastSimDayRef.current = day;
+          onDayChange?.(day);
+        },
         onCollision: (event) => canvasRef.current!.playMatch(event),
-        onMatchResolved: async (_event, groupResults) => {
+        onMatchResolved: async (event: CollisionEvent, groupResults) => {
+          if (event.isKnockout) {
+            eliminatedRef.current.add(event.loser);
+            setLiveEliminated(new Set(eliminatedRef.current));
+            await canvasRef.current?.eliminateTeams([event.loser]);
+
+            const layout = computeLayout(
+              standingsRef.current,
+              bracketDepthsRef.current,
+              eliminatedRef.current,
+            );
+            canvasRef.current?.setLayoutTargets(layout);
+            await canvasRef.current?.animateRankTransition();
+            return;
+          }
+
           const newStandings = buildStandingsFromGroupResults(groupResults);
+          standingsRef.current = newStandings;
           setLiveStandings(newStandings);
-          const layout = recomputeAndSetLayout(newStandings);
+
+          const layout = computeLayout(
+            newStandings,
+            bracketDepthsRef.current,
+            eliminatedRef.current,
+          );
           canvasRef.current?.setLayoutTargets(layout);
           await canvasRef.current?.animateRankTransition();
         },
-        onEliminations: async () => {},
+        onEliminations: async ({ teamIds }) => {
+          for (const id of teamIds) {
+            eliminatedRef.current.add(id);
+          }
+          setLiveEliminated(new Set(eliminatedRef.current));
+          await canvasRef.current?.eliminateTeams(teamIds);
+        },
         onProbabilitiesUpdate: (probs) => {
           probabilitiesRef.current = probs;
           setLiveProbabilities(probs);
           canvasRef.current?.setProbabilities(probs);
         },
-        onBracketStateChange: () => {},
+        onBracketStateChange: (state) => {
+          bracketDepthsRef.current = state.bracketDepths;
+          setLiveBracketDepths(state.bracketDepths);
+        },
         onComplete: () => {
           onSimulatingChange(false);
+          setLiveProbabilities(null);
+          setLiveStandings(null);
+          setLiveBracketDepths(null);
+          setLiveEliminated(null);
           if (configRef.current.autoAdvanceDay && onDayChange) {
-            onDayChange(snapshot.day + 1);
+            onDayChange(lastSimDayRef.current + 1);
           }
         },
         shouldAbort: () => abortRef.current,
       },
-      {
-        startDay: snapshot.day,
-        snapshot,
-        stopAfterDay: snapshot.day,
-        groupStageOnly: true,
-      },
+      { startDay },
     );
-  }, [
-    isSimulating,
-    onSimulatingChange,
-    snapshot,
-    recomputeAndSetLayout,
-    onDayChange,
-  ]);
+  }, [isSimulating, onSimulatingChange, snapshot.day, computeLayout, onDayChange]);
 
   useImperativeHandle(
     ref,
@@ -179,6 +265,7 @@ export const PetalSimulationVisualization = forwardRef<
         probabilities={displayProbabilities}
         standings={standings}
         bracketDepths={bracketDepths}
+        eliminated={eliminated}
         config={config}
         isSimulating={isSimulating}
       />
