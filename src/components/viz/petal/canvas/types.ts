@@ -6,15 +6,18 @@ import type { DisplayState } from "@/components/viz/petal/canvas/display-state";
 
 export type PetalCanvasRef = {
   playMatch: (event: CollisionEvent) => Promise<void>;
-  animateRankTransition: () => Promise<void>;
+  animateRankTransition: (borderTeamIds?: string[], positionTeamIds?: string[]) => Promise<void>;
   eliminateTeams: (teamIds: string[]) => Promise<void>;
   setProbabilities: (probabilities: Record<string, number>) => void;
-  setLayoutTargets: (layout: PetalLayoutResult) => void;
+  markTeamsDropped: (teamIds: string[]) => void;
+  setLayoutTargets: (layout: PetalLayoutResult, borderTeamIds?: string[]) => void;
   resetDisplay: (layout: PetalLayoutResult) => void;
   setEliminated: (eliminated: Set<string>) => void;
   clearEliminated: () => void;
   stop: () => void;
 };
+
+import type { StandingRank } from "@/components/viz/petal/canvas/display-state";
 
 export type TeamDrawItem = {
   id: string;
@@ -28,6 +31,9 @@ export type TeamDrawItem = {
   isParticipant: boolean;
   isWinner: boolean;
   isLoser: boolean;
+  standingRank: StandingRank;
+  rankBorderOpacity: number;
+  bracketDepth: number;
 };
 
 export type DrawFrameContext = {

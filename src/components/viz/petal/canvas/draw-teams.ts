@@ -1,11 +1,49 @@
 import { drawFlagCover } from "@/lib/flags";
+import type { StandingRank } from "@/components/viz/petal/canvas/display-state";
 import type { TeamDrawItem } from "@/components/viz/petal/canvas/types";
+
+const RANK_BORDER_COLORS: Record<1 | 2 | 3, string> = {
+  1: "#fbbf24",
+  2: "#d4d4d8",
+  3: "#cd7f32",
+};
 
 function getStrokeStyle(team: TeamDrawItem): { color: string; width: number } {
   if (team.isWinner) return { color: "#fbbf24", width: 3 };
   if (team.isLoser) return { color: "#f87171", width: 3 };
   if (team.isParticipant) return { color: "#38bdf8", width: 2.5 };
   return { color: "#a1a1aa", width: 1 };
+}
+
+function getRankBorderColor(standingRank: StandingRank): string | null {
+  if (standingRank === 1 || standingRank === 2 || standingRank === 3) {
+    return RANK_BORDER_COLORS[standingRank];
+  }
+  return null;
+}
+
+function drawRankBorder(
+  ctx: CanvasRenderingContext2D,
+  team: TeamDrawItem,
+  baseAlpha: number,
+  isEliminated: boolean,
+  eliminatedOpacity: number,
+) {
+  if (team.bracketDepth > 0 || team.rankBorderOpacity <= 0 || team.probability <= 0) {
+    return;
+  }
+
+  const color = getRankBorderColor(team.standingRank);
+  if (!color) return;
+
+  ctx.beginPath();
+  ctx.arc(team.x, team.y, team.r + 3, 0, Math.PI * 2);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 3;
+  ctx.globalAlpha = isEliminated
+    ? eliminatedOpacity * team.rankBorderOpacity
+    : baseAlpha * team.rankBorderOpacity;
+  ctx.stroke();
 }
 
 export function drawTeam(
@@ -33,6 +71,8 @@ export function drawTeam(
   ctx.lineWidth = stroke.width;
   ctx.globalAlpha = isEliminated ? eliminatedOpacity : baseAlpha;
   ctx.stroke();
+
+  drawRankBorder(ctx, team, baseAlpha, isEliminated, eliminatedOpacity);
 
   if (isParticipant) {
     ctx.beginPath();

@@ -6,15 +6,20 @@ import {
   isParticipant,
   isWinner,
 } from "@/components/viz/petal/canvas/draw-matches";
+import { drawGuideRings } from "@/components/viz/petal/canvas/draw-rings";
 import { drawTeams } from "@/components/viz/petal/canvas/draw-teams";
 import type { DrawFrameContext } from "@/components/viz/petal/canvas/types";
 
 export function renderFrame(frame: DrawFrameContext) {
-  const { ctx, width, height, dpr, config, displayState, matchController, flags, teams } =
+  const { ctx, width, height, dpr, config, layout, displayState, matchController, flags, teams } =
     frame;
 
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, width, height);
+
+  if (layout) {
+    drawGuideRings(ctx, layout);
+  }
 
   const activeMatches = matchController.getActiveMatches();
   const backgroundTeams = teams.filter((t) => !t.isParticipant);
@@ -34,8 +39,13 @@ export function buildTeamDrawItems(
   const highlighted = getHighlightedTeamIds(activeMatches);
   const hasActive = frame.matchController.hasActiveMatches();
 
+  const layoutTeamsById = new Map(
+    frame.layout?.teams.map((node) => [node.id, node]) ?? [],
+  );
+
   const teams = [...frame.teamMeta.entries()].map(([id, meta]) => {
     const pos = frame.displayState.teams.get(id);
+    const layoutNode = layoutTeamsById.get(id);
     return {
       id,
       isoCode: meta.isoCode,
@@ -48,6 +58,9 @@ export function buildTeamDrawItems(
       isParticipant: isParticipant(id, highlighted),
       isWinner: isWinner(id, activeMatches),
       isLoser: isLoser(id, activeMatches),
+      standingRank: pos?.standingRank ?? 4,
+      rankBorderOpacity: pos?.rankBorderOpacity ?? 1,
+      bracketDepth: layoutNode?.bracketDepth ?? 0,
     };
   });
 

@@ -23,16 +23,20 @@ import type { CollisionEvent } from "@/lib/simulation/types";
 import { runSimulation } from "@/lib/simulation/simulation-engine";
 import { getVizSizing } from "@/components/viz/viz-math";
 
+export type SimulationSessionPhase = "idle" | "running" | "frozen" | "completed";
+
 export type PetalSimulationVisualizationRef = {
   stopSimulation: () => void;
   startSimulation: () => void;
+  resetSimulation: () => void;
 };
 
 type PetalSimulationVisualizationProps = {
   teams: Team[];
   snapshot: Snapshot;
-  isSimulating: boolean;
+  sessionPhase: SimulationSessionPhase;
   onSimulatingChange: (simulating: boolean) => void;
+  onSessionComplete: (winnerId: string) => void;
   onDayChange?: (day: number) => void;
 };
 
@@ -49,7 +53,7 @@ export const PetalSimulationVisualization = forwardRef<
   PetalSimulationVisualizationRef,
   PetalSimulationVisualizationProps
 >(function PetalSimulationVisualization(
-  { teams, snapshot, isSimulating, onSimulatingChange, onDayChange },
+  { teams, snapshot, sessionPhase, onSimulatingChange, onSessionComplete, onDayChange },
   ref,
 ) {
   const canvasRef = useRef<PetalCanvasRef>(null);
@@ -73,24 +77,30 @@ export const PetalSimulationVisualization = forwardRef<
   );
   const [liveEliminated, setLiveEliminated] = useState<Set<string> | null>(null);
 
-  probabilitiesRef.current = liveProbabilities ?? snapshot.probabilities;
+  const useLiveData = sessionPhase !== "idle";
+  const isSimulating = sessionPhase === "running";
+  const freezeLayout = sessionPhase === "frozen" || sessionPhase === "completed";
 
-  const displayProbabilities = isSimulating
+  probabilitiesRef.current = useLiveData
     ? (liveProbabilities ?? snapshot.probabilities)
     : snapshot.probabilities;
 
-  const standings =
-    isSimulating && liveStandings ? liveStandings : getGroupStandings(snapshot.day);
+  const displayProbabilities = useLiveData
+    ? (liveProbabilities ?? snapshot.probabilities)
+    : snapshot.probabilities;
 
-  const bracketDepths =
-    isSimulating && liveBracketDepths
-      ? liveBracketDepths
-      : (snapshot.bracketDepths ?? {});
+  const standings = useLiveData
+    ? (liveStandings ?? getGroupStandings(snapshot.day))
+    : getGroupStandings(snapshot.day);
+
+  const bracketDepths = useLiveData
+    ? (liveBracketDepths ?? snapshot.bracketDepths ?? {})
+    : (snapshot.bracketDepths ?? {});
 
   const eliminated = useMemo(() => {
-    if (isSimulating && liveEliminated) return liveEliminated;
+    if (useLiveData && liveEliminated) return liveEliminated;
     return getStaticEliminated(teams, snapshot.probabilities);
-  }, [isSimulating, liveEliminated, teams, snapshot.probabilities]);
+  }, [useLiveData, liveEliminated, teams, snapshot.probabilities]);
 
   const getCanvasSize = () => {
     const el = containerRef.current;
@@ -126,17 +136,39 @@ export const PetalSimulationVisualization = forwardRef<
   const stopSimulation = useCallback(() => {
     abortRef.current = true;
     onSimulatingChange(false);
+    canvasRef.current?.stop();
+  }, [onSimulatingChange]);
+
+  const resetSimulation = useCallback(() => {
+    abortRef.current = true;
     setLiveProbabilities(null);
     setLiveStandings(null);
     setLiveBracketDepths(null);
     setLiveEliminated(null);
+
+    const staticEliminated = getStaticEliminated(teams, snapshot.probabilities);
+    eliminatedRef.current = new Set(staticEliminated);
+    probabilitiesRef.current = snapshot.probabilities;
+    standingsRef.current = getGroupStandings(snapshot.day);
+    bracketDepthsRef.current = snapshot.bracketDepths ?? {};
+
     canvasRef.current?.stop();
     canvasRef.current?.clearEliminated();
-    canvasRef.current?.setProbabilities(snapshot.probabilities);
-  }, [snapshot.probabilities, onSimulatingChange]);
+    canvasRef.current?.setEliminated(staticEliminated);
+
+    const layout = computeLayout(
+      standingsRef.current,
+      bracketDepthsRef.current,
+      staticEliminated,
+    );
+    canvasRef.current?.resetDisplay(layout);
+    if (staticEliminated.size > 0) {
+      canvasRef.current?.markTeamsDropped([...staticEliminated]);
+    }
+  }, [teams, snapshot, computeLayout]);
 
   const startSimulation = useCallback(async () => {
-    if (isSimulating) return;
+    if (sessionPhase === "running") return;
 
     const startDay = snapshot.day;
     const bootstrap = buildSimulationBootstrap(startDay);
@@ -161,6 +193,9 @@ export const PetalSimulationVisualization = forwardRef<
       bootstrap.eliminated,
     );
     canvasRef.current?.resetDisplay(initialLayout);
+    if (bootstrap.eliminated.size > 0) {
+      canvasRef.current?.markTeamsDropped([...bootstrap.eliminated]);
+    }
 
     await runSimulation(
       DEFAULT_ANIMATION_PARAMS,
@@ -194,8 +229,13 @@ export const PetalSimulationVisualization = forwardRef<
             bracketDepthsRef.current,
             eliminatedRef.current,
           );
-          canvasRef.current?.setLayoutTargets(layout);
-          await canvasRef.current?.animateRankTransition();
+          const matchTeams = [event.home, event.away];
+          const groupId = teams.find((team) => team.id === event.home)?.group;
+          const groupTeamIds = groupId
+            ? teams.filter((team) => team.group === groupId).map((team) => team.id)
+            : matchTeams;
+          canvasRef.current?.setLayoutTargets(layout, matchTeams);
+          await canvasRef.current?.animateRankTransition(matchTeams, groupTeamIds);
         },
         onEliminations: async ({ teamIds }) => {
           for (const id of teamIds) {
@@ -213,30 +253,39 @@ export const PetalSimulationVisualization = forwardRef<
           bracketDepthsRef.current = state.bracketDepths;
           setLiveBracketDepths(state.bracketDepths);
         },
-        onComplete: () => {
+        onComplete: (finalState) => {
           onSimulatingChange(false);
-          setLiveProbabilities(null);
-          setLiveStandings(null);
-          setLiveBracketDepths(null);
-          setLiveEliminated(null);
+          const survivors = teams.filter((team) => !finalState.eliminated.has(team.id));
+          if (survivors.length === 1) {
+            onSessionComplete(survivors[0]!.id);
+          }
         },
         shouldAbort: () => abortRef.current,
       },
       { startDay },
     );
-  }, [isSimulating, onSimulatingChange, snapshot.day, computeLayout, onDayChange]);
+  }, [
+    sessionPhase,
+    onSimulatingChange,
+    onSessionComplete,
+    snapshot.day,
+    computeLayout,
+    onDayChange,
+    teams,
+  ]);
 
   useImperativeHandle(
     ref,
     () => ({
       stopSimulation,
       startSimulation,
+      resetSimulation,
     }),
-    [stopSimulation, startSimulation],
+    [stopSimulation, startSimulation, resetSimulation],
   );
 
   return (
-    <section ref={containerRef} className="relative min-h-0 min-w-0 flex-1">
+    <section ref={containerRef} className="relative h-full min-h-0 min-w-0 w-full">
       <PetalCanvas
         ref={canvasRef}
         teams={teams}
@@ -246,6 +295,7 @@ export const PetalSimulationVisualization = forwardRef<
         eliminated={eliminated}
         config={DEFAULT_PETAL_CONFIG}
         isSimulating={isSimulating}
+        freezeLayout={freezeLayout}
       />
     </section>
   );

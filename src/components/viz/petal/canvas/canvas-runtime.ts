@@ -8,11 +8,16 @@ import {
   type PetalLayoutResult,
 } from "@/components/viz/petal/petal-layout";
 import {
+  animateRankBorderOpacity,
+  applyTargetStandingRanks,
+  clearDroppedTeams,
   createDisplayState,
+  markTeamsDropped,
   resetDisplayFromLayout,
   setDropTargetsYOnly,
   setRadiusTargets,
   setTargetsFromLayout,
+  startPositionTransitions,
   tickDisplayState,
   waitUntilSettled,
 } from "@/components/viz/petal/canvas/display-state";
@@ -36,6 +41,7 @@ export type PetalCanvasRuntime = {
     bracketDepths: Record<string, number>;
     config: PetalLayoutConfig;
     isSimulating: boolean;
+    freezeLayout: boolean;
     eliminated?: Set<string>;
   }) => void;
   updateSize: (width: number, height: number) => void;
@@ -65,9 +71,10 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
   const standingsRef: MutableRefObject<Record<string, StandingRow[]>> = { current: {} };
   const bracketDepthsRef: MutableRefObject<Record<string, number>> = { current: {} };
   const isSimulatingRef: MutableRefObject<boolean> = { current: false };
+  const freezeLayoutRef: MutableRefObject<boolean> = { current: false };
   const eliminatedRef: MutableRefObject<Set<string>> = { current: new Set() };
 
-  const displayStateRef = { current: createDisplayState(800) };
+  const displayStateRef = { current: createDisplayState(200) };
   const matchControllerRef = {
     current: createMatchController({
       getHoldDurationMs: () => configRef.current.matchHoldDurationMs,
@@ -142,8 +149,6 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
 
   const loop = createRenderLoop({
     onFrame(timestamp) {
-      displayStateRef.current.transitionDurationMs =
-        configRef.current.rankTransitionDurationMs;
       tickDisplayState(displayStateRef.current, timestamp);
       paint();
     },
@@ -177,8 +182,9 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
       bracketDepthsRef.current = props.bracketDepths;
       configRef.current = props.config;
       isSimulatingRef.current = props.isSimulating;
+      freezeLayoutRef.current = props.freezeLayout;
       displayStateRef.current.transitionDurationMs = props.config.rankTransitionDurationMs;
-      if (!props.isSimulating && props.eliminated) {
+      if (!props.isSimulating && !props.freezeLayout && props.eliminated) {
         eliminatedRef.current = new Set(props.eliminated);
       }
     },
@@ -186,8 +192,11 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
     updateSize(width, height) {
       sizingRef.current = getVizSizing();
       sizeRef.current = { width, height };
-      const layout = recomputeLayout();
-      setTargetsFromLayout(displayStateRef.current, layout);
+      if (!freezeLayoutRef.current) {
+        const layout = recomputeLayout();
+        setTargetsFromLayout(displayStateRef.current, layout, { syncStandingRanks: true });
+      }
+      paint();
     },
 
     resetLayout() {
@@ -198,7 +207,7 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
 
     syncLayoutTargets() {
       const layout = recomputeLayout();
-      setTargetsFromLayout(displayStateRef.current, layout);
+      setTargetsFromLayout(displayStateRef.current, layout, { syncStandingRanks: true });
       const radii = Object.fromEntries(layout.teams.map((n) => [n.id, n.r]));
       setRadiusTargets(displayStateRef.current, radii);
     },
@@ -219,10 +228,34 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
           return matchControllerRef.current.playMatch(event);
         },
 
-        animateRankTransition() {
-          displayStateRef.current.transitionDurationMs =
-            configRef.current.rankTransitionDurationMs;
-          return waitUntilSettled(displayStateRef.current);
+        async animateRankTransition(
+          borderTeamIds: string[] = [],
+          positionTeamIds?: string[],
+        ) {
+          const config = configRef.current;
+          displayStateRef.current.transitionDurationMs = config.rankTransitionDurationMs;
+
+          if (borderTeamIds.length > 0) {
+            await animateRankBorderOpacity(
+              displayStateRef.current,
+              0,
+              config.rankBorderFadeMs,
+              borderTeamIds,
+            );
+          }
+
+          startPositionTransitions(displayStateRef.current, positionTeamIds);
+          await waitUntilSettled(displayStateRef.current, undefined, positionTeamIds);
+
+          applyTargetStandingRanks(displayStateRef.current, borderTeamIds);
+          if (borderTeamIds.length > 0) {
+            await animateRankBorderOpacity(
+              displayStateRef.current,
+              1,
+              config.rankBorderFadeMs,
+              borderTeamIds,
+            );
+          }
         },
 
         async eliminateTeams(teamIds) {
@@ -248,18 +281,23 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
           );
           await waitUntilSettled(displayStateRef.current);
           displayStateRef.current.transitionDurationMs = savedDuration;
+          markTeamsDropped(displayStateRef.current, teamIds);
         },
 
         setProbabilities(probs) {
           probabilitiesRef.current = probs;
-          const layout = recomputeLayout();
-          const radii = Object.fromEntries(layout.teams.map((n) => [n.id, n.r]));
-          setRadiusTargets(displayStateRef.current, radii);
         },
 
-        setLayoutTargets(layout) {
+        markTeamsDropped(teamIds) {
+          markTeamsDropped(displayStateRef.current, teamIds);
+        },
+
+        setLayoutTargets(layout, borderTeamIds?: string[]) {
           layoutRef.current = layout;
-          setTargetsFromLayout(displayStateRef.current, layout);
+          setTargetsFromLayout(displayStateRef.current, layout, {
+            deferTransition: true,
+            borderTeamIds,
+          });
         },
 
         resetDisplay(layout) {
@@ -274,6 +312,7 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
 
         clearEliminated() {
           eliminatedRef.current = new Set();
+          clearDroppedTeams(displayStateRef.current);
         },
 
         stop() {

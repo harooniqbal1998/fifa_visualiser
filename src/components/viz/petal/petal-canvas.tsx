@@ -18,6 +18,7 @@ type PetalCanvasProps = {
   eliminated?: Set<string>;
   config: PetalLayoutConfig;
   isSimulating?: boolean;
+  freezeLayout?: boolean;
 };
 
 export const PetalCanvas = forwardRef<PetalCanvasRef, PetalCanvasProps>(
@@ -30,10 +31,12 @@ export const PetalCanvas = forwardRef<PetalCanvasRef, PetalCanvasProps>(
       eliminated,
       config,
       isSimulating = false,
+      freezeLayout = false,
     } = props;
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const runtimeRef = useRef(createPetalCanvasRuntime());
+    const prevFreezeLayoutRef = useRef(freezeLayout);
 
     useImperativeHandle(ref, () => runtimeRef.current.getRefApi(), []);
 
@@ -49,12 +52,14 @@ export const PetalCanvas = forwardRef<PetalCanvasRef, PetalCanvasProps>(
         bracketDepths,
         config,
         isSimulating,
+        freezeLayout,
         eliminated,
       });
       runtimeRef.current.resetLayout();
     }, [teams]);
 
     useEffect(() => {
+      const wasFrozen = prevFreezeLayoutRef.current;
       runtimeRef.current.syncFromProps({
         teams,
         probabilities,
@@ -62,12 +67,18 @@ export const PetalCanvas = forwardRef<PetalCanvasRef, PetalCanvasProps>(
         bracketDepths,
         config,
         isSimulating,
+        freezeLayout,
         eliminated,
       });
-      if (!isSimulating) {
+
+      if (wasFrozen && !freezeLayout) {
+        runtimeRef.current.syncLayoutTargets();
+      } else if (!isSimulating && !freezeLayout) {
         runtimeRef.current.syncLayoutTargets();
       }
-    }, [standings, bracketDepths, config, probabilities, isSimulating, teams, eliminated]);
+
+      prevFreezeLayoutRef.current = freezeLayout;
+    }, [standings, bracketDepths, config, probabilities, isSimulating, teams, eliminated, freezeLayout]);
 
     useEffect(() => {
       const flags = runtimeRef.current.flagsRef.current;

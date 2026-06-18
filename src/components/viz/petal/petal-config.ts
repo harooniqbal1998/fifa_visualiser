@@ -12,6 +12,7 @@ export type PetalLayoutConfig = {
   centerYOffsetRatio: number;
   matchHoldDurationMs: number;
   rankTransitionDurationMs: number;
+  rankBorderFadeMs: number;
   spotlightDimOpacity: number;
   connectorWidth: number;
   eliminatedOpacity: number;
@@ -36,7 +37,8 @@ export const DEFAULT_PETAL_CONFIG: PetalLayoutConfig = {
   groupStartAngle: -0.792,
   centerYOffsetRatio: 0,
   matchHoldDurationMs: 1500,
-  rankTransitionDurationMs: 800,
+  rankTransitionDurationMs: 200,
+  rankBorderFadeMs: 80,
   spotlightDimOpacity: 0.25,
   connectorWidth: 2,
   eliminatedOpacity: 0.45,
