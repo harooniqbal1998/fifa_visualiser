@@ -1,84 +1,52 @@
 import type { Snapshot } from "@/types";
-import { teams } from "./teams";
-import { matches } from "./matches";
-import { OPENING_PROBABILITIES } from "./opening-probabilities";
-import {
-  buildBracketState,
-  getEliminatedFromResults,
-} from "@/lib/simulation/bracket-state";
-import type { SimMatchResult } from "@/lib/simulation/types";
+import { deriveTournamentStateAtDay } from "@/lib/probability/derive-tournament-state";
+import { DEFAULT_PROBABILITY_CONFIG } from "@/lib/probability/types";
+import { getScriptedResultsUpToDay } from "@/lib/simulation/advancement";
+import { buildBracketState, getEliminatedFromResults } from "@/lib/simulation/bracket-state";
 
-const SEED_PRIORS: Record<string, number> = { ...OPENING_PROBABILITIES };
-
-function getScriptedResultsUpToDay(day: number): SimMatchResult[] {
-  return matches
-    .filter((match) => match.day <= day && match.winner)
-    .map((match) => ({
-      matchId: match.id,
-      stage: match.stage,
-      day: match.day,
-      home: match.home,
-      away: match.away,
-      winner: match.winner!,
-    }));
+function captureSnapshot(
+  day: number,
+  derived: ReturnType<typeof deriveTournamentStateAtDay>,
+): Snapshot {
+  const { probability, groupResults, knockoutResults } = derived;
+  const eliminated = getEliminatedFromResults(day, knockoutResults, groupResults);
+  const { possibleOpponents, bracketDepths } = buildBracketState(
+    day,
+    knockoutResults,
+    groupResults,
+    eliminated,
+  );
+  return {
+    day,
+    probabilities: { ...probability.probabilities },
+    possibleOpponents,
+    bracketDepths,
+    eliminatedTeamIds: [...eliminated],
+  };
 }
 
-function teamWonOnDay(teamId: string, day: number): boolean {
-  return matches.some((match) => match.day === day && match.winner === teamId);
-}
-
-function buildProbabilities(day: number, eliminated: Set<string>): Record<string, number> {
-  const raw: Record<string, number> = {};
-  let total = 0;
-
-  for (const team of teams) {
-    if (eliminated.has(team.id)) {
-      raw[team.id] = 0;
-      continue;
-    }
-
-    const base = SEED_PRIORS[team.id] ?? 1;
-    const boost = teamWonOnDay(team.id, day) ? 1.12 : 1;
-    raw[team.id] = base * boost;
-    total += raw[team.id];
-  }
-
-  const probs: Record<string, number> = {};
-  for (const team of teams) {
-    probs[team.id] =
-      raw[team.id] === 0 ? 0 : Number(((raw[team.id] / total) * 100).toFixed(2));
-  }
-
-  return probs;
-}
-
+/** One forward pass through the calendar; snapshot at end of each day. */
 export function buildSnapshots(): Snapshot[] {
+  const config = DEFAULT_PROBABILITY_CONFIG;
   const snapshots: Snapshot[] = [];
 
   for (let day = 0; day <= 35; day++) {
-    const allResults = getScriptedResultsUpToDay(day);
-    const groupResults = allResults.filter((r) => r.stage === "group");
-    const knockoutResults = allResults.filter((r) => r.stage !== "group");
-    const eliminated = getEliminatedFromResults(day, knockoutResults, groupResults);
-    const probabilities = buildProbabilities(day, eliminated);
-    const { possibleOpponents, bracketDepths } = buildBracketState(
-      day,
-      knockoutResults,
-      groupResults,
-      eliminated,
-    );
-
-    snapshots.push({ day, probabilities, possibleOpponents, bracketDepths });
+    const scripted = getScriptedResultsUpToDay(day);
+    const derived = deriveTournamentStateAtDay(day, config, scripted);
+    snapshots.push(captureSnapshot(day, derived));
   }
 
   return snapshots;
 }
 
 if (require.main === module) {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const fs = require("node:fs");
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const path = require("node:path");
+  console.log("Building snapshots...");
+  const start = Date.now();
   const snapshots = buildSnapshots();
-
   const output = `import type { Snapshot } from "@/types";
 
 export const snapshots: Snapshot[] = ${JSON.stringify(snapshots, null, 2)} as Snapshot[];
@@ -90,5 +58,5 @@ export const snapshotsByDay: Record<number, Snapshot> = Object.fromEntries(
 
   const target = path.join(__dirname, "snapshots.ts");
   fs.writeFileSync(target, output, "utf8");
-  console.log(`Wrote ${snapshots.length} snapshots to ${target}`);
+  console.log(`Wrote ${snapshots.length} snapshots in ${((Date.now() - start) / 1000).toFixed(1)}s`);
 }

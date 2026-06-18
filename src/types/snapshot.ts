@@ -9,4 +9,5 @@ export type Snapshot = {
   bracketDepths?: {
     [teamId: string]: number;
   };
+  eliminatedTeamIds?: string[];
 };
