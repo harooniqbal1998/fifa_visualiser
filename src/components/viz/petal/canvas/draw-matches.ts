@@ -1,4 +1,3 @@
-import type { CollisionEvent } from "@/lib/simulation/types";
 import type { PetalLayoutConfig } from "@/components/viz/petal/petal-config";
 import type { DisplayState } from "@/components/viz/petal/canvas/display-state";
 import type { ActiveMatch } from "@/components/viz/petal/canvas/match-controller";
@@ -61,5 +60,3 @@ export function drawConnectors(
 
   ctx.restore();
 }
-
-export type { CollisionEvent };

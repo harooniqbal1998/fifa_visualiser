@@ -42,12 +42,6 @@ export const DEFAULT_PETAL_CONFIG: PetalLayoutConfig = {
   dropDurationMs: 900,
 };
 
-export function mergePetalConfig(
-  overrides: Partial<PetalLayoutConfig>,
-): PetalLayoutConfig {
-  return { ...DEFAULT_PETAL_CONFIG, ...overrides };
-}
-
 export function getCumulativePullPct(
   depth: number,
   config: PetalLayoutConfig,

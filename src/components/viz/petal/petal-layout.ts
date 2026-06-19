@@ -305,19 +305,3 @@ export function computePetalPositions(
     usableRadius,
   };
 }
-
-export function computePetalLaneAnchor(
-  groupCenter: PetalPoint,
-  angle: number,
-  standingRank: 1 | 2 | 3 | 4,
-  spreadRad: number,
-  spreadTan: number,
-): PetalPoint {
-  return computeDiamondAnchor(
-    groupCenter,
-    angle,
-    standingRank,
-    spreadRad,
-    spreadTan,
-  );
-}
