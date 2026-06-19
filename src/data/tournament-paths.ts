@@ -1,7 +1,6 @@
 import { lookupAnnexC } from "@/data/annex-c-lookup";
 import type { BracketNode } from "@/data/knockout-bracket";
-import { KNOCKOUT_TREE, THIRD_PLACE_NODE } from "@/data/knockout-bracket";
-import { matches } from "@/data/matches";
+import { KNOCKOUT_TREE } from "@/data/knockout-bracket";
 import {
   R32_FIXTURES,
   R32_FIXTURES_BY_ID,
@@ -9,19 +8,7 @@ import {
   type RankSlot,
   type ThirdSlot,
 } from "@/data/r32-fixtures";
-import { pickMatchWinner } from "@/lib/probability/match-elo";
-import {
-  buildStandingsFromGroupResults,
-  selectAdvancingThirdPlaceGroups,
-  type StandingsTable,
-} from "@/lib/simulation/group-advancement";
-import type { SimMatchResult } from "@/lib/simulation/types";
-import type { MatchStage } from "@/types";
-
-export type { BracketNode } from "@/data/knockout-bracket";
-export { KNOCKOUT_TREE, THIRD_PLACE_NODE } from "@/data/knockout-bracket";
-export { R32_FIXTURES, R32_FIXTURES_BY_ID } from "@/data/r32-fixtures";
-export type { FixtureSlot, RankSlot, ThirdSlot, R32Fixture } from "@/data/r32-fixtures";
+import type { StandingsTable } from "@/lib/simulation/group-advancement";
 
 export type BracketHalf = "left" | "right";
 export type GroupFinish = 1 | 2 | 3;
@@ -214,126 +201,6 @@ export function resolveR32Participants(
     home: resolveFixtureSlot(fixture.home, standings, advancingThirdGroups),
     away: resolveFixtureSlot(fixture.away, standings, advancingThirdGroups),
   };
-}
-
-export function resolveR32MatchFromResults(
-  matchId: string,
-  groupResults: SimMatchResult[],
-  rng: () => number,
-): { home?: string; away?: string } {
-  const standings = buildStandingsFromGroupResults(groupResults);
-  const advancingThirdGroups = selectAdvancingThirdPlaceGroups(standings, rng);
-  return resolveR32Participants(matchId, standings, advancingThirdGroups);
-}
-
-type OrderedKnockoutMatch = {
-  node: BracketNode;
-  matchId: string;
-  stage: MatchStage;
-  day: number;
-};
-
-const knockoutMetaById = new Map(
-  matches
-    .filter((m) => m.stage !== "group")
-    .map((m) => [m.id, { stage: m.stage as MatchStage, day: m.day }]),
-);
-
-function collectKnockoutNodes(node: BracketNode, acc: BracketNode[] = []): BracketNode[] {
-  acc.push(node);
-  if (node.homeSource) collectKnockoutNodes(node.homeSource, acc);
-  if (node.awaySource) collectKnockoutNodes(node.awaySource, acc);
-  return acc;
-}
-
-const ALL_KNOCKOUT_NODES = collectKnockoutNodes(KNOCKOUT_TREE);
-
-function getKnockoutMatchesInOrder(): OrderedKnockoutMatch[] {
-  const ordered: OrderedKnockoutMatch[] = [];
-
-  for (const node of ALL_KNOCKOUT_NODES) {
-    const meta = knockoutMetaById.get(node.matchId);
-    if (!meta) continue;
-    ordered.push({ node, matchId: node.matchId, stage: meta.stage, day: meta.day });
-  }
-
-  const tpMeta = knockoutMetaById.get("tp-1");
-  if (tpMeta) {
-    ordered.push({
-      node: THIRD_PLACE_NODE,
-      matchId: "tp-1",
-      stage: tpMeta.stage,
-      day: tpMeta.day,
-    });
-  }
-
-  return ordered.sort((a, b) => a.day - b.day || a.matchId.localeCompare(b.matchId));
-}
-
-const KNOCKOUT_ORDER = getKnockoutMatchesInOrder();
-
-function getWinner(results: SimMatchResult[], matchId: string): string | undefined {
-  return results.find((r) => r.matchId === matchId)?.winner;
-}
-
-function getLoser(results: SimMatchResult[], matchId: string): string | undefined {
-  const result = results.find((r) => r.matchId === matchId);
-  if (!result?.winner) return undefined;
-  return result.winner === result.home ? result.away : result.home;
-}
-
-function resolveNodeParticipants(
-  node: BracketNode,
-  results: SimMatchResult[],
-  groupResults: SimMatchResult[],
-  rng: () => number,
-): { home?: string; away?: string } {
-  if (node.matchId.startsWith("r32-")) {
-    return resolveR32MatchFromResults(node.matchId, groupResults, rng);
-  }
-
-  const home = node.homeSource ? getWinner(results, node.homeSource.matchId) : undefined;
-  const away = node.awaySource ? getWinner(results, node.awaySource.matchId) : undefined;
-  return { home, away };
-}
-
-export function walkKnockoutPath(
-  groupResults: SimMatchResult[],
-  knownKnockoutResults: SimMatchResult[],
-  eloRatings: Record<string, number>,
-  eliminated: Set<string>,
-  rng: () => number,
-): string | undefined {
-  const results = [...knownKnockoutResults];
-
-  for (const entry of KNOCKOUT_ORDER) {
-    if (results.some((r) => r.matchId === entry.matchId)) continue;
-
-    let home: string | undefined;
-    let away: string | undefined;
-
-    if (entry.matchId === "tp-1") {
-      home = getLoser(results, "sf-1");
-      away = getLoser(results, "sf-2");
-    } else {
-      ({ home, away } = resolveNodeParticipants(entry.node, results, groupResults, rng));
-    }
-
-    if (!home || !away) continue;
-    if (eliminated.has(home) || eliminated.has(away)) continue;
-
-    const winner = pickMatchWinner(home, away, eloRatings, rng);
-    results.push({
-      matchId: entry.matchId,
-      stage: entry.stage,
-      day: entry.day,
-      home,
-      away,
-      winner,
-    });
-  }
-
-  return getWinner(results, "fin-1");
 }
 
 export function getR32EntryForTeam(
