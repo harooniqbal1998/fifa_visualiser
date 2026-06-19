@@ -2,7 +2,7 @@ import { applyEloMatchResult } from "@/lib/probability/match-elo";
 import { computeTournamentProbabilities } from "@/lib/probability/compute-tournament-probabilities";
 import { initProbabilityState } from "@/lib/probability/state";
 import { computeProbDeltas } from "@/lib/probability/tournament-priors";
-import type { MatchInput, ProbabilityConfig, ProbabilityState } from "@/lib/probability/types";
+import type { ProbabilityConfig, ProbabilityState } from "@/lib/probability/types";
 import { getEliminatedFromResults } from "@/lib/simulation/bracket-state";
 import type { SimMatchResult } from "@/lib/simulation/types";
 
@@ -62,14 +62,4 @@ export function deriveTournamentStateAtDay(
   };
 
   return { probability, groupResults, knockoutResults };
-}
-
-export function resultToMatchInput(result: SimMatchResult): MatchInput {
-  return {
-    matchId: result.matchId,
-    stage: result.stage,
-    day: result.day,
-    home: result.home,
-    away: result.away,
-  };
 }

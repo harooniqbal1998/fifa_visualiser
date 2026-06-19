@@ -1,7 +1,7 @@
 import type { Team } from "@/types";
 import type { ProbabilityConfig } from "@/lib/probability/types";
 
-export function fifaRankingToElo(rank: number, config: ProbabilityConfig): number {
+function fifaRankingToElo(rank: number, config: ProbabilityConfig): number {
   return config.eloBase - (rank - 1) * config.eloScale;
 }
 
@@ -18,10 +18,6 @@ export function buildInitialEloRatings(
 
 export function expectedHomeWinProb(homeElo: number, awayElo: number): number {
   return 1 / (1 + 10 ** ((awayElo - homeElo) / 400));
-}
-
-export function expectedScore(ratingA: number, ratingB: number): number {
-  return expectedHomeWinProb(ratingA, ratingB);
 }
 
 export function pickMatchWinner(
@@ -46,7 +42,7 @@ export function applyEloMatchResult(
   const next = { ...ratings };
   const homeElo = next[homeId] ?? 1500;
   const awayElo = next[awayId] ?? 1500;
-  const homeExpected = expectedScore(homeElo, awayElo);
+  const homeExpected = expectedHomeWinProb(homeElo, awayElo);
   const awayExpected = 1 - homeExpected;
 
   if (winnerId === homeId) {

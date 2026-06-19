@@ -67,5 +67,3 @@ export function finalizeKnockoutDay(
     lastDeltas: update.deltas,
   };
 }
-
-export { applyProbUpdate };

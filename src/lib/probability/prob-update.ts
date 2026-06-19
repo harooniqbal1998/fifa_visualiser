@@ -40,5 +40,3 @@ export function recomputeTournamentProbabilities(
     lastDeltas: update.deltas,
   };
 }
-
-export { zeroEliminated, computeProbDeltas };

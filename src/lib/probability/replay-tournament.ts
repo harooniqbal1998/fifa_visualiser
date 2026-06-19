@@ -19,5 +19,3 @@ export function replayTournamentToDay(
   const scripted = getScriptedResultsUpToDay(targetDay);
   return deriveTournamentStateAtDay(targetDay, config, scripted);
 }
-
-export { countUnplayedGroupMatches };
