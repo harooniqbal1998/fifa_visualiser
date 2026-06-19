@@ -2,10 +2,6 @@ import type { StandingRow } from "@/lib/standings";
 import { computeGroupStandings } from "@/lib/standings";
 import { simResultToMatch } from "@/lib/simulation/sim-result";
 import type { SimMatchResult } from "@/lib/simulation/types";
-import type { Match } from "@/types";
-
-export type GroupFinishRank = 1 | 2 | 3 | 4;
-export type GroupFinishRanks = Record<string, GroupFinishRank>;
 
 export type StandingsTable = Record<string, StandingRow[]>;
 
@@ -48,19 +44,6 @@ export function selectAdvancingThirdPlaceGroups(
   return ordered.slice(0, 8);
 }
 
-export function computeGroupFinishRanks(standings: StandingsTable): GroupFinishRanks {
-  const ranks: GroupFinishRanks = {};
-  for (const table of Object.values(standings)) {
-    table.forEach((row, index) => {
-      const rank = (index + 1) as GroupFinishRank;
-      if (rank <= 4) {
-        ranks[row.teamId] = rank;
-      }
-    });
-  }
-  return ranks;
-}
-
 export function getAdvancingTeamIds(
   groupResults: SimMatchResult[],
   rng: () => number,
@@ -93,8 +76,4 @@ export function buildStandingsFromGroupResults(
   groupResults: SimMatchResult[],
 ): StandingsTable {
   return computeGroupStandings(groupResults.map(simResultToMatch));
-}
-
-export function standingsFromMatches(groupMatches: Match[]): StandingsTable {
-  return computeGroupStandings(groupMatches);
 }

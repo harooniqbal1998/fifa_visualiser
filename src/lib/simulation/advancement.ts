@@ -19,8 +19,6 @@ export type SimulationBootstrap = {
   eliminated: Set<string>;
 };
 
-export { buildStandingsFromGroupResults, getAdvancingTeamIds };
-
 function matchToSimResult(match: Match): SimMatchResult | null {
   if (match.homeScore === undefined || match.awayScore === undefined) return null;
   return {
@@ -33,13 +31,6 @@ function matchToSimResult(match: Match): SimMatchResult | null {
     homeScore: match.homeScore,
     awayScore: match.awayScore,
   };
-}
-
-export function getScriptedResultsBeforeDay(startDay: number): SimMatchResult[] {
-  return matches
-    .filter((match) => match.day < startDay && match.homeScore !== undefined)
-    .map(matchToSimResult)
-    .filter((result): result is SimMatchResult => result !== null);
 }
 
 export function getScriptedResultsUpToDay(day: number): SimMatchResult[] {

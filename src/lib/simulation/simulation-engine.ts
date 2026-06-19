@@ -12,7 +12,6 @@ import {
   applyGroupStageCut,
   applyKnownMatchResult,
   finalizeKnockoutDay,
-  initProbabilityState,
   recomputeTournamentProbabilities,
   resolveMatchWinnerOnly,
   toVizFeed,
@@ -21,7 +20,6 @@ import {
   buildStandingsFromGroupResults,
   selectAdvancingThirdPlaceGroups,
 } from "@/lib/simulation/group-advancement";
-import { DEFAULT_PROBABILITY_CONFIG } from "@/lib/probability/types";
 import type {
   CollisionEvent,
   SimulationCallbacks,
@@ -57,15 +55,6 @@ function emitProbabilityUpdate(
     callbacks.onProbabilityDeltas(feed.lastDeltas);
   }
   callbacks.onProbabilityStateUpdate?.(state.probability);
-}
-
-export function createInitialRunState(): SimulationRunState {
-  return {
-    day: 0,
-    probability: initProbabilityState(DEFAULT_PROBABILITY_CONFIG),
-    results: [],
-    groupResults: [],
-  };
 }
 
 export type SimulationOptions = {

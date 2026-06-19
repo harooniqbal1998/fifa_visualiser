@@ -17,9 +17,9 @@ import { computePetalPositions } from "@/components/viz/petal/petal-layout";
 import { DEFAULT_ANIMATION_PARAMS } from "@/lib/simulation/animation-params";
 import {
   buildSimulationBootstrap,
-  buildStandingsFromGroupResults,
   getScriptedResultsUpToDay,
 } from "@/lib/simulation/advancement";
+import { buildStandingsFromGroupResults } from "@/lib/simulation/group-advancement";
 import { getEliminatedFromResults } from "@/lib/simulation/bracket-state";
 import type { ProbabilityState } from "@/lib/probability/types";
 import type { CollisionEvent, SimMatchResult } from "@/lib/simulation/types";

@@ -6,8 +6,6 @@ import {
 import { createSeededRng } from "@/lib/simulation/animation-params";
 import type { SimMatchResult } from "@/lib/simulation/types";
 
-export { selectAdvancingThirdPlaceGroups };
-
 export function resolveR32Match(
   matchId: string,
   groupResults: SimMatchResult[],
@@ -19,5 +17,3 @@ export function resolveR32Match(
     selectAdvancingThirdPlaceGroups(standings, createSeededRng(42));
   return resolveR32Participants(matchId, standings, thirdGroups);
 }
-
-export { buildStandingsFromGroupResults };

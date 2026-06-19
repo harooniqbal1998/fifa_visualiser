@@ -1,44 +1,14 @@
-import type { Team, Match, Snapshot, Group } from "@/types";
-import { teams, teamsById } from "@/data/teams";
-import { matches, timelineDays, getPlayedMatchesUpToDay } from "@/data/matches";
-import { snapshots, snapshotsByDay } from "@/data/snapshots";
-import { groups, groupsById } from "@/data/groups";
+import type { Team } from "@/types";
+import { teams } from "@/data/teams";
+import { timelineDays, getPlayedMatchesUpToDay } from "@/data/matches";
+import { snapshotsByDay } from "@/data/snapshots";
 import { computeGroupStandings } from "@/lib/standings";
-export { getFlagUrl } from "@/lib/flags";
 
 export function getTeams(): Team[] {
   return teams;
 }
 
-export function getTeamById(id: string): Team | undefined {
-  return teamsById[id];
-}
-
-export function getGroups(): Group[] {
-  return groups;
-}
-
-export function getGroupById(id: string): Group | undefined {
-  return groupsById[id];
-}
-
-export function getTeamsByGroup(groupId: string): Team[] {
-  const group = groupsById[groupId];
-  if (!group) return [];
-  return group.teamIds
-    .map((id) => teamsById[id])
-    .filter((team): team is Team => team !== undefined);
-}
-
-export function getMatches(): Match[] {
-  return matches;
-}
-
-export function getSnapshots(): Snapshot[] {
-  return snapshots;
-}
-
-export function getSnapshotByDay(day: number): Snapshot | undefined {
+export function getSnapshotByDay(day: number) {
   return snapshotsByDay[day];
 }
 

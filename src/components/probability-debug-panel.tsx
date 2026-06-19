@@ -8,7 +8,7 @@ import {
 } from "@/lib/probability/debug-snapshot";
 import type { ProbabilityState } from "@/lib/probability/types";
 import type { SimMatchResult } from "@/lib/simulation/types";
-import { getFlagUrl } from "@/lib/tournament";
+import { getFlagUrl } from "@/lib/flags";
 
 type ProbabilityDebugPanelProps = {
   open: boolean;
