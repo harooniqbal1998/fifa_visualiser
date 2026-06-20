@@ -35,6 +35,12 @@ export const DEFAULT_ANIMATION_PARAMS: AnimationParams = {
   probabilityConfig: DEFAULT_PROBABILITY_CONFIG,
 };
 
+export function createSimulationSeed(): number {
+  const buf = new Uint32Array(1);
+  crypto.getRandomValues(buf);
+  return buf[0]! || 1;
+}
+
 export function createSeededRng(seed: number): () => number {
   let state = seed || 1;
   return () => {

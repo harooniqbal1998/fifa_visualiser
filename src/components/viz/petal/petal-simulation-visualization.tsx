@@ -14,7 +14,10 @@ import { getGroupStandings } from "@/lib/tournament";
 import { PetalCanvas, type PetalCanvasRef } from "@/components/viz/petal/petal-canvas";
 import { DEFAULT_PETAL_CONFIG } from "@/components/viz/petal/petal-config";
 import { computePetalPositions } from "@/components/viz/petal/petal-layout";
-import { DEFAULT_ANIMATION_PARAMS } from "@/lib/simulation/animation-params";
+import {
+  createSimulationSeed,
+  DEFAULT_ANIMATION_PARAMS,
+} from "@/lib/simulation/animation-params";
 import {
   buildSimulationBootstrap,
   getScriptedResultsUpToDay,
@@ -180,7 +183,9 @@ export const PetalSimulationVisualization = forwardRef<
     if (sessionPhase === "running") return;
 
     const startDay = snapshot.day;
-    const bootstrap = buildSimulationBootstrap(startDay);
+    const simulationSeed = createSimulationSeed();
+    const params = { ...DEFAULT_ANIMATION_PARAMS, simulationSeed };
+    const bootstrap = buildSimulationBootstrap(startDay, simulationSeed);
 
     abortRef.current = false;
     onSimulatingChange(true);
@@ -209,7 +214,7 @@ export const PetalSimulationVisualization = forwardRef<
     }
 
     await runSimulation(
-      DEFAULT_ANIMATION_PARAMS,
+      params,
       {
         onDayChange: (day) => {
           onDayChange?.(day);

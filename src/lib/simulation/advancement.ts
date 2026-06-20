@@ -40,7 +40,10 @@ export function getScriptedResultsUpToDay(day: number): SimMatchResult[] {
     .filter((result): result is SimMatchResult => result !== null);
 }
 
-export function buildSimulationBootstrap(startDay: number): SimulationBootstrap {
+export function buildSimulationBootstrap(
+  startDay: number,
+  simulationSeed: number,
+): SimulationBootstrap {
   const replay = replayTournamentToDay(startDay - 1);
   const { probability, groupResults, knockoutResults } = replay;
 
@@ -60,7 +63,7 @@ export function buildSimulationBootstrap(startDay: number): SimulationBootstrap 
 
   if (startDay > 12 && groupResults.length > 0) {
     const standings = buildStandingsFromGroupResults(groupResults);
-    const thirdRng = createSeededRng(42 + 12);
+    const thirdRng = createSeededRng(simulationSeed + 12);
     runState.advancingThirdGroups = selectAdvancingThirdPlaceGroups(standings, thirdRng);
   }
 

@@ -68,7 +68,7 @@ export async function runSimulation(
   callbacks: SimulationCallbacks,
   options: SimulationOptions,
 ): Promise<SimulationRunState> {
-  const state = buildSimulationBootstrap(options.startDay).runState;
+  const state = buildSimulationBootstrap(options.startDay, params.simulationSeed).runState;
   const rng = createSeededRng(params.simulationSeed);
   const config = params.probabilityConfig;
   const timelineDays = getTimelineDays().filter((entry) => entry.day >= options.startDay);
