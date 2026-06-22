@@ -1,13 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
   getDayRange,
-  getLatestSimStartDay,
   getSnapshotByDay,
   getTeams,
 } from "@/lib/tournament";
-import { measurePillReserve } from "@/lib/viz-layout";
 import { SimulationPill } from "@/components/simulation-pill";
 import { MatchSpotlightBar } from "@/components/match-spotlight-bar";
 import { DEFAULT_PETAL_CONFIG } from "@/components/viz/petal/petal-config";
@@ -27,17 +25,16 @@ import { DEFAULT_PROBABILITY_CONFIG } from "@/lib/probability/types";
 import type { ProbabilityState } from "@/lib/probability/types";
 import type { CollisionEvent, SimMatchResult } from "@/lib/simulation/types";
 import { getScriptedResultsUpToDay } from "@/lib/simulation/advancement";
+import { buildTournamentStructureView } from "@/lib/tournament-structure";
+import { TournamentStructureDrawer } from "@/components/tournament-structure-drawer";
 
 const isDev = process.env.NODE_ENV === "development";
 
 export function TournamentView() {
   const { min } = getDayRange();
-  const latestSimStartDay = getLatestSimStartDay();
   const teams = getTeams();
-  const [day, setDay] = useState(latestSimStartDay);
+  const [day, setDay] = useState(min);
   const [sessionPhase, setSessionPhase] = useState<SimulationSessionPhase>("idle");
-  const [pillReserve, setPillReserve] = useState(0);
-  const [pillWidth, setPillWidth] = useState(0);
   const [debugOpen, setDebugOpen] = useState(false);
   const [liveProbabilityState, setLiveProbabilityState] = useState<ProbabilityState | null>(
     null,
@@ -45,10 +42,9 @@ export function TournamentView() {
   const [liveGroupResults, setLiveGroupResults] = useState<SimMatchResult[]>([]);
   const [liveKnockoutResults, setLiveKnockoutResults] = useState<SimMatchResult[]>([]);
   const [activeMatches, setActiveMatches] = useState<CollisionEvent[]>([]);
+  const [structureOpen, setStructureOpen] = useState(false);
   const snapshot = getSnapshotByDay(day) ?? getSnapshotByDay(min)!;
   const petalVizRef = useRef<PetalSimulationVisualizationRef>(null);
-  const pillRef = useRef<HTMLDivElement>(null);
-  const stackRef = useRef<HTMLDivElement>(null);
 
   const idleReplay = useMemo(() => {
     if (!isDev || !debugOpen || sessionPhase !== "idle") return null;
@@ -82,25 +78,37 @@ export function TournamentView() {
       : "bracket_analytical"
     : "opening";
 
-  useEffect(() => {
-    const pill = pillRef.current;
-    if (!pill) return;
+  const structureGroupResults =
+    sessionPhase === "idle"
+      ? getScriptedResultsUpToDay(day).filter((r) => r.stage === "group")
+      : liveGroupResults;
 
-    const updateReserve = () => {
-      const rect = pill.getBoundingClientRect();
-      setPillReserve(measurePillReserve(pill));
-      setPillWidth(rect.width);
-    };
+  const structureKnockoutResults =
+    sessionPhase === "idle"
+      ? getScriptedResultsUpToDay(day).filter((r) => r.stage !== "group")
+      : liveKnockoutResults;
 
-    updateReserve();
-    const observer = new ResizeObserver(updateReserve);
-    observer.observe(pill);
-    window.addEventListener("resize", updateReserve);
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", updateReserve);
-    };
-  }, [sessionPhase, day]);
+  const structureEloRatings = useMemo(() => {
+    const replayElo = replayTournamentToDay(
+      day,
+      createSeededRng(42 + day),
+      DEFAULT_PROBABILITY_CONFIG,
+    ).probability.eloRatings;
+
+    if (sessionPhase === "idle") {
+      return replayElo;
+    }
+
+    return liveProbabilityState?.eloRatings ?? replayElo;
+  }, [sessionPhase, day, liveProbabilityState]);
+
+  const tournamentStructure = useMemo(
+    () =>
+      buildTournamentStructureView(day, structureGroupResults, structureKnockoutResults, {
+        eloRatings: structureEloRatings,
+      }),
+    [day, structureGroupResults, structureKnockoutResults, structureEloRatings],
+  );
 
   const handlePlay = () => {
     petalVizRef.current?.startSimulation();
@@ -112,12 +120,12 @@ export function TournamentView() {
   };
 
   const handleRestart = () => {
-    setDay(latestSimStartDay);
+    setDay(min);
     setSessionPhase("idle");
     setLiveProbabilityState(null);
     setLiveGroupResults([]);
     setLiveKnockoutResults([]);
-    petalVizRef.current?.resetSimulation(latestSimStartDay);
+    petalVizRef.current?.resetSimulation(min);
   };
 
   const handleSimulatingChange = (simulating: boolean) => {
@@ -132,67 +140,70 @@ export function TournamentView() {
 
   return (
     <div className="relative h-full w-full min-h-0">
-      <div
-        className="relative min-h-0 w-full"
-        style={{ height: `calc(100% - ${pillReserve}px)` }}
-      >
-        <PetalSimulationVisualization
-          ref={petalVizRef}
-          teams={teams}
-          snapshot={snapshot}
-          sessionPhase={sessionPhase}
-          onSimulatingChange={handleSimulatingChange}
-          onSessionComplete={handleSessionComplete}
-          onDayChange={setDay}
-          onProbabilityStateUpdate={({ state, groupResults, knockoutResults }) => {
-            setLiveProbabilityState(state);
-            setLiveGroupResults(groupResults);
-            setLiveKnockoutResults(knockoutResults);
-          }}
-          onActiveMatchesChange={setActiveMatches}
-        />
-        {isDev ? (
-          <>
-            <div className="absolute right-4 top-4 z-40">
-              <DebugToggleButton open={debugOpen} onToggle={() => setDebugOpen((v) => !v)} />
-            </div>
-            <ProbabilityDebugPanel
-              open={debugOpen}
-              onClose={() => setDebugOpen(false)}
-              day={day}
-              probabilityState={debugProbabilityState}
-              groupResults={debugGroupResults}
-              knockoutResults={debugKnockoutResults}
-              method={debugMethod}
-            />
-          </>
-        ) : null}
-      </div>
-      {activeMatches.length > 0 ? (
-        <div
-          className="pointer-events-none fixed left-1/2 z-40 -translate-x-1/2"
-          style={{ bottom: pillReserve + 8, width: pillWidth || undefined }}
-        >
-          <MatchSpotlightBar
-            matches={activeMatches}
-            teamsById={teamsById}
-            holdDurationMs={DEFAULT_PETAL_CONFIG.matchHoldDurationMs}
+      <div className="relative flex h-full min-h-0 flex-row gap-4">
+        <div className="relative min-h-0 min-w-0 flex-1">
+          <PetalSimulationVisualization
+            ref={petalVizRef}
+            teams={teams}
+            snapshot={snapshot}
+            sessionPhase={sessionPhase}
+            onSimulatingChange={handleSimulatingChange}
+            onSessionComplete={handleSessionComplete}
+            onDayChange={setDay}
+            onProbabilityStateUpdate={({ state, groupResults, knockoutResults }) => {
+              setLiveProbabilityState(state);
+              setLiveGroupResults(groupResults);
+              setLiveKnockoutResults(knockoutResults);
+            }}
+            onActiveMatchesChange={setActiveMatches}
           />
+          {isDev ? (
+            <>
+              <div className="absolute right-4 top-4 z-40">
+                <DebugToggleButton open={debugOpen} onToggle={() => setDebugOpen((v) => !v)} />
+              </div>
+              <ProbabilityDebugPanel
+                open={debugOpen}
+                onClose={() => setDebugOpen(false)}
+                day={day}
+                probabilityState={debugProbabilityState}
+                groupResults={debugGroupResults}
+                knockoutResults={debugKnockoutResults}
+                method={debugMethod}
+              />
+            </>
+          ) : null}
         </div>
-      ) : null}
-      <div
-        ref={stackRef}
-        className="fixed bottom-4 left-1/2 z-50 w-max max-w-[40vw] -translate-x-1/2"
-      >
-        <SimulationPill
-          ref={pillRef}
+        <TournamentStructureDrawer
+          open={structureOpen}
+          structure={tournamentStructure}
+          teamsById={teamsById}
           day={day}
-          onDayChange={setDay}
-          sessionPhase={sessionPhase}
-          onPlay={handlePlay}
-          onStop={handleStop}
-          onRestart={handleRestart}
+          activeMatches={activeMatches}
         />
+      </div>
+      <div className="pointer-events-none absolute inset-x-0 bottom-4 z-50 flex justify-center px-4">
+        <div className="flex w-full max-w-md flex-col items-center gap-2">
+          {activeMatches.length > 0 ? (
+            <MatchSpotlightBar
+              matches={activeMatches}
+              teamsById={teamsById}
+              holdDurationMs={DEFAULT_PETAL_CONFIG.matchHoldDurationMs}
+            />
+          ) : null}
+          <div className="pointer-events-auto w-max max-w-[40vw]">
+            <SimulationPill
+              day={day}
+              onDayChange={setDay}
+              sessionPhase={sessionPhase}
+              onPlay={handlePlay}
+              onStop={handleStop}
+              onRestart={handleRestart}
+              onTournamentStructureClick={() => setStructureOpen((open) => !open)}
+              tournamentStructureOpen={structureOpen}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

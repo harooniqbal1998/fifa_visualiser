@@ -12,6 +12,8 @@ type SimulationPillProps = {
   onPlay: () => void;
   onStop: () => void;
   onRestart: () => void;
+  onTournamentStructureClick?: () => void;
+  tournamentStructureOpen?: boolean;
 };
 
 function PlayIcon() {
@@ -39,9 +41,27 @@ function RestartIcon() {
   );
 }
 
+function BracketIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-3 w-3" aria-hidden>
+      <path d="M4 6h4v4H4zM16 6h4v4h-4zM4 14h4v4H4zM16 14h4v4h-4z" strokeLinejoin="round" />
+      <path d="M8 8h3M13 8h3M8 16h3M13 16h3" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
   function SimulationPill(
-    { day, onDayChange, sessionPhase, onPlay, onStop, onRestart },
+    {
+      day,
+      onDayChange,
+      sessionPhase,
+      onPlay,
+      onStop,
+      onRestart,
+      onTournamentStructureClick,
+      tournamentStructureOpen,
+    },
     ref,
   ) {
     const isRunning = sessionPhase === "running";
@@ -96,6 +116,23 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
           isSimulating={isRunning}
           isSimStartDay={isSimStartDay}
         />
+
+        {onTournamentStructureClick ? (
+          <button
+            type="button"
+            title="Tournament structure"
+            aria-label="Tournament structure"
+            aria-expanded={tournamentStructureOpen}
+            onClick={onTournamentStructureClick}
+            className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border hover:bg-zinc-50 dark:hover:bg-zinc-800 ${
+              tournamentStructureOpen
+                ? "border-zinc-900 bg-zinc-100 dark:border-zinc-100 dark:bg-zinc-800"
+                : "border-zinc-300 dark:border-zinc-600"
+            }`}
+          >
+            <BracketIcon />
+          </button>
+        ) : null}
       </div>
     );
   },
