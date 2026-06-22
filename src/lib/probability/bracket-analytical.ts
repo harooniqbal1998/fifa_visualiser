@@ -236,12 +236,21 @@ function buildFinishRankDistribution(
   return out;
 }
 
-export function recomputeFromBracketAnalytical(
+export type BracketSlotProbabilities = Record<
+  string,
+  { home: Record<string, number>; away: Record<string, number> }
+>;
+
+export function buildBracketSlotProbabilities(
   groupResults: SimMatchResult[],
   knockoutResults: SimMatchResult[],
-  eliminated: Set<string>,
   eloRatings: Record<string, number>,
-): AnalyticalResult {
+): {
+  slots: BracketSlotProbabilities;
+  winnerReach: Record<string, TeamProbMap>;
+  finishDist: FinishDistribution;
+  teamThirdAdvance: Record<string, number>;
+} {
   const groupOutcomesByGroup = computeGroupOutcomesByGroup(groupResults, eloRatings);
   const finishDist = computeFinishDistributions(groupOutcomesByGroup);
   const marginals = buildThirdPlaceMarginals(groupOutcomesByGroup);
@@ -254,6 +263,7 @@ export function recomputeFromBracketAnalytical(
     marginals,
     groupAdvProb,
   );
+  const slots: BracketSlotProbabilities = {};
   const winnerReach: Record<string, TeamProbMap> = {};
 
   for (const matchId of KNOCKOUT_MATCH_IDS) {
@@ -277,6 +287,8 @@ export function recomputeFromBracketAnalytical(
       }
     }
 
+    slots[matchId] = { home: slotHome, away: slotAway };
+
     const knownWinner = getKnownWinner(knockoutResults, matchId);
     if (knownWinner) {
       const advance = emptyTeamMap();
@@ -286,6 +298,21 @@ export function recomputeFromBracketAnalytical(
       winnerReach[matchId] = computeWinProbs(slotHome, slotAway, eloRatings);
     }
   }
+
+  return { slots, winnerReach, finishDist, teamThirdAdvance };
+}
+
+export function recomputeFromBracketAnalytical(
+  groupResults: SimMatchResult[],
+  knockoutResults: SimMatchResult[],
+  eliminated: Set<string>,
+  eloRatings: Record<string, number>,
+): AnalyticalResult {
+  const { winnerReach, finishDist, teamThirdAdvance } = buildBracketSlotProbabilities(
+    groupResults,
+    knockoutResults,
+    eloRatings,
+  );
 
   const rawWeights = winnerReach["fin-1"] ?? emptyTeamMap();
   const probabilities = normalizeProbabilities(rawWeights, eliminated);
