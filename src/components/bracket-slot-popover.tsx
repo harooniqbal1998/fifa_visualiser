@@ -1,0 +1,218 @@
+"use client";
+
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+import { createPortal } from "react-dom";
+import type { Team } from "@/types";
+import { getFlagUrl } from "@/lib/flags";
+import {
+  formatSlotCandidateTooltip,
+  type SlotCandidate,
+} from "@/lib/tournament-structure";
+
+const GAP = 4;
+const VIEWPORT_PADDING = 8;
+
+type PopoverPosition = {
+  top: number;
+  left: number;
+};
+
+type BracketSlotPopoverProps = {
+  candidates: SlotCandidate[];
+  teamsById: Record<string, Team>;
+  children: ReactNode;
+};
+
+function computePosition(
+  triggerRect: DOMRect,
+  panelRect: DOMRect,
+): PopoverPosition {
+  const spaceAbove = triggerRect.top - VIEWPORT_PADDING;
+  const spaceBelow =
+    window.innerHeight - triggerRect.bottom - VIEWPORT_PADDING;
+  const placeAbove =
+    spaceAbove >= panelRect.height + GAP || spaceAbove >= spaceBelow;
+
+  let top: number;
+  if (placeAbove) {
+    top = triggerRect.top - panelRect.height - GAP;
+  } else {
+    top = triggerRect.bottom + GAP;
+  }
+
+  let left = triggerRect.left;
+  const maxLeft = window.innerWidth - panelRect.width - VIEWPORT_PADDING;
+  left = Math.max(VIEWPORT_PADDING, Math.min(left, maxLeft));
+
+  return { top, left };
+}
+
+function TeamFlag({ isoCode }: { isoCode: string }) {
+  return (
+    <img
+      src={getFlagUrl(isoCode)}
+      alt=""
+      className="h-3 w-3 shrink-0 rounded-full object-cover ring-1 ring-zinc-200 dark:ring-zinc-600"
+    />
+  );
+}
+
+export function BracketSlotPopover({
+  candidates,
+  teamsById,
+  children,
+}: BracketSlotPopoverProps) {
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(false);
+  const [position, setPosition] = useState<PopoverPosition | null>(null);
+  const [canHover, setCanHover] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    setCanHover(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setCanHover(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  const updatePosition = useCallback(() => {
+    const trigger = triggerRef.current;
+    const panel = panelRef.current;
+    if (!trigger || !panel) return;
+    const triggerRect = trigger.getBoundingClientRect();
+    const panelRect = panel.getBoundingClientRect();
+    setPosition(computePosition(triggerRect, panelRect));
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!open) {
+      setPosition(null);
+      return;
+    }
+    updatePosition();
+  }, [open, candidates, updatePosition]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handleReposition = () => updatePosition();
+    window.addEventListener("resize", handleReposition);
+    window.addEventListener("scroll", handleReposition, true);
+
+    return () => {
+      window.removeEventListener("resize", handleReposition);
+      window.removeEventListener("scroll", handleReposition, true);
+    };
+  }, [open, updatePosition]);
+
+  useEffect(() => {
+    if (!open || canHover) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (
+        triggerRef.current?.contains(target) ||
+        panelRef.current?.contains(target)
+      ) {
+        return;
+      }
+      setOpen(false);
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open, canHover]);
+
+  const ariaLabel = formatSlotCandidateTooltip(candidates, teamsById);
+
+  const handlePointerEnter = () => {
+    if (canHover) setOpen(true);
+  };
+
+  const handlePointerLeave = () => {
+    if (canHover) setOpen(false);
+  };
+
+  const handleClick = () => {
+    if (!canHover) setOpen((prev) => !prev);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === "Escape") {
+      setOpen(false);
+      return;
+    }
+    if (!canHover && (event.key === "Enter" || event.key === " ")) {
+      event.preventDefault();
+      setOpen((prev) => !prev);
+    }
+  };
+
+  const panel =
+    open && mounted ? (
+      <div
+        ref={panelRef}
+        role="tooltip"
+        className={`fixed z-[100] min-w-max rounded border border-zinc-200 bg-white px-2 py-1 text-[10px] leading-snug text-zinc-700 shadow-md dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 ${
+          position ? "visible" : "invisible"
+        }`}
+        style={
+          position
+            ? { top: position.top, left: position.left }
+            : { top: 0, left: 0 }
+        }
+      >
+        {candidates.map((candidate) => {
+          const team = teamsById[candidate.teamId];
+          return (
+            <div
+              key={candidate.teamId}
+              className="flex items-center gap-1.5 whitespace-nowrap py-0.5"
+            >
+              <TeamFlag isoCode={team?.isoCode ?? ""} />
+              <span>{team?.name ?? candidate.teamId}</span>
+              <span className="text-zinc-500 dark:text-zinc-400">
+                {(candidate.probability * 100).toFixed(1)}%
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    ) : null;
+
+  return (
+    <>
+      <div
+        ref={triggerRef}
+        tabIndex={0}
+        aria-label={ariaLabel}
+        className="inline-flex shrink-0 cursor-default outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 dark:focus-visible:ring-zinc-500"
+        onPointerEnter={handlePointerEnter}
+        onPointerLeave={handlePointerLeave}
+        onClick={handleClick}
+        onKeyDown={handleKeyDown}
+      >
+        {children}
+      </div>
+      {panel && createPortal(panel, document.body)}
+    </>
+  );
+}
