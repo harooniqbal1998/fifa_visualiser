@@ -15,44 +15,16 @@ import {
   formatSlotCandidateTooltip,
   type SlotCandidate,
 } from "@/lib/tournament-structure";
-
-const GAP = 4;
-const VIEWPORT_PADDING = 8;
-
-type PopoverPosition = {
-  top: number;
-  left: number;
-};
+import {
+  computePopoverPosition,
+  type PopoverPosition,
+} from "@/lib/popover-position";
 
 type BracketSlotPopoverProps = {
   candidates: SlotCandidate[];
   teamsById: Record<string, Team>;
   children: ReactNode;
 };
-
-function computePosition(
-  triggerRect: DOMRect,
-  panelRect: DOMRect,
-): PopoverPosition {
-  const spaceAbove = triggerRect.top - VIEWPORT_PADDING;
-  const spaceBelow =
-    window.innerHeight - triggerRect.bottom - VIEWPORT_PADDING;
-  const placeAbove =
-    spaceAbove >= panelRect.height + GAP || spaceAbove >= spaceBelow;
-
-  let top: number;
-  if (placeAbove) {
-    top = triggerRect.top - panelRect.height - GAP;
-  } else {
-    top = triggerRect.bottom + GAP;
-  }
-
-  let left = triggerRect.left;
-  const maxLeft = window.innerWidth - panelRect.width - VIEWPORT_PADDING;
-  left = Math.max(VIEWPORT_PADDING, Math.min(left, maxLeft));
-
-  return { top, left };
-}
 
 function TeamFlag({ isoCode }: { isoCode: string }) {
   return (
@@ -91,7 +63,7 @@ export function BracketSlotPopover({
     if (!trigger || !panel) return;
     const triggerRect = trigger.getBoundingClientRect();
     const panelRect = panel.getBoundingClientRect();
-    setPosition(computePosition(triggerRect, panelRect));
+    setPosition(computePopoverPosition(triggerRect, panelRect));
   }, []);
 
   useLayoutEffect(() => {

@@ -1,4 +1,4 @@
-import type { Team } from "@/types";
+import type { MatchStage, Team } from "@/types";
 import { teams } from "@/data/teams";
 import {
   timelineDays,
@@ -11,6 +11,17 @@ import {
 export { isSimStartDay, getSimStartDays, getLatestSimStartDay };
 import { snapshotsByDay } from "@/data/snapshots";
 import { computeGroupStandings } from "@/lib/standings";
+import {
+  formatTimelineStartLabel,
+  timelineLabelKey,
+  timelineLabelToString,
+} from "@/lib/match-context-label";
+
+export type TimelineStartOption = {
+  day: number;
+  label: string;
+  stage: MatchStage;
+};
 
 export function getTeams(): Team[] {
   return teams;
@@ -32,4 +43,27 @@ export function getTimelineDays() {
 
 export function getGroupStandings(day: number) {
   return computeGroupStandings(getPlayedMatchesUpToDay(day));
+}
+
+export function getTimelineStartOptions(): TimelineStartOption[] {
+  const seen = new Set<string>();
+  const options: TimelineStartOption[] = [];
+
+  for (const day of getSimStartDays()) {
+    const entry = timelineDays.find((e) => e.day === day);
+    if (!entry) continue;
+
+    const labelInfo = formatTimelineStartLabel(day, entry.stage);
+    const bandKey = timelineLabelKey(labelInfo);
+    if (seen.has(bandKey)) continue;
+    seen.add(bandKey);
+
+    options.push({
+      day,
+      label: timelineLabelToString(labelInfo),
+      stage: entry.stage,
+    });
+  }
+
+  return options;
 }

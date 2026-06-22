@@ -9,7 +9,11 @@ const KNOCKOUT_LABELS: Record<Exclude<MatchStage, "group">, string> = {
   final: "Final",
 };
 
-function groupMatchdayFromDay(day: number): number {
+export type TimelineLabel =
+  | { kind: "group"; md: 1 | 2 | 3 }
+  | { kind: "knockout"; label: string };
+
+function groupMatchdayFromDay(day: number): 1 | 2 | 3 {
   if (day <= 4) return 1;
   if (day <= 8) return 2;
   return 3;
@@ -19,6 +23,23 @@ function groupMatchdayFromId(matchId: string): number | null {
   const match = matchId.match(/md(\d)/i);
   if (!match) return null;
   return Number(match[1]);
+}
+
+export function formatTimelineStartLabel(day: number, stage: MatchStage): TimelineLabel {
+  if (stage === "group") {
+    return { kind: "group", md: groupMatchdayFromDay(day) };
+  }
+  return { kind: "knockout", label: KNOCKOUT_LABELS[stage] };
+}
+
+export function timelineLabelToString(label: TimelineLabel): string {
+  if (label.kind === "group") return `Matchday ${label.md}`;
+  return label.label;
+}
+
+export function timelineLabelKey(label: TimelineLabel): string {
+  if (label.kind === "group") return `group-${label.md}`;
+  return `knockout-${label.label}`;
 }
 
 export function formatMatchContextLabel(

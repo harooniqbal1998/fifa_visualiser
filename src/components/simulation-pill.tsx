@@ -1,7 +1,7 @@
 "use client";
 
 import { forwardRef } from "react";
-import { Timeline } from "@/components/timeline";
+import { TimelineDayPicker } from "@/components/timeline";
 import type { SimulationSessionPhase } from "@/components/viz/petal/petal-simulation-visualization";
 import { isSimStartDay } from "@/lib/tournament";
 
@@ -65,6 +65,7 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
     ref,
   ) {
     const isRunning = sessionPhase === "running";
+    const isCompleted = sessionPhase === "completed";
     const canPlay = sessionPhase !== "idle" || isSimStartDay(day);
     const playTitle = canPlay
       ? "Play simulation from selected day"
@@ -75,47 +76,39 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
         ref={ref}
         className="flex w-full flex-row items-center gap-2 rounded-full border border-zinc-200 bg-white/90 px-2.5 py-1.5 shadow-lg backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90"
       >
-        {sessionPhase === "running" ? (
-          <button
-            type="button"
-            title="Stop simulation"
-            aria-label="Stop simulation"
-            onClick={onStop}
-            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-zinc-300 hover:bg-zinc-50 dark:border-zinc-600 dark:hover:bg-zinc-800"
-          >
-            <StopIcon />
-          </button>
-        ) : sessionPhase === "completed" ? (
-          <button
-            type="button"
-            title="Restart simulation"
-            aria-label="Restart simulation"
-            onClick={onRestart}
-            className="flex h-7 shrink-0 items-center gap-1.5 rounded-full bg-zinc-900 px-2.5 text-xs font-medium text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
-          >
-            <RestartIcon />
-            Restart
-          </button>
+        {isRunning ? (
+          <>
+            <button
+              type="button"
+              title="Stop simulation"
+              aria-label="Stop simulation"
+              onClick={onStop}
+              className="relative z-0 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-zinc-300 hover:bg-zinc-50 dark:border-zinc-600 dark:hover:bg-zinc-800"
+            >
+              <StopIcon />
+            </button>
+            <TimelineDayPicker
+              day={day}
+              onDayChange={onDayChange}
+              isSimulating
+            />
+          </>
         ) : (
-          <button
-            type="button"
-            title={playTitle}
-            aria-label={playTitle}
-            onClick={onPlay}
-            disabled={!canPlay}
-            className="flex h-7 shrink-0 items-center gap-1.5 rounded-full bg-zinc-900 px-2.5 text-xs font-medium text-white hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
-          >
-            <PlayIcon />
-            Play
-          </button>
+          <div className="relative flex h-7 shrink-0 items-center rounded-full bg-zinc-900 pr-1 text-white dark:bg-zinc-100 dark:text-zinc-900">
+            <button
+              type="button"
+              title={isCompleted ? "Restart simulation" : playTitle}
+              aria-label={isCompleted ? "Restart simulation" : playTitle}
+              onClick={isCompleted ? onRestart : onPlay}
+              disabled={!isCompleted && !canPlay}
+              className="relative z-0 flex h-7 shrink-0 items-center gap-1.5 rounded-l-full pl-2.5 text-xs font-medium hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-zinc-200"
+            >
+              {isCompleted ? <RestartIcon /> : <PlayIcon />}
+              {isCompleted ? "Restart from" : "Play from"}
+            </button>
+            <TimelineDayPicker day={day} onDayChange={onDayChange} />
+          </div>
         )}
-
-        <Timeline
-          day={day}
-          onDayChange={onDayChange}
-          isSimulating={isRunning}
-          isSimStartDay={isSimStartDay}
-        />
 
         {onTournamentStructureClick ? (
           <button

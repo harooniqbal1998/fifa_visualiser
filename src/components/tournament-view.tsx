@@ -120,12 +120,11 @@ export function TournamentView() {
   };
 
   const handleRestart = () => {
-    setDay(min);
     setSessionPhase("idle");
     setLiveProbabilityState(null);
     setLiveGroupResults([]);
     setLiveKnockoutResults([]);
-    petalVizRef.current?.resetSimulation(min);
+    petalVizRef.current?.resetSimulation(day);
   };
 
   const handleSimulatingChange = (simulating: boolean) => {

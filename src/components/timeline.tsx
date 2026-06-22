@@ -1,127 +1,332 @@
 "use client";
 
-import { useLayoutEffect, useRef } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { createPortal } from "react-dom";
 import type { MatchStage } from "@/types";
-import { getTimelineDays } from "@/lib/tournament";
+import {
+  formatTimelineStartLabel,
+  timelineLabelKey,
+  timelineLabelToString,
+  type TimelineLabel,
+} from "@/lib/match-context-label";
+import { computePopoverPosition, type PopoverPosition } from "@/lib/popover-position";
+import {
+  getSimStartDays,
+  getTimelineDays,
+  getTimelineStartOptions,
+} from "@/lib/tournament";
 
-const VISIBLE_DAYS = 5;
-const TRAILING_GHOST_SLOTS = Math.floor((VISIBLE_DAYS - 1) / 2);
-const SLOT_PX = 24;
-const GAP_PX = 6;
-const STEP_PX = SLOT_PX + GAP_PX;
-const VIEWPORT_PX = VISIBLE_DAYS * SLOT_PX + (VISIBLE_DAYS - 1) * GAP_PX;
-const TRACK_PADDING_PX = (VIEWPORT_PX - SLOT_PX) / 2;
 const CIRCLE_PX = 14;
+const SCROLL_MS = 200;
 
-function circleVisuals(distance: number) {
-  if (distance === 0) return { scale: 1, blur: 0, opacity: 1 };
-  if (distance === 1) return { scale: 0.8, blur: 0.5, opacity: 0.65 };
-  return { scale: 0.65, blur: 1.5, opacity: 0.45 };
+const stageStyles: Record<MatchStage, string> = {
+  group: "border-sky-500 bg-sky-500/20",
+  "round-of-32": "border-violet-500 bg-violet-500/20",
+  "round-of-16": "border-fuchsia-500 bg-fuchsia-500/20",
+  "quarter-final": "border-amber-500 bg-amber-500/20",
+  "semi-final": "border-orange-500 bg-orange-500/20",
+  final: "border-rose-500 bg-rose-500/20",
+};
+
+function getStageForDay(day: number): MatchStage {
+  return getTimelineDays().find((entry) => entry.day === day)?.stage ?? "group";
 }
 
-type TimelineProps = {
+function VerticalTicker({
+  value,
+  animate,
+}: {
+  value: string;
+  animate: boolean;
+}) {
+  const prevValueRef = useRef(value);
+  const [prevValue, setPrevValue] = useState(value);
+  const [scrolling, setScrolling] = useState(false);
+
+  useLayoutEffect(() => {
+    if (value === prevValueRef.current) return;
+    setPrevValue(prevValueRef.current);
+    setScrolling(true);
+    prevValueRef.current = value;
+  }, [value]);
+
+  useEffect(() => {
+    if (!scrolling) return;
+    const timer = window.setTimeout(() => setScrolling(false), SCROLL_MS);
+    return () => window.clearTimeout(timer);
+  }, [scrolling]);
+
+  const translateY = scrolling && animate ? "-100%" : "0%";
+
+  return (
+    <span className="relative inline-block h-[1em] overflow-hidden align-bottom">
+      <span
+        className="block transition-transform ease-out"
+        style={{
+          transform: `translateY(${translateY})`,
+          transitionDuration: `${SCROLL_MS}ms`,
+        }}
+      >
+        {scrolling && animate ? (
+          <>
+            <span className="block">{prevValue}</span>
+            <span className="block">{value}</span>
+          </>
+        ) : (
+          <span className="block">{value}</span>
+        )}
+      </span>
+    </span>
+  );
+}
+
+function GroupLabel({ label, animate }: { label: TimelineLabel; animate: boolean }) {
+  if (label.kind !== "group") return null;
+  return (
+    <span className="inline-flex items-baseline gap-1 whitespace-nowrap">
+      <span>Matchday</span>
+      <VerticalTicker value={String(label.md)} animate={animate} />
+    </span>
+  );
+}
+
+function KnockoutLabel({ label, animate }: { label: TimelineLabel; animate: boolean }) {
+  if (label.kind !== "knockout") return null;
+  return <VerticalTicker value={label.label} animate={animate} />;
+}
+
+type TimelineInlineDisplayProps = {
+  day: number;
+  animate?: boolean;
+};
+
+export function TimelineInlineDisplay({
+  day,
+  animate = false,
+}: TimelineInlineDisplayProps) {
+  const stage = getStageForDay(day);
+  const label = formatTimelineStartLabel(day, stage);
+
+  return (
+    <span
+      className="inline-flex items-center gap-1.5 whitespace-nowrap"
+      aria-live={animate ? "polite" : undefined}
+    >
+      <span
+        aria-hidden
+        className={`shrink-0 rounded-full border-2 ${stageStyles[stage]}`}
+        style={{ width: CIRCLE_PX, height: CIRCLE_PX }}
+      />
+      {label.kind === "group" ? (
+        <GroupLabel label={label} animate={animate} />
+      ) : (
+        <KnockoutLabel label={label} animate={animate} />
+      )}
+    </span>
+  );
+}
+
+type TimelineDayPickerProps = {
   day: number;
   onDayChange: (day: number) => void;
   isSimulating?: boolean;
-  isSimStartDay?: (day: number) => boolean;
 };
 
-export function Timeline({
+export function TimelineDayPicker({
   day,
   onDayChange,
   isSimulating = false,
-  isSimStartDay,
-}: TimelineProps) {
-  const timelineDays = getTimelineDays();
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const activeIndex = timelineDays.findIndex((entry) => entry.day === day);
+}: TimelineDayPickerProps) {
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(false);
+  const [position, setPosition] = useState<PopoverPosition | null>(null);
+  const [mounted, setMounted] = useState(false);
+  const [highlightIndex, setHighlightIndex] = useState(0);
+
+  const simStartKey = getSimStartDays().join(",");
+  const options = useMemo(
+    () => getTimelineStartOptions(),
+    [simStartKey],
+  );
+  const stage = getStageForDay(day);
+  const currentLabel = timelineLabelToString(formatTimelineStartLabel(day, stage));
+  const ariaLabel = `Start from ${currentLabel}. Choose matchday or round.`;
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const updatePosition = useCallback(() => {
+    const trigger = triggerRef.current;
+    const panel = panelRef.current;
+    if (!trigger || !panel) return;
+    const next = computePopoverPosition(
+      trigger.getBoundingClientRect(),
+      panel.getBoundingClientRect(),
+    );
+    setPosition((prev) =>
+      prev?.top === next.top && prev?.left === next.left ? prev : next,
+    );
+  }, []);
 
   useLayoutEffect(() => {
-    if (activeIndex < 0 || !scrollRef.current) return;
-    scrollRef.current.scrollTo({
-      left: activeIndex * STEP_PX,
-      behavior: isSimulating ? "smooth" : "auto",
-    });
-  }, [activeIndex, isSimulating]);
+    if (!open) return;
+    updatePosition();
+  }, [open, updatePosition]);
 
-  const stageStyles: Record<MatchStage, string> = {
-    group: "border-sky-500 bg-sky-500/20",
-    "round-of-32": "border-violet-500 bg-violet-500/20",
-    "round-of-16": "border-fuchsia-500 bg-fuchsia-500/20",
-    "quarter-final": "border-amber-500 bg-amber-500/20",
-    "semi-final": "border-orange-500 bg-orange-500/20",
-    final: "border-rose-500 bg-rose-500/20",
+  useEffect(() => {
+    if (!open) setPosition(null);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const handleReposition = () => updatePosition();
+    window.addEventListener("resize", handleReposition);
+    window.addEventListener("scroll", handleReposition, true);
+    return () => {
+      window.removeEventListener("resize", handleReposition);
+      window.removeEventListener("scroll", handleReposition, true);
+    };
+  }, [open, updatePosition]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (
+        triggerRef.current?.contains(target) ||
+        panelRef.current?.contains(target)
+      ) {
+        return;
+      }
+      setOpen(false);
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const selectedIndex = options.findIndex((option) => {
+      const optionLabel = formatTimelineStartLabel(option.day, option.stage);
+      const current = formatTimelineStartLabel(day, stage);
+      return timelineLabelKey(optionLabel) === timelineLabelKey(current);
+    });
+    setHighlightIndex(selectedIndex >= 0 ? selectedIndex : 0);
+  }, [open, day, stage, options]);
+
+  const handleSelect = (selectedDay: number) => {
+    onDayChange(selectedDay);
+    setOpen(false);
   };
 
-  return (
-    <div
-      className="relative shrink-0 overflow-x-hidden py-1"
-      style={{ width: VIEWPORT_PX }}
-    >
-      <div
-        aria-hidden
-        className="pointer-events-none absolute top-1/2 left-1/2 z-10 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 ring-zinc-900 ring-offset-2 ring-offset-white dark:ring-zinc-100 dark:ring-offset-zinc-900"
-      />
+  const handleTriggerClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    if (isSimulating) return;
+    setOpen((prev) => !prev);
+  };
 
+  const handleTriggerKeyDown = (event: React.KeyboardEvent) => {
+    if (isSimulating) return;
+
+    if (event.key === "Escape") {
+      setOpen(false);
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      if (open) {
+        const option = options[highlightIndex];
+        if (option) handleSelect(option.day);
+      } else {
+        setOpen(true);
+      }
+      return;
+    }
+
+    if (!open) return;
+
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setHighlightIndex((i) => Math.min(i + 1, options.length - 1));
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setHighlightIndex((i) => Math.max(i - 1, 0));
+    }
+  };
+
+  const panel =
+    open && mounted ? (
       <div
-        ref={scrollRef}
-        className="snap-x snap-mandatory overflow-x-auto overflow-y-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        ref={panelRef}
+        role="listbox"
+        aria-label="Start from"
+        className={`fixed z-[100] min-w-[10rem] rounded-lg border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-600 dark:bg-zinc-800 ${
+          position ? "visible" : "invisible"
+        }`}
+        style={
+          position
+            ? { top: position.top, left: position.left }
+            : { top: 0, left: 0 }
+        }
       >
-        <div
-          className="flex flex-row items-center gap-1.5"
-          style={{ paddingInline: TRACK_PADDING_PX }}
-        >
-          {timelineDays.map((entry, index) => {
-            const isActive = entry.day === day;
-            const simStartable = isSimStartDay?.(entry.day) ?? true;
-            const stageStyle = stageStyles[entry.stage];
-            const distance =
-              activeIndex >= 0 ? Math.abs(index - activeIndex) : 0;
-            const { scale, blur, opacity } = circleVisuals(distance);
-            const dayLabel = simStartable
-              ? `Matchday ${entry.day}`
-              : `Matchday ${entry.day} (results incomplete — sim unavailable)`;
-            return (
-              <span
-                key={entry.day}
-                className="inline-flex w-6 shrink-0 snap-center items-center justify-center"
-              >
-                <button
-                  type="button"
-                  onClick={() => !isSimulating && onDayChange(entry.day)}
-                  disabled={isSimulating}
-                  aria-label={dayLabel}
-                  aria-current={isActive ? "step" : undefined}
-                  aria-disabled={!simStartable}
-                  title={simStartable ? undefined : "Complete match results required before this day"}
-                  className={`shrink-0 rounded-full border-2 outline-none transition-[transform,filter,opacity] duration-200 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-zinc-900 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-zinc-100 ${stageStyle} ${
-                    simStartable ? "border-solid" : "border-dashed opacity-40"
-                  } ${isActive ? "" : "hover:opacity-80"}`}
-                  style={{
-                    width: CIRCLE_PX,
-                    height: CIRCLE_PX,
-                    transform: `scale(${scale})`,
-                    filter: blur > 0 ? `blur(${blur}px)` : undefined,
-                    opacity,
-                  }}
-                />
-              </span>
-            );
-          })}
-          {Array.from({ length: TRAILING_GHOST_SLOTS }, (_, i) => (
-            <span
-              key={`ghost-${i}`}
-              aria-hidden
-              className="pointer-events-none inline-flex w-6 shrink-0 snap-center items-center justify-center"
-            >
-              <span
-                className="invisible rounded-full"
-                style={{ width: CIRCLE_PX, height: CIRCLE_PX }}
-              />
-            </span>
-          ))}
-        </div>
+        {options.map((option, index) => (
+          <button
+            key={option.day}
+            type="button"
+            role="option"
+            aria-selected={timelineLabelKey(
+              formatTimelineStartLabel(option.day, option.stage),
+            ) === timelineLabelKey(formatTimelineStartLabel(day, stage))}
+            className={`flex w-full items-center px-3 py-1.5 text-left text-xs whitespace-nowrap ${
+              index === highlightIndex
+                ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-700 dark:text-zinc-100"
+                : "text-zinc-700 hover:bg-zinc-50 dark:text-zinc-200 dark:hover:bg-zinc-700/60"
+            }`}
+            onMouseEnter={() => setHighlightIndex(index)}
+            onClick={() => handleSelect(option.day)}
+          >
+            {option.label}
+          </button>
+        ))}
       </div>
-    </div>
+    ) : null;
+
+  return (
+    <>
+      <button
+        ref={triggerRef}
+        type="button"
+        aria-label={ariaLabel}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        disabled={isSimulating}
+        onClick={handleTriggerClick}
+        onKeyDown={handleTriggerKeyDown}
+        className="relative z-10 inline-flex shrink-0 cursor-pointer items-center rounded-full px-1.5 py-0.5 text-xs font-medium text-inherit outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/50 disabled:cursor-not-allowed disabled:opacity-70 dark:hover:bg-black/10 dark:focus-visible:ring-zinc-400"
+      >
+        <TimelineInlineDisplay day={day} animate={isSimulating} />
+      </button>
+      {panel && createPortal(panel, document.body)}
+    </>
   );
 }

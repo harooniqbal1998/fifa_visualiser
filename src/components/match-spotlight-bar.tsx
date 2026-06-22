@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Team } from "@/types";
 import { getFlagUrl } from "@/lib/flags";
-import { formatMatchContextLabel } from "@/lib/match-context-label";
 import type { CollisionEvent } from "@/lib/simulation/types";
 
 const MIN_CAROUSEL_MS = 700;
@@ -83,9 +82,6 @@ export function MatchSpotlightBar({
   const safeIndex =
     matches.length === 0 ? 0 : Math.min(index, matches.length - 1);
   const currentMatch = matches[safeIndex];
-  const stageLabel = currentMatch
-    ? formatMatchContextLabel(currentMatch)
-    : "";
   const intervalMs = Math.max(MIN_CAROUSEL_MS, holdDurationMs / matches.length);
 
   useEffect(() => {
@@ -127,20 +123,7 @@ export function MatchSpotlightBar({
       : "translate-y-full opacity-0";
 
   return (
-    <div className="flex w-full flex-col items-center gap-1.5 rounded-xl border border-zinc-200/80 bg-white/85 px-4 py-2.5 shadow-sm backdrop-blur dark:border-zinc-700/80 dark:bg-zinc-900/85">
-      <div className="flex w-full items-center gap-3">
-        <div
-          aria-hidden
-          className="h-px flex-1 bg-zinc-300/70 dark:bg-zinc-600/70"
-        />
-        <p className="shrink-0 text-center text-[10px] font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-          {stageLabel}
-        </p>
-        <div
-          aria-hidden
-          className="h-px flex-1 bg-zinc-300/70 dark:bg-zinc-600/70"
-        />
-      </div>
+    <div className="flex w-full flex-col items-center rounded-xl border border-zinc-200/80 bg-white/85 px-4 py-2.5 shadow-sm backdrop-blur dark:border-zinc-700/80 dark:bg-zinc-900/85">
       <div className="relative h-6 w-full overflow-hidden">
         <div
           key={currentMatch.matchId}
