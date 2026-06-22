@@ -2,7 +2,15 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+
+  /* brand palette — keep in sync with src/lib/brand-colors.ts */
+  --average-green: #3CAC3B;
+  --hermes: #2A398D;
+  --torch-red: #E61D25;
+  --light-gray: #D1D4D1;
+  --dark-heather: #474A4A;
+
+  --foreground: var(--dark-heather);
 }
 
 html {
@@ -12,6 +20,11 @@ html {
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-average-green: var(--average-green);
+  --color-hermes: var(--hermes);
+  --color-torch-red: var(--torch-red);
+  --color-light-gray: var(--light-gray);
+  --color-dark-heather: var(--dark-heather);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -19,7 +32,7 @@ html {
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground: var(--light-gray);
   }
 }
 
