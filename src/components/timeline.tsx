@@ -65,7 +65,7 @@ export function Timeline({
 
       <div
         ref={scrollRef}
-        className="overflow-x-auto overflow-y-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        className="snap-x snap-mandatory overflow-x-auto overflow-y-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
       >
         <div
           className="flex flex-row items-center gap-1.5"
@@ -84,7 +84,7 @@ export function Timeline({
             return (
               <span
                 key={entry.day}
-                className="inline-flex w-6 shrink-0 items-center justify-center"
+                className="inline-flex w-6 shrink-0 snap-center items-center justify-center"
               >
                 <button
                   type="button"
@@ -94,7 +94,7 @@ export function Timeline({
                   aria-current={isActive ? "step" : undefined}
                   aria-disabled={!simStartable}
                   title={simStartable ? undefined : "Complete match results required before this day"}
-                  className={`shrink-0 rounded-full border-2 outline-none transition-[transform,filter,opacity] duration-200 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-zinc-100 dark:focus-visible:ring-offset-zinc-900 ${stageStyle} ${
+                  className={`shrink-0 rounded-full border-2 outline-none transition-[transform,filter,opacity] duration-200 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-zinc-900 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-zinc-100 ${stageStyle} ${
                     simStartable ? "border-solid" : "border-dashed opacity-40"
                   } ${isActive ? "" : "hover:opacity-80"}`}
                   style={{
@@ -112,7 +112,7 @@ export function Timeline({
             <span
               key={`ghost-${i}`}
               aria-hidden
-              className="pointer-events-none inline-flex w-6 shrink-0 items-center justify-center"
+              className="pointer-events-none inline-flex w-6 shrink-0 snap-center items-center justify-center"
             >
               <span
                 className="invisible rounded-full"
