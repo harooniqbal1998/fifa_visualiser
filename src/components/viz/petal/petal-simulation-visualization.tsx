@@ -62,6 +62,24 @@ function getSnapshotEliminated(snapshot: Snapshot): Set<string> {
   return getEliminatedFromResults(snapshot.day, knockoutResults, groupResults);
 }
 
+function collisionEventToResult(event: CollisionEvent): SimMatchResult {
+  return {
+    matchId: event.matchId,
+    stage: event.stage,
+    day: event.day,
+    home: event.home,
+    away: event.away,
+    winner: event.winner,
+  };
+}
+
+function upsertMatchResult(
+  results: SimMatchResult[],
+  result: SimMatchResult,
+): SimMatchResult[] {
+  return [...results.filter((r) => r.matchId !== result.matchId), result];
+}
+
 export const PetalSimulationVisualization = forwardRef<
   PetalSimulationVisualizationRef,
   PetalSimulationVisualizationProps
@@ -79,6 +97,7 @@ export const PetalSimulationVisualization = forwardRef<
   const eliminatedRef = useRef<Set<string>>(getSnapshotEliminated(snapshot));
   const groupResultsRef = useRef<SimMatchResult[]>([]);
   const knockoutResultsRef = useRef<SimMatchResult[]>([]);
+  const probabilityStateRef = useRef<ProbabilityState | null>(null);
 
   const [liveProbabilities, setLiveProbabilities] = useState<Record<string, number> | null>(
     null,
@@ -152,6 +171,25 @@ export const PetalSimulationVisualization = forwardRef<
     onActiveMatchesChange?.([]);
   }, [onActiveMatchesChange]);
 
+  const notifyStructureState = useCallback(() => {
+    const probState = probabilityStateRef.current;
+    if (!probState) return;
+    onProbabilityStateUpdate?.({
+      state: probState,
+      groupResults: groupResultsRef.current,
+      knockoutResults: knockoutResultsRef.current,
+    });
+  }, [onProbabilityStateUpdate]);
+
+  const commitMatchResult = useCallback((event: CollisionEvent) => {
+    const result = collisionEventToResult(event);
+    if (event.isKnockout) {
+      knockoutResultsRef.current = upsertMatchResult(knockoutResultsRef.current, result);
+    } else {
+      groupResultsRef.current = upsertMatchResult(groupResultsRef.current, result);
+    }
+  }, []);
+
   const stopSimulation = useCallback(() => {
     abortRef.current = true;
     onSimulatingChange(false);
@@ -176,6 +214,7 @@ export const PetalSimulationVisualization = forwardRef<
       bracketDepthsRef.current = restoreSnapshot.bracketDepths ?? {};
       groupResultsRef.current = [];
       knockoutResultsRef.current = [];
+      probabilityStateRef.current = null;
 
       canvasRef.current?.stop();
       canvasRef.current?.clearEliminated();
@@ -211,6 +250,7 @@ export const PetalSimulationVisualization = forwardRef<
     bracketDepthsRef.current = bootstrap.bracketDepths;
     groupResultsRef.current = bootstrap.runState.groupResults;
     knockoutResultsRef.current = bootstrap.runState.results;
+    probabilityStateRef.current = bootstrap.runState.probability;
     eliminatedRef.current = new Set(bootstrap.eliminated);
 
     setLiveProbabilities({ ...bootstrap.probabilities });
@@ -233,6 +273,8 @@ export const PetalSimulationVisualization = forwardRef<
           try {
             await canvasRef.current!.playMatch(event);
           } finally {
+            commitMatchResult(event);
+            notifyStructureState();
             activeMatchesRef.current = activeMatchesRef.current.filter(
               (m) => m.matchId !== event.matchId,
             );
@@ -293,6 +335,7 @@ export const PetalSimulationVisualization = forwardRef<
           canvasRef.current?.syncRadiusTargetsFromLayout(layout);
         },
         onProbabilityStateUpdate: (probState) => {
+          probabilityStateRef.current = probState;
           onProbabilityStateUpdate?.({
             state: probState,
             groupResults: groupResultsRef.current,
@@ -325,6 +368,8 @@ export const PetalSimulationVisualization = forwardRef<
     onDayChange,
     teams,
     onActiveMatchesChange,
+    commitMatchResult,
+    notifyStructureState,
   ]);
 
   useImperativeHandle(
