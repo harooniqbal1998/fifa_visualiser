@@ -80,15 +80,25 @@ export function MatchSpotlightBar({
     [matches],
   );
 
-  const stageLabel = formatMatchContextLabel(matches[0]!);
+  const safeIndex =
+    matches.length === 0 ? 0 : Math.min(index, matches.length - 1);
+  const currentMatch = matches[safeIndex];
+  const stageLabel = currentMatch
+    ? formatMatchContextLabel(currentMatch)
+    : "";
   const intervalMs = Math.max(MIN_CAROUSEL_MS, holdDurationMs / matches.length);
-  const currentMatch = matches[index]!;
 
   useEffect(() => {
     setIndex(0);
     setExiting(false);
     setEntered(true);
   }, [matchKey]);
+
+  useEffect(() => {
+    if (index >= matches.length) {
+      setIndex(0);
+    }
+  }, [index, matches.length]);
 
   useEffect(() => {
     if (matches.length <= 1) return;
@@ -106,6 +116,10 @@ export function MatchSpotlightBar({
     return () => clearInterval(id);
   }, [matches.length, intervalMs, matchKey]);
 
+  if (!currentMatch) {
+    return null;
+  }
+
   const slideClass = exiting
     ? "-translate-y-full opacity-0"
     : entered
@@ -113,7 +127,7 @@ export function MatchSpotlightBar({
       : "translate-y-full opacity-0";
 
   return (
-    <div className="flex w-full flex-col items-center gap-1.5">
+    <div className="flex w-full flex-col items-center gap-1.5 rounded-xl border border-zinc-200/80 bg-white/85 px-4 py-2.5 shadow-sm backdrop-blur dark:border-zinc-700/80 dark:bg-zinc-900/85">
       <div className="flex w-full items-center gap-3">
         <div
           aria-hidden
