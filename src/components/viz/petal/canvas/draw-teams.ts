@@ -28,8 +28,9 @@ function drawRankBorder(
   baseAlpha: number,
   isEliminated: boolean,
   eliminatedOpacity: number,
+  showRankBorders: boolean,
 ) {
-  if (team.bracketDepth > 0 || team.rankBorderOpacity <= 0 || isEliminated) {
+  if (!showRankBorders || team.rankBorderOpacity <= 0 || isEliminated) {
     return;
   }
 
@@ -51,6 +52,7 @@ export function drawTeam(
   team: TeamDrawItem,
   flags: Map<string, HTMLImageElement>,
   eliminatedOpacity: number,
+  showRankBorders: boolean,
 ) {
   const { x, y, r, opacity, isWinner, isParticipant } = team;
   const isEliminated = team.isEliminated && !isParticipant;
@@ -72,7 +74,7 @@ export function drawTeam(
   ctx.globalAlpha = isEliminated ? eliminatedOpacity : baseAlpha;
   ctx.stroke();
 
-  drawRankBorder(ctx, team, baseAlpha, isEliminated, eliminatedOpacity);
+  drawRankBorder(ctx, team, baseAlpha, isEliminated, eliminatedOpacity, showRankBorders);
 
   if (isParticipant) {
     ctx.beginPath();
@@ -108,9 +110,10 @@ export function drawTeams(
   teams: TeamDrawItem[],
   flags: Map<string, HTMLImageElement>,
   eliminatedOpacity: number,
+  showRankBorders: boolean,
 ) {
   const sorted = [...teams].sort((a, b) => a.renderLayer - b.renderLayer);
   for (const team of sorted) {
-    drawTeam(ctx, team, flags, eliminatedOpacity);
+    drawTeam(ctx, team, flags, eliminatedOpacity, showRankBorders);
   }
 }

@@ -145,7 +145,6 @@ const KNOCKOUT_SCHEDULE: KnockoutScheduleEntry[] = [
   { id: "qf-4", stage: "quarter-final", day: 28 },
   { id: "sf-1", stage: "semi-final", day: 31 },
   { id: "sf-2", stage: "semi-final", day: 32 },
-  { id: "tp-1", stage: "third-place", day: 34 },
   { id: "fin-1", stage: "final", day: 35 },
 ];
 
@@ -179,7 +178,6 @@ const STAGE_PRIORITY: MatchStage[] = [
   "round-of-16",
   "quarter-final",
   "semi-final",
-  "third-place",
   "final",
 ];
 

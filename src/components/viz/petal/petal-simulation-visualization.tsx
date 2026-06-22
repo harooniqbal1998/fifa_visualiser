@@ -10,7 +10,7 @@ import {
 } from "react";
 import type { Snapshot, Team } from "@/types";
 import type { StandingRow } from "@/lib/standings";
-import { getGroupStandings } from "@/lib/tournament";
+import { getGroupStandings, getSnapshotByDay } from "@/lib/tournament";
 import { PetalCanvas, type PetalCanvasRef } from "@/components/viz/petal/petal-canvas";
 import { DEFAULT_PETAL_CONFIG } from "@/components/viz/petal/petal-config";
 import { computePetalPositions } from "@/components/viz/petal/petal-layout";
@@ -34,7 +34,7 @@ export type SimulationSessionPhase = "idle" | "running" | "frozen" | "completed"
 export type PetalSimulationVisualizationRef = {
   stopSimulation: () => void;
   startSimulation: () => void;
-  resetSimulation: () => void;
+  resetSimulation: (restoreDay?: number) => void;
 };
 
 type PetalSimulationVisualizationProps = {
@@ -49,6 +49,7 @@ type PetalSimulationVisualizationProps = {
     groupResults: SimMatchResult[];
     knockoutResults: SimMatchResult[];
   }) => void;
+  onActiveMatchesChange?: (matches: CollisionEvent[]) => void;
 };
 
 function getSnapshotEliminated(snapshot: Snapshot): Set<string> {
@@ -65,12 +66,13 @@ export const PetalSimulationVisualization = forwardRef<
   PetalSimulationVisualizationRef,
   PetalSimulationVisualizationProps
 >(function PetalSimulationVisualization(
-  { teams, snapshot, sessionPhase, onSimulatingChange, onSessionComplete, onDayChange, onProbabilityStateUpdate },
+  { teams, snapshot, sessionPhase, onSimulatingChange, onSessionComplete, onDayChange, onProbabilityStateUpdate, onActiveMatchesChange },
   ref,
 ) {
   const canvasRef = useRef<PetalCanvasRef>(null);
   const containerRef = useRef<HTMLElement>(null);
   const abortRef = useRef(false);
+  const activeMatchesRef = useRef<CollisionEvent[]>([]);
   const probabilitiesRef = useRef(snapshot.probabilities);
   const standingsRef = useRef<Record<string, StandingRow[]>>(getGroupStandings(snapshot.day));
   const bracketDepthsRef = useRef<Record<string, number>>(snapshot.bracketDepths ?? {});
@@ -145,39 +147,53 @@ export const PetalSimulationVisualization = forwardRef<
     [teams],
   );
 
+  const clearActiveMatches = useCallback(() => {
+    activeMatchesRef.current = [];
+    onActiveMatchesChange?.([]);
+  }, [onActiveMatchesChange]);
+
   const stopSimulation = useCallback(() => {
     abortRef.current = true;
     onSimulatingChange(false);
     canvasRef.current?.stop();
-  }, [onSimulatingChange]);
+    clearActiveMatches();
+  }, [onSimulatingChange, clearActiveMatches]);
 
-  const resetSimulation = useCallback(() => {
-    abortRef.current = true;
-    setLiveProbabilities(null);
-    setLiveStandings(null);
-    setLiveBracketDepths(null);
-    setLiveEliminated(null);
+  const resetSimulation = useCallback(
+    (restoreDay?: number) => {
+      abortRef.current = true;
+      setLiveProbabilities(null);
+      setLiveStandings(null);
+      setLiveBracketDepths(null);
+      setLiveEliminated(null);
 
-    const staticEliminated = getSnapshotEliminated(snapshot);
-    eliminatedRef.current = new Set(staticEliminated);
-    probabilitiesRef.current = snapshot.probabilities;
-    standingsRef.current = getGroupStandings(snapshot.day);
-    bracketDepthsRef.current = snapshot.bracketDepths ?? {};
+      const restoreSnapshot =
+        getSnapshotByDay(restoreDay ?? snapshot.day) ?? snapshot;
+      const staticEliminated = getSnapshotEliminated(restoreSnapshot);
+      eliminatedRef.current = new Set(staticEliminated);
+      probabilitiesRef.current = restoreSnapshot.probabilities;
+      standingsRef.current = getGroupStandings(restoreSnapshot.day);
+      bracketDepthsRef.current = restoreSnapshot.bracketDepths ?? {};
+      groupResultsRef.current = [];
+      knockoutResultsRef.current = [];
 
-    canvasRef.current?.stop();
-    canvasRef.current?.clearEliminated();
-    canvasRef.current?.setEliminated(staticEliminated);
+      canvasRef.current?.stop();
+      canvasRef.current?.clearEliminated();
+      canvasRef.current?.setEliminated(staticEliminated);
 
-    const layout = computeLayout(
-      standingsRef.current,
-      bracketDepthsRef.current,
-      staticEliminated,
-    );
-    canvasRef.current?.resetDisplay(layout);
-    if (staticEliminated.size > 0) {
-      canvasRef.current?.markTeamsDropped([...staticEliminated]);
-    }
-  }, [teams, snapshot, computeLayout]);
+      const layout = computeLayout(
+        standingsRef.current,
+        bracketDepthsRef.current,
+        staticEliminated,
+      );
+      canvasRef.current?.resetDisplay(layout);
+      if (staticEliminated.size > 0) {
+        canvasRef.current?.markTeamsDropped([...staticEliminated]);
+      }
+      clearActiveMatches();
+    },
+    [snapshot, computeLayout, clearActiveMatches],
+  );
 
   const startSimulation = useCallback(async () => {
     if (sessionPhase === "running") return;
@@ -185,7 +201,7 @@ export const PetalSimulationVisualization = forwardRef<
     const startDay = snapshot.day;
     const simulationSeed = createSimulationSeed();
     const params = { ...DEFAULT_ANIMATION_PARAMS, simulationSeed };
-    const bootstrap = buildSimulationBootstrap(startDay, simulationSeed);
+    const bootstrap = buildSimulationBootstrap(startDay);
 
     abortRef.current = false;
     onSimulatingChange(true);
@@ -202,16 +218,8 @@ export const PetalSimulationVisualization = forwardRef<
     setLiveBracketDepths(bootstrap.bracketDepths);
     setLiveEliminated(new Set(bootstrap.eliminated));
 
-    canvasRef.current?.setEliminated(bootstrap.eliminated);
-    const initialLayout = computeLayout(
-      bootstrap.standings,
-      bootstrap.bracketDepths,
-      bootstrap.eliminated,
-    );
-    canvasRef.current?.resetDisplay(initialLayout);
-    if (bootstrap.eliminated.size > 0) {
-      canvasRef.current?.markTeamsDropped([...bootstrap.eliminated]);
-    }
+    // Canvas already reflects idle snapshot layout — keep display state on play.
+    canvasRef.current?.setProbabilities(bootstrap.probabilities);
 
     await runSimulation(
       params,
@@ -219,7 +227,18 @@ export const PetalSimulationVisualization = forwardRef<
         onDayChange: (day) => {
           onDayChange?.(day);
         },
-        onCollision: (event) => canvasRef.current!.playMatch(event),
+        onCollision: async (event) => {
+          activeMatchesRef.current = [...activeMatchesRef.current, event];
+          onActiveMatchesChange?.([...activeMatchesRef.current]);
+          try {
+            await canvasRef.current!.playMatch(event);
+          } finally {
+            activeMatchesRef.current = activeMatchesRef.current.filter(
+              (m) => m.matchId !== event.matchId,
+            );
+            onActiveMatchesChange?.([...activeMatchesRef.current]);
+          }
+        },
         onMatchResolved: async (event: CollisionEvent, groupResults) => {
           groupResultsRef.current = groupResults;
           if (event.isKnockout) {
@@ -305,6 +324,7 @@ export const PetalSimulationVisualization = forwardRef<
     computeLayout,
     onDayChange,
     teams,
+    onActiveMatchesChange,
   ]);
 
   useImperativeHandle(
@@ -329,6 +349,7 @@ export const PetalSimulationVisualization = forwardRef<
         config={DEFAULT_PETAL_CONFIG}
         isSimulating={isSimulating}
         freezeLayout={freezeLayout}
+        showRankBorders={snapshot.day < 12}
       />
     </section>
   );

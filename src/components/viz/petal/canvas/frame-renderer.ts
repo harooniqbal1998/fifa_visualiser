@@ -17,7 +17,7 @@ export function renderFrame(frame: DrawFrameContext) {
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, width, height);
 
-  if (layout) {
+  if (layout && frame.showGuideRings) {
     drawGuideRings(ctx, layout);
   }
 
@@ -25,13 +25,13 @@ export function renderFrame(frame: DrawFrameContext) {
   const backgroundTeams = teams.filter((t) => !t.isParticipant);
   const participantTeams = teams.filter((t) => t.isParticipant);
 
-  drawTeams(ctx, backgroundTeams, flags, config.eliminatedOpacity);
+  drawTeams(ctx, backgroundTeams, flags, config.eliminatedOpacity, frame.showRankBorders);
   drawConnectors(ctx, activeMatches, displayState, config);
-  drawTeams(ctx, participantTeams, flags, config.eliminatedOpacity);
+  drawTeams(ctx, participantTeams, flags, config.eliminatedOpacity, frame.showRankBorders);
 }
 
 export function buildTeamDrawItems(
-  frame: Omit<DrawFrameContext, "teams" | "eliminated"> & {
+  frame: Omit<DrawFrameContext, "teams" | "eliminated" | "showGuideRings" | "showRankBorders"> & {
     teamMeta: Map<string, { isoCode: string; renderLayer: number; probability: number }>;
     eliminated: Set<string>;
   },

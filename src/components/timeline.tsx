@@ -5,6 +5,7 @@ import type { MatchStage } from "@/types";
 import { getTimelineDays } from "@/lib/tournament";
 
 const VISIBLE_DAYS = 5;
+const TRAILING_GHOST_SLOTS = Math.floor((VISIBLE_DAYS - 1) / 2);
 const SLOT_PX = 24;
 const GAP_PX = 6;
 const STEP_PX = SLOT_PX + GAP_PX;
@@ -43,7 +44,6 @@ export function Timeline({ day, onDayChange, isSimulating = false }: TimelinePro
     "round-of-16": "border-fuchsia-500 bg-fuchsia-500/20",
     "quarter-final": "border-amber-500 bg-amber-500/20",
     "semi-final": "border-orange-500 bg-orange-500/20",
-    "third-place": "border-emerald-500 bg-emerald-500/20",
     final: "border-rose-500 bg-rose-500/20",
   };
 
@@ -96,6 +96,18 @@ export function Timeline({ day, onDayChange, isSimulating = false }: TimelinePro
               </span>
             );
           })}
+          {Array.from({ length: TRAILING_GHOST_SLOTS }, (_, i) => (
+            <span
+              key={`ghost-${i}`}
+              aria-hidden
+              className="pointer-events-none inline-flex w-6 shrink-0 items-center justify-center"
+            >
+              <span
+                className="invisible rounded-full"
+                style={{ width: CIRCLE_PX, height: CIRCLE_PX }}
+              />
+            </span>
+          ))}
         </div>
       </div>
     </div>

@@ -76,13 +76,6 @@ export const KNOCKOUT_TREE: BracketNode = {
   },
 };
 
-/** Third-place playoff — FIFA match 103: loser sf-1 vs loser sf-2 */
-export const THIRD_PLACE_NODE: BracketNode = {
-  matchId: "tp-1",
-  homeSource: { matchId: "sf-1" },
-  awaySource: { matchId: "sf-2" },
-};
-
 export const KNOCKOUT_MATCH_IDS: string[] = [];
 
 function collectMatchIds(node: BracketNode): void {

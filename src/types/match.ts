@@ -4,7 +4,6 @@ export type MatchStage =
   | "round-of-16"
   | "quarter-final"
   | "semi-final"
-  | "third-place"
   | "final";
 
 export type Match = {

@@ -32,7 +32,7 @@ export const DEFAULT_PETAL_CONFIG: PetalLayoutConfig = {
   knockoutMinRadiusRatio: 0.08,
   groupStartAngle: -0.792,
   centerYOffsetRatio: 0,
-  matchHoldDurationMs: 1200,
+  matchHoldDurationMs: 4500,
   rankTransitionDurationMs: 200,
   rankBorderFadeMs: 80,
   spotlightDimOpacity: 0.25,

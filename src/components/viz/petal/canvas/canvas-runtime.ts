@@ -43,6 +43,8 @@ export type PetalCanvasRuntime = {
     isSimulating: boolean;
     freezeLayout: boolean;
     eliminated?: Set<string>;
+    showGuideRings?: boolean;
+    showRankBorders?: boolean;
   }) => void;
   updateSize: (width: number, height: number) => void;
   resetLayout: () => void;
@@ -73,6 +75,8 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
   const isSimulatingRef: MutableRefObject<boolean> = { current: false };
   const freezeLayoutRef: MutableRefObject<boolean> = { current: false };
   const eliminatedRef: MutableRefObject<Set<string>> = { current: new Set() };
+  const showGuideRingsRef: MutableRefObject<boolean> = { current: true };
+  const showRankBordersRef: MutableRefObject<boolean> = { current: true };
 
   const displayStateRef = { current: createDisplayState(200) };
   const matchControllerRef = {
@@ -146,6 +150,8 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
       flags: flagsRef.current,
       teams: drawTeams,
       eliminated: eliminatedRef.current,
+      showGuideRings: showGuideRingsRef.current,
+      showRankBorders: showRankBordersRef.current,
     });
   };
 
@@ -188,6 +194,12 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
       displayStateRef.current.transitionDurationMs = props.config.rankTransitionDurationMs;
       if (!props.isSimulating && !props.freezeLayout && props.eliminated) {
         eliminatedRef.current = new Set(props.eliminated);
+      }
+      if (props.showGuideRings !== undefined) {
+        showGuideRingsRef.current = props.showGuideRings;
+      }
+      if (props.showRankBorders !== undefined) {
+        showRankBordersRef.current = props.showRankBorders;
       }
     },
 
@@ -237,7 +249,7 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
           const config = configRef.current;
           displayStateRef.current.transitionDurationMs = config.rankTransitionDurationMs;
 
-          if (borderTeamIds.length > 0) {
+          if (borderTeamIds.length > 0 && showRankBordersRef.current) {
             await animateRankBorderOpacity(
               displayStateRef.current,
               0,
@@ -250,7 +262,7 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
           await waitUntilSettled(displayStateRef.current, undefined, positionTeamIds);
 
           applyTargetStandingRanks(displayStateRef.current, borderTeamIds);
-          if (borderTeamIds.length > 0) {
+          if (borderTeamIds.length > 0 && showRankBordersRef.current) {
             await animateRankBorderOpacity(
               displayStateRef.current,
               1,

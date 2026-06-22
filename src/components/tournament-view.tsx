@@ -8,6 +8,9 @@ import {
 } from "@/lib/tournament";
 import { measurePillReserve } from "@/lib/viz-layout";
 import { SimulationPill } from "@/components/simulation-pill";
+import { MatchSpotlightBar } from "@/components/match-spotlight-bar";
+import { DEFAULT_PETAL_CONFIG } from "@/components/viz/petal/petal-config";
+import { teamsById } from "@/data/teams";
 import {
   DebugToggleButton,
   ProbabilityDebugPanel,
@@ -21,7 +24,7 @@ import { replayTournamentToDay } from "@/lib/probability/replay-tournament";
 import { createSeededRng } from "@/lib/simulation/animation-params";
 import { DEFAULT_PROBABILITY_CONFIG } from "@/lib/probability/types";
 import type { ProbabilityState } from "@/lib/probability/types";
-import type { SimMatchResult } from "@/lib/simulation/types";
+import type { CollisionEvent, SimMatchResult } from "@/lib/simulation/types";
 import { getScriptedResultsUpToDay } from "@/lib/simulation/advancement";
 
 const isDev = process.env.NODE_ENV === "development";
@@ -32,15 +35,18 @@ export function TournamentView() {
   const [day, setDay] = useState(min);
   const [sessionPhase, setSessionPhase] = useState<SimulationSessionPhase>("idle");
   const [pillReserve, setPillReserve] = useState(0);
+  const [pillWidth, setPillWidth] = useState(0);
   const [debugOpen, setDebugOpen] = useState(false);
   const [liveProbabilityState, setLiveProbabilityState] = useState<ProbabilityState | null>(
     null,
   );
   const [liveGroupResults, setLiveGroupResults] = useState<SimMatchResult[]>([]);
   const [liveKnockoutResults, setLiveKnockoutResults] = useState<SimMatchResult[]>([]);
+  const [activeMatches, setActiveMatches] = useState<CollisionEvent[]>([]);
   const snapshot = getSnapshotByDay(day) ?? getSnapshotByDay(min)!;
   const petalVizRef = useRef<PetalSimulationVisualizationRef>(null);
   const pillRef = useRef<HTMLDivElement>(null);
+  const stackRef = useRef<HTMLDivElement>(null);
 
   const idleReplay = useMemo(() => {
     if (!isDev || !debugOpen || sessionPhase !== "idle") return null;
@@ -79,7 +85,9 @@ export function TournamentView() {
     if (!pill) return;
 
     const updateReserve = () => {
+      const rect = pill.getBoundingClientRect();
       setPillReserve(measurePillReserve(pill));
+      setPillWidth(rect.width);
     };
 
     updateReserve();
@@ -102,9 +110,12 @@ export function TournamentView() {
   };
 
   const handleRestart = () => {
-    petalVizRef.current?.resetSimulation();
+    setDay(min);
     setSessionPhase("idle");
     setLiveProbabilityState(null);
+    setLiveGroupResults([]);
+    setLiveKnockoutResults([]);
+    petalVizRef.current?.resetSimulation(min);
   };
 
   const handleSimulatingChange = (simulating: boolean) => {
@@ -120,7 +131,7 @@ export function TournamentView() {
   return (
     <div className="relative h-full w-full min-h-0">
       <div
-        className="min-h-0 w-full"
+        className="relative min-h-0 w-full"
         style={{ height: `calc(100% - ${pillReserve}px)` }}
       >
         <PetalSimulationVisualization
@@ -136,6 +147,7 @@ export function TournamentView() {
             setLiveGroupResults(groupResults);
             setLiveKnockoutResults(knockoutResults);
           }}
+          onActiveMatchesChange={setActiveMatches}
         />
         {isDev ? (
           <>
@@ -154,15 +166,32 @@ export function TournamentView() {
           </>
         ) : null}
       </div>
-      <SimulationPill
-        ref={pillRef}
-        day={day}
-        onDayChange={setDay}
-        sessionPhase={sessionPhase}
-        onPlay={handlePlay}
-        onStop={handleStop}
-        onRestart={handleRestart}
-      />
+      {activeMatches.length > 0 ? (
+        <div
+          className="pointer-events-none fixed left-1/2 z-40 -translate-x-1/2"
+          style={{ bottom: pillReserve + 8, width: pillWidth || undefined }}
+        >
+          <MatchSpotlightBar
+            matches={activeMatches}
+            teamsById={teamsById}
+            holdDurationMs={DEFAULT_PETAL_CONFIG.matchHoldDurationMs}
+          />
+        </div>
+      ) : null}
+      <div
+        ref={stackRef}
+        className="fixed bottom-4 left-1/2 z-50 w-max max-w-[40vw] -translate-x-1/2"
+      >
+        <SimulationPill
+          ref={pillRef}
+          day={day}
+          onDayChange={setDay}
+          sessionPhase={sessionPhase}
+          onPlay={handlePlay}
+          onStop={handleStop}
+          onRestart={handleRestart}
+        />
+      </div>
     </div>
   );
 }

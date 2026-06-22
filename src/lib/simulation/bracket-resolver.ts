@@ -1,7 +1,7 @@
 import type { Match, MatchStage } from "@/types";
 import { matches, matchesByDay } from "@/data/matches";
 import type { BracketNode } from "@/data/knockout-bracket";
-import { KNOCKOUT_TREE, THIRD_PLACE_NODE } from "@/data/knockout-bracket";
+import { KNOCKOUT_TREE } from "@/data/knockout-bracket";
 import { teamsById } from "@/data/teams";
 import { resolveR32Match } from "@/lib/simulation/r32-resolver";
 import type { SimMatchResult } from "@/lib/simulation/types";
@@ -24,12 +24,6 @@ function getWinner(results: SimMatchResult[], matchId: string): string | undefin
   return results.find((r) => r.matchId === matchId)?.winner;
 }
 
-function getLoser(results: SimMatchResult[], matchId: string): string | undefined {
-  const result = results.find((r) => r.matchId === matchId);
-  if (!result) return undefined;
-  return result.winner === result.home ? result.away : result.home;
-}
-
 function resolveNodeParticipants(
   node: BracketNode,
   results: SimMatchResult[],
@@ -42,14 +36,6 @@ function resolveNodeParticipants(
 
   const home = node.homeSource ? getWinner(results, node.homeSource.matchId) : undefined;
   const away = node.awaySource ? getWinner(results, node.awaySource.matchId) : undefined;
-  return { home, away };
-}
-
-function resolveThirdPlaceParticipants(
-  results: SimMatchResult[],
-): { home?: string; away?: string } {
-  const home = getLoser(results, THIRD_PLACE_NODE.homeSource!.matchId);
-  const away = getLoser(results, THIRD_PLACE_NODE.awaySource!.matchId);
   return { home, away };
 }
 
@@ -92,21 +78,6 @@ export function resolveKnockoutMatchesForDay(
       home,
       away,
     });
-  }
-
-  const tpMeta = knockoutMetaById.get("tp-1");
-  if (tpMeta && tpMeta.day === day) {
-    const { home, away } = resolveThirdPlaceParticipants(results);
-    // SF losers are eliminated from the trophy but still contest third place.
-    if (home && away && !results.some((r) => r.matchId === "tp-1")) {
-      resolved.push({
-        matchId: "tp-1",
-        stage: tpMeta.stage,
-        day,
-        home,
-        away,
-      });
-    }
   }
 
   return resolved;

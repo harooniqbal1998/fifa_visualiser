@@ -48,7 +48,7 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
     return (
       <div
         ref={ref}
-        className="fixed bottom-4 left-1/2 z-50 flex w-auto max-w-[40vw] -translate-x-1/2 flex-row items-center gap-2 rounded-full border border-zinc-200 bg-white/90 px-2.5 py-1.5 shadow-lg backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90"
+        className="flex w-full flex-row items-center gap-2 rounded-full border border-zinc-200 bg-white/90 px-2.5 py-1.5 shadow-lg backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90"
       >
         {sessionPhase === "running" ? (
           <button

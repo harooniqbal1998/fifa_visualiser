@@ -209,7 +209,7 @@ const ALL_NODES = collectKnockoutNodes(KNOCKOUT_TREE);
 const NODE_BY_ID = new Map(ALL_NODES.map((n) => [n.matchId, n]));
 
 const KNOCKOUT_MATCH_IDS = matches
-  .filter((m) => m.stage !== "group" && m.id !== "tp-1")
+  .filter((m) => m.stage !== "group")
   .sort((a, b) => a.day - b.day || a.id.localeCompare(b.id))
   .map((m) => m.id);
 

@@ -21,7 +21,6 @@ const STAGE_ELIM_DEPTH: Partial<Record<MatchStage, number>> = {
   "quarter-final": 3,
   "semi-final": 4,
   final: 5,
-  "third-place": 4,
 };
 
 export type BracketState = {

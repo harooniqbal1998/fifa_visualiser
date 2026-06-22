@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useLayoutEffect, useRef } from "react";
 import type { Team } from "@/types";
 import type { StandingRow } from "@/lib/standings";
 import type { PetalLayoutConfig } from "@/components/viz/petal/petal-config";
@@ -19,6 +19,8 @@ type PetalCanvasProps = {
   config: PetalLayoutConfig;
   isSimulating?: boolean;
   freezeLayout?: boolean;
+  showGuideRings?: boolean;
+  showRankBorders?: boolean;
 };
 
 export const PetalCanvas = forwardRef<PetalCanvasRef, PetalCanvasProps>(
@@ -32,6 +34,8 @@ export const PetalCanvas = forwardRef<PetalCanvasRef, PetalCanvasProps>(
       config,
       isSimulating = false,
       freezeLayout = false,
+      showGuideRings = true,
+      showRankBorders = true,
     } = props;
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -40,66 +44,11 @@ export const PetalCanvas = forwardRef<PetalCanvasRef, PetalCanvasProps>(
 
     useImperativeHandle(ref, () => runtimeRef.current.getRefApi(), []);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       runtimeRef.current.setCanvasElement(canvasRef.current);
     }, []);
 
-    useEffect(() => {
-      runtimeRef.current.syncFromProps({
-        teams,
-        probabilities,
-        standings,
-        bracketDepths,
-        config,
-        isSimulating,
-        freezeLayout,
-        eliminated,
-      });
-      runtimeRef.current.resetLayout();
-    }, [teams]);
-
-    useEffect(() => {
-      const wasFrozen = prevFreezeLayoutRef.current;
-      runtimeRef.current.syncFromProps({
-        teams,
-        probabilities,
-        standings,
-        bracketDepths,
-        config,
-        isSimulating,
-        freezeLayout,
-        eliminated,
-      });
-
-      if (wasFrozen && !freezeLayout) {
-        runtimeRef.current.syncLayoutTargets();
-      } else if (!isSimulating && !freezeLayout) {
-        runtimeRef.current.syncLayoutTargets();
-      }
-
-      prevFreezeLayoutRef.current = freezeLayout;
-    }, [standings, bracketDepths, config, probabilities, isSimulating, teams, eliminated, freezeLayout]);
-
-    useEffect(() => {
-      const flags = runtimeRef.current.flagsRef.current;
-      for (const iso of [...new Set(teams.map((t) => t.isoCode))]) {
-        if (flags.has(iso)) continue;
-        const img = new Image();
-        img.crossOrigin = "anonymous";
-        img.src = getFlagUrl(iso);
-        img.onload = () => {
-          flags.set(iso, img);
-          runtimeRef.current.paint();
-        };
-      }
-    }, [teams]);
-
-    useEffect(() => {
-      runtimeRef.current.startLoop();
-      return () => runtimeRef.current.stopLoop();
-    }, []);
-
-    useEffect(() => {
+    useLayoutEffect(() => {
       const container = containerRef.current;
       if (!container) return;
 
@@ -118,6 +67,65 @@ export const PetalCanvas = forwardRef<PetalCanvasRef, PetalCanvasProps>(
         observer.disconnect();
         window.removeEventListener("resize", onResize);
       };
+    }, []);
+
+    useLayoutEffect(() => {
+      runtimeRef.current.syncFromProps({
+        teams,
+        probabilities,
+        standings,
+        bracketDepths,
+        config,
+        isSimulating,
+        freezeLayout,
+        eliminated,
+        showGuideRings,
+        showRankBorders,
+      });
+      runtimeRef.current.resetLayout();
+    }, [teams]);
+
+    useLayoutEffect(() => {
+      const wasFrozen = prevFreezeLayoutRef.current;
+      runtimeRef.current.syncFromProps({
+        teams,
+        probabilities,
+        standings,
+        bracketDepths,
+        config,
+        isSimulating,
+        freezeLayout,
+        eliminated,
+        showGuideRings,
+        showRankBorders,
+      });
+
+      if (wasFrozen && !freezeLayout) {
+        runtimeRef.current.syncLayoutTargets();
+      } else if (!isSimulating && !freezeLayout) {
+        runtimeRef.current.syncLayoutTargets();
+      }
+
+      prevFreezeLayoutRef.current = freezeLayout;
+    }, [standings, bracketDepths, config, probabilities, isSimulating, teams, eliminated, freezeLayout, showGuideRings, showRankBorders]);
+
+    useEffect(() => {
+      const flags = runtimeRef.current.flagsRef.current;
+      for (const iso of [...new Set(teams.map((t) => t.isoCode))]) {
+        if (flags.has(iso)) continue;
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.src = getFlagUrl(iso);
+        img.onload = () => {
+          flags.set(iso, img);
+          runtimeRef.current.paint();
+        };
+      }
+    }, [teams]);
+
+    useEffect(() => {
+      runtimeRef.current.startLoop();
+      return () => runtimeRef.current.stopLoop();
     }, []);
 
     return (

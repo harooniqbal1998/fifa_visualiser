@@ -68,7 +68,7 @@ export async function runSimulation(
   callbacks: SimulationCallbacks,
   options: SimulationOptions,
 ): Promise<SimulationRunState> {
-  const state = buildSimulationBootstrap(options.startDay, params.simulationSeed).runState;
+  const state = buildSimulationBootstrap(options.startDay).runState;
   const rng = createSeededRng(params.simulationSeed);
   const config = params.probabilityConfig;
   const timelineDays = getTimelineDays().filter((entry) => entry.day >= options.startDay);
@@ -155,6 +155,8 @@ export async function runSimulation(
       const events: { match: (typeof batch)[number]; event: CollisionEvent }[] = [];
 
       for (const match of batch) {
+        const homeElo = state.probability.eloRatings[match.home] ?? 1500;
+        const awayElo = state.probability.eloRatings[match.away] ?? 1500;
         const winnerId = resolveMatchWinnerOnly(state.probability, match, config, rng);
         state.probability = applyKnownMatchResult(
           state.probability,
@@ -193,6 +195,8 @@ export async function runSimulation(
             winner: winnerId,
             loser,
             isKnockout: match.stage !== "group",
+            homeElo,
+            awayElo,
           },
         });
       }

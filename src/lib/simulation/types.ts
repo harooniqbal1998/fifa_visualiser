@@ -20,6 +20,8 @@ export type CollisionEvent = {
   winner: string;
   loser: string;
   isKnockout: boolean;
+  homeElo: number;
+  awayElo: number;
 };
 
 export type EliminationEvent = {

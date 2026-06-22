@@ -54,6 +54,8 @@ export type DrawFrameContext = {
   flags: Map<string, HTMLImageElement>;
   teams: TeamDrawItem[];
   eliminated: Set<string>;
+  showGuideRings: boolean;
+  showRankBorders: boolean;
 };
 
 export type RenderLoopCallbacks = {
