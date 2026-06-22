@@ -3,6 +3,7 @@
 import { forwardRef } from "react";
 import { Timeline } from "@/components/timeline";
 import type { SimulationSessionPhase } from "@/components/viz/petal/petal-simulation-visualization";
+import { isSimStartDay } from "@/lib/tournament";
 
 type SimulationPillProps = {
   day: number;
@@ -44,6 +45,10 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
     ref,
   ) {
     const isRunning = sessionPhase === "running";
+    const canPlay = sessionPhase !== "idle" || isSimStartDay(day);
+    const playTitle = canPlay
+      ? "Play simulation from selected day"
+      : "Complete match results required before this day";
 
     return (
       <div
@@ -74,17 +79,23 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
         ) : (
           <button
             type="button"
-            title="Play simulation from selected day"
-            aria-label="Play simulation from selected day"
+            title={playTitle}
+            aria-label={playTitle}
             onClick={onPlay}
-            className="flex h-7 shrink-0 items-center gap-1.5 rounded-full bg-zinc-900 px-2.5 text-xs font-medium text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+            disabled={!canPlay}
+            className="flex h-7 shrink-0 items-center gap-1.5 rounded-full bg-zinc-900 px-2.5 text-xs font-medium text-white hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
           >
             <PlayIcon />
             Play
           </button>
         )}
 
-        <Timeline day={day} onDayChange={onDayChange} isSimulating={isRunning} />
+        <Timeline
+          day={day}
+          onDayChange={onDayChange}
+          isSimulating={isRunning}
+          isSimStartDay={isSimStartDay}
+        />
       </div>
     );
   },

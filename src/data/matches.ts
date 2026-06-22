@@ -1,62 +1,19 @@
 import type { Match, MatchStage } from "@/types";
-import { teams, teamsById } from "./teams";
-
-type MatchResult = { homeScore: number; awayScore: number };
-
-const GROUP_MATCH_RESULTS: Record<string, MatchResult> = {
-  // Group A — MD1 (real)
-  "mex-rsa": { homeScore: 2, awayScore: 0 },
-  "kor-cze": { homeScore: 2, awayScore: 1 },
-  // Group B — MD1 (real)
-  "can-bih": { homeScore: 1, awayScore: 1 },
-  "sui-qat": { homeScore: 1, awayScore: 1 },
-  // Group C — MD1 (real)
-  "bra-mar": { homeScore: 1, awayScore: 1 },
-  "sco-hai": { homeScore: 1, awayScore: 0 },
-  // Group D — MD1 (real)
-  "usa-par": { homeScore: 4, awayScore: 1 },
-  "aus-tur": { homeScore: 2, awayScore: 0 },
-  // Group E — MD1 (real)
-  "ger-cuw": { homeScore: 7, awayScore: 1 },
-  "civ-ecu": { homeScore: 1, awayScore: 0 },
-  // Group F — MD1 (real)
-  "ned-jpn": { homeScore: 2, awayScore: 2 },
-  "swe-tun": { homeScore: 5, awayScore: 1 },
-  // Group G — MD1 (real)
-  "bel-egy": { homeScore: 1, awayScore: 1 },
-  "irn-nzl": { homeScore: 2, awayScore: 2 },
-  // Group H — MD1 (real)
-  "esp-cpv": { homeScore: 0, awayScore: 0 },
-  "uru-ksa": { homeScore: 1, awayScore: 1 },
-};
+import { teams } from "./teams";
+import { ACTUAL_RESULTS } from "./actual-results";
 
 function matchKey(home: string, away: string): string {
   return `${home}-${away}`;
 }
 
-function getMockResult(home: string, away: string): MatchResult {
-  const homeTeam = teamsById[home];
-  const awayTeam = teamsById[away];
-  if (!homeTeam || !awayTeam) {
-    return { homeScore: 1, awayScore: 0 };
-  }
-
-  if (homeTeam.fifaRanking < awayTeam.fifaRanking) {
-    return { homeScore: 2, awayScore: 1 };
-  }
-  if (awayTeam.fifaRanking < homeTeam.fifaRanking) {
-    return { homeScore: 1, awayScore: 2 };
-  }
-  return { homeScore: 1, awayScore: 1 };
-}
-
-function getResult(home: string, away: string): MatchResult {
-  return GROUP_MATCH_RESULTS[matchKey(home, away)] ?? getMockResult(home, away);
-}
-
-function resultToWinner(home: string, away: string, result: MatchResult): string | undefined {
-  if (result.homeScore > result.awayScore) return home;
-  if (result.awayScore > result.homeScore) return away;
+function resultToWinner(
+  home: string,
+  away: string,
+  homeScore: number,
+  awayScore: number,
+): string | undefined {
+  if (homeScore > awayScore) return home;
+  if (awayScore > homeScore) return away;
   return undefined;
 }
 
@@ -90,17 +47,25 @@ function buildGroupMatches(): Match[] {
     pairings.forEach((round, roundIndex) => {
       const day = matchdays[roundIndex] + Math.floor(groupIndex / 3);
       round.forEach(([home, away], matchIndex) => {
-        const result = getResult(home, away);
-        matches.push({
+        const result = ACTUAL_RESULTS[matchKey(home, away)];
+        const match: Match = {
           id: `grp-${group.toLowerCase()}-md${roundIndex + 1}-${matchIndex + 1}`,
           stage: "group",
           day,
           home,
           away,
-          homeScore: result.homeScore,
-          awayScore: result.awayScore,
-          winner: resultToWinner(home, away, result),
-        });
+        };
+        if (result) {
+          match.homeScore = result.homeScore;
+          match.awayScore = result.awayScore;
+          match.winner = resultToWinner(
+            home,
+            away,
+            result.homeScore,
+            result.awayScore,
+          );
+        }
+        matches.push(match);
       });
     });
   });
@@ -205,6 +170,26 @@ export const timelineDays: TimelineDay[] = Object.keys(matchesByDay)
       stage: stages[0],
     };
   });
+
+export function hasActualResult(match: Match): boolean {
+  return match.homeScore !== undefined && match.awayScore !== undefined;
+}
+
+export function isSimStartDay(day: number): boolean {
+  if (day === 0) return true;
+  return matches
+    .filter((match) => match.day < day && match.home !== "" && match.away !== "")
+    .every(hasActualResult);
+}
+
+export function getSimStartDays(): number[] {
+  return timelineDays.map((entry) => entry.day).filter(isSimStartDay);
+}
+
+export function getLatestSimStartDay(): number {
+  const days = getSimStartDays();
+  return days[days.length - 1] ?? 0;
+}
 
 export function getPlayedMatchesUpToDay(day: number): Match[] {
   return matches.filter(

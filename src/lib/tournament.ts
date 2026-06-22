@@ -1,6 +1,14 @@
 import type { Team } from "@/types";
 import { teams } from "@/data/teams";
-import { timelineDays, getPlayedMatchesUpToDay } from "@/data/matches";
+import {
+  timelineDays,
+  getPlayedMatchesUpToDay,
+  isSimStartDay,
+  getSimStartDays,
+  getLatestSimStartDay,
+} from "@/data/matches";
+
+export { isSimStartDay, getSimStartDays, getLatestSimStartDay };
 import { snapshotsByDay } from "@/data/snapshots";
 import { computeGroupStandings } from "@/lib/standings";
 

@@ -23,9 +23,15 @@ type TimelineProps = {
   day: number;
   onDayChange: (day: number) => void;
   isSimulating?: boolean;
+  isSimStartDay?: (day: number) => boolean;
 };
 
-export function Timeline({ day, onDayChange, isSimulating = false }: TimelineProps) {
+export function Timeline({
+  day,
+  onDayChange,
+  isSimulating = false,
+  isSimStartDay,
+}: TimelineProps) {
   const timelineDays = getTimelineDays();
   const scrollRef = useRef<HTMLDivElement>(null);
   const activeIndex = timelineDays.findIndex((entry) => entry.day === day);
@@ -67,10 +73,14 @@ export function Timeline({ day, onDayChange, isSimulating = false }: TimelinePro
         >
           {timelineDays.map((entry, index) => {
             const isActive = entry.day === day;
+            const simStartable = isSimStartDay?.(entry.day) ?? true;
             const stageStyle = stageStyles[entry.stage];
             const distance =
               activeIndex >= 0 ? Math.abs(index - activeIndex) : 0;
             const { scale, blur, opacity } = circleVisuals(distance);
+            const dayLabel = simStartable
+              ? `Matchday ${entry.day}`
+              : `Matchday ${entry.day} (results incomplete — sim unavailable)`;
             return (
               <span
                 key={entry.day}
@@ -80,11 +90,13 @@ export function Timeline({ day, onDayChange, isSimulating = false }: TimelinePro
                   type="button"
                   onClick={() => !isSimulating && onDayChange(entry.day)}
                   disabled={isSimulating}
-                  aria-label={`Matchday ${entry.day}`}
+                  aria-label={dayLabel}
                   aria-current={isActive ? "step" : undefined}
+                  aria-disabled={!simStartable}
+                  title={simStartable ? undefined : "Complete match results required before this day"}
                   className={`shrink-0 rounded-full border-2 outline-none transition-[transform,filter,opacity] duration-200 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-zinc-100 dark:focus-visible:ring-offset-zinc-900 ${stageStyle} ${
-                    isActive ? "" : "hover:opacity-80"
-                  }`}
+                    simStartable ? "border-solid" : "border-dashed opacity-40"
+                  } ${isActive ? "" : "hover:opacity-80"}`}
                   style={{
                     width: CIRCLE_PX,
                     height: CIRCLE_PX,

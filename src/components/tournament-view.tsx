@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   getDayRange,
+  getLatestSimStartDay,
   getSnapshotByDay,
   getTeams,
 } from "@/lib/tournament";
@@ -31,8 +32,9 @@ const isDev = process.env.NODE_ENV === "development";
 
 export function TournamentView() {
   const { min } = getDayRange();
+  const latestSimStartDay = getLatestSimStartDay();
   const teams = getTeams();
-  const [day, setDay] = useState(min);
+  const [day, setDay] = useState(latestSimStartDay);
   const [sessionPhase, setSessionPhase] = useState<SimulationSessionPhase>("idle");
   const [pillReserve, setPillReserve] = useState(0);
   const [pillWidth, setPillWidth] = useState(0);
@@ -110,12 +112,12 @@ export function TournamentView() {
   };
 
   const handleRestart = () => {
-    setDay(min);
+    setDay(latestSimStartDay);
     setSessionPhase("idle");
     setLiveProbabilityState(null);
     setLiveGroupResults([]);
     setLiveKnockoutResults([]);
-    petalVizRef.current?.resetSimulation(min);
+    petalVizRef.current?.resetSimulation(latestSimStartDay);
   };
 
   const handleSimulatingChange = (simulating: boolean) => {

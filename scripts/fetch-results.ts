@@ -1,0 +1,222 @@
+/**
+ * Fetches completed group-stage results from openfootball/worldcup.json.
+ *
+ * Source: https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json
+ * Output: src/data/actual-results.ts
+ */
+
+import { writeFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { teams } from "../src/data/teams";
+
+const SOURCE_URL =
+  "https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json";
+const OUTPUT_PATH = resolve(__dirname, "../src/data/actual-results.ts");
+
+type OpenFootballMatch = {
+  team1?: string;
+  team2?: string;
+  group?: string;
+  score?: { ft?: [number, number] };
+};
+
+type OpenFootballData = {
+  matches?: OpenFootballMatch[];
+};
+
+type Fixture = { home: string; away: string };
+
+const OPENFOOTBALL_NAME_TO_TEAM_ID: Record<string, string> = {
+  Algeria: "alg",
+  Argentina: "arg",
+  Australia: "aus",
+  Austria: "aut",
+  Belgium: "bel",
+  "Bosnia & Herzegovina": "bih",
+  "Bosnia and Herzegovina": "bih",
+  Brazil: "bra",
+  Canada: "can",
+  "Cape Verde": "cpv",
+  Colombia: "col",
+  "Congo DR": "cod",
+  "DR Congo": "cod",
+  Croatia: "cro",
+  Curaçao: "cuw",
+  Curacao: "cuw",
+  "Czech Republic": "cze",
+  Czechia: "cze",
+  Ecuador: "ecu",
+  Egypt: "egy",
+  England: "eng",
+  France: "fra",
+  Germany: "ger",
+  Ghana: "gha",
+  Haiti: "hai",
+  Iran: "irn",
+  "IR Iran": "irn",
+  Iraq: "irq",
+  "Ivory Coast": "civ",
+  Japan: "jpn",
+  Jordan: "jor",
+  Mexico: "mex",
+  Morocco: "mar",
+  Netherlands: "ned",
+  "New Zealand": "nzl",
+  Norway: "nor",
+  Panama: "pan",
+  Paraguay: "par",
+  Portugal: "por",
+  Qatar: "qat",
+  "Saudi Arabia": "ksa",
+  Scotland: "sco",
+  Senegal: "sen",
+  "South Africa": "rsa",
+  "South Korea": "kor",
+  Spain: "esp",
+  Sweden: "swe",
+  Switzerland: "sui",
+  Tunisia: "tun",
+  Turkey: "tur",
+  Türkiye: "tur",
+  USA: "usa",
+  "United States": "usa",
+  Uruguay: "uru",
+  Uzbekistan: "uzb",
+};
+
+function matchKey(home: string, away: string): string {
+  return `${home}-${away}`;
+}
+
+function pairKey(a: string, b: string): string {
+  return [a, b].sort().join("|");
+}
+
+function buildGroupFixtures(): Fixture[] {
+  const fixtures: Fixture[] = [];
+  const groups = [...new Set(teams.map((team) => team.group))].sort();
+
+  groups.forEach((group) => {
+    const groupTeams = teams
+      .filter((team) => team.group === group)
+      .sort((a, b) => a.groupPosition - b.groupPosition)
+      .map((team) => team.id);
+    const [t1, t2, t3, t4] = groupTeams;
+
+    const pairings = [
+      [
+        [t1, t2],
+        [t3, t4],
+      ],
+      [
+        [t1, t3],
+        [t2, t4],
+      ],
+      [
+        [t1, t4],
+        [t2, t3],
+      ],
+    ];
+
+    pairings.forEach((round) => {
+      round.forEach(([home, away]) => {
+        fixtures.push({ home, away });
+      });
+    });
+  });
+
+  return fixtures;
+}
+
+function resolveTeamId(name: string): string | undefined {
+  const direct = OPENFOOTBALL_NAME_TO_TEAM_ID[name];
+  if (direct) return direct;
+
+  const team = teams.find((t) => t.name === name);
+  return team?.id;
+}
+
+async function fetchJson<T>(url: string): Promise<T> {
+  const response = await fetch(url, {
+    headers: { "User-Agent": "fifaworldcup-fetch/1.0" },
+  });
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status} for ${url}`);
+  }
+  return response.json() as Promise<T>;
+}
+
+async function main() {
+  console.log("Fetching results from openfootball...");
+  const data = await fetchJson<OpenFootballData>(SOURCE_URL);
+
+  const fixtures = buildGroupFixtures();
+  const fixtureByPair = new Map<string, Fixture>();
+  for (const fixture of fixtures) {
+    fixtureByPair.set(pairKey(fixture.home, fixture.away), fixture);
+  }
+
+  const results: Record<string, { homeScore: number; awayScore: number }> = {};
+  const unmatched: string[] = [];
+
+  const groupMatches = (data.matches ?? []).filter(
+    (m) => m.group?.startsWith("Group ") && m.score?.ft,
+  );
+
+  for (const entry of groupMatches) {
+    const team1 = entry.team1;
+    const team2 = entry.team2;
+    const ft = entry.score?.ft;
+    if (!team1 || !team2 || !ft) continue;
+
+    const id1 = resolveTeamId(team1);
+    const id2 = resolveTeamId(team2);
+    if (!id1 || !id2) {
+      unmatched.push(`${team1} vs ${team2} (unknown team name)`);
+      continue;
+    }
+
+    const fixture = fixtureByPair.get(pairKey(id1, id2));
+    if (!fixture) {
+      unmatched.push(`${team1} vs ${team2} (not in app schedule)`);
+      continue;
+    }
+
+    const [s1, s2] = ft;
+    const key = matchKey(fixture.home, fixture.away);
+    const homeScore = fixture.home === id1 ? s1 : s2;
+    const awayScore = fixture.home === id1 ? s2 : s1;
+    results[key] = { homeScore, awayScore };
+  }
+
+  const missing = fixtures
+    .filter((f) => !results[matchKey(f.home, f.away)])
+    .map((f) => matchKey(f.home, f.away));
+
+  const fetchedAt = new Date().toISOString();
+  const file = `// Auto-generated by scripts/fetch-results.ts — do not edit manually.
+// Source: ${SOURCE_URL}
+// Fetched at: ${fetchedAt}
+
+export const ACTUAL_RESULTS_FETCHED_AT = ${JSON.stringify(fetchedAt)};
+
+export const ACTUAL_RESULTS: Record<string, { homeScore: number; awayScore: number }> = ${JSON.stringify(results, null, 2)};
+`;
+
+  writeFileSync(OUTPUT_PATH, file, "utf8");
+
+  console.log(`Wrote ${Object.keys(results).length} results to ${OUTPUT_PATH}`);
+  if (unmatched.length > 0) {
+    console.warn(`Unmatched openfootball entries (${unmatched.length}):`);
+    unmatched.forEach((line) => console.warn(`  - ${line}`));
+  }
+  if (missing.length > 0) {
+    console.log(`Scheduled fixtures without results yet (${missing.length}):`);
+    missing.forEach((key) => console.log(`  - ${key}`));
+  }
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

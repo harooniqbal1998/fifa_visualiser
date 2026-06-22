@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "build:snapshots": "npx tsx src/data/build-snapshots.ts",
-    "fetch:opening-odds": "npx tsx scripts/fetch-opening-odds.ts"
+    "fetch:opening-odds": "npx tsx scripts/fetch-opening-odds.ts",
+    "fetch:results": "npx tsx scripts/fetch-results.ts",
+    "update:tournament": "npm run fetch:results && npm run build:snapshots"
   },
   "dependencies": {
     "d3": "^7.9.0",
