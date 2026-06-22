@@ -24,7 +24,7 @@ function getWinner(results: SimMatchResult[], matchId: string): string | undefin
   return results.find((r) => r.matchId === matchId)?.winner;
 }
 
-function resolveNodeParticipants(
+export function resolveNodeParticipants(
   node: BracketNode,
   results: SimMatchResult[],
   groupResults: SimMatchResult[],
@@ -39,14 +39,18 @@ function resolveNodeParticipants(
   return { home, away };
 }
 
-function collectKnockoutNodes(node: BracketNode, acc: BracketNode[] = []): BracketNode[] {
+export function collectKnockoutNodes(node: BracketNode, acc: BracketNode[] = []): BracketNode[] {
   acc.push(node);
   if (node.homeSource) collectKnockoutNodes(node.homeSource, acc);
   if (node.awaySource) collectKnockoutNodes(node.awaySource, acc);
   return acc;
 }
 
-const ALL_KNOCKOUT_NODES = collectKnockoutNodes(KNOCKOUT_TREE);
+export const ALL_KNOCKOUT_NODES = collectKnockoutNodes(KNOCKOUT_TREE);
+
+export function getKnockoutMatchMeta(matchId: string) {
+  return knockoutMetaById.get(matchId);
+}
 
 export function resolveKnockoutMatchesForDay(
   day: number,
