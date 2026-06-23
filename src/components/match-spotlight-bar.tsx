@@ -19,7 +19,7 @@ function TeamFlag({ isoCode }: { isoCode: string }) {
     <img
       src={getFlagUrl(isoCode)}
       alt=""
-      className="h-5 w-5 shrink-0 rounded-full object-cover ring-1 ring-zinc-200 dark:ring-zinc-600"
+      className="h-5 w-5 shrink-0 rounded-full object-cover ring-1 ring-light-gray dark:ring-light-gray/30"
     />
   );
 }
@@ -37,25 +37,25 @@ function MatchupRow({
   const awayWon = match.winner === match.away;
 
   return (
-    <div className="flex items-center justify-center gap-3 px-2 text-xs whitespace-nowrap">
+    <div className="flex items-center justify-center gap-3 text-xs whitespace-nowrap">
       <div
         className={`flex min-w-[4.5rem] items-center justify-end gap-1.5 ${homeWon ? "opacity-100" : "opacity-45"}`}
       >
         <TeamFlag isoCode={homeTeam?.isoCode ?? ""} />
         <span
-          className={`font-mono tabular-nums ${homeWon ? "font-semibold text-amber-600 dark:text-amber-400" : "text-zinc-600 dark:text-zinc-400"}`}
+          className={`font-mono tabular-nums ${homeWon ? "font-semibold text-average-green" : "text-dark-heather/70 dark:text-light-gray/55"}`}
         >
           {Math.round(match.homeElo)}
         </span>
       </div>
-      <span className="shrink-0 text-[10px] font-medium uppercase tracking-wide text-zinc-400">
+      <span className="shrink-0 text-[10px] font-medium uppercase tracking-wide text-dark-heather/55 dark:text-light-gray/55">
         vs
       </span>
       <div
         className={`flex min-w-[4.5rem] items-center gap-1.5 ${awayWon ? "opacity-100" : "opacity-45"}`}
       >
         <span
-          className={`font-mono tabular-nums ${awayWon ? "font-semibold text-amber-600 dark:text-amber-400" : "text-zinc-600 dark:text-zinc-400"}`}
+          className={`font-mono tabular-nums ${awayWon ? "font-semibold text-average-green" : "text-dark-heather/70 dark:text-light-gray/55"}`}
         >
           {Math.round(match.awayElo)}
         </span>
@@ -123,11 +123,14 @@ export function MatchSpotlightBar({
       : "translate-y-full opacity-0";
 
   return (
-    <div className="flex w-full flex-col items-center rounded-xl border border-zinc-200/80 bg-white/85 px-4 py-2.5 shadow-sm backdrop-blur dark:border-zinc-700/80 dark:bg-zinc-900/85">
-      <div className="relative h-6 w-full overflow-hidden">
+    <div className="w-max rounded-xl border border-light-gray/80 bg-background/85 px-3 py-1 shadow-sm backdrop-blur dark:border-light-gray/25 dark:bg-dark-heather/85">
+      <div className="relative grid overflow-hidden">
+        <div className="invisible col-start-1 row-start-1" aria-hidden>
+          <MatchupRow match={currentMatch} teamsById={teamsById} />
+        </div>
         <div
           key={currentMatch.matchId}
-          className={`absolute inset-x-0 top-0 transition-all ease-out ${slideClass}`}
+          className={`col-start-1 row-start-1 transition-all ease-out ${slideClass}`}
           style={{ transitionDuration: `${TRANSITION_MS}ms` }}
         >
           <MatchupRow match={currentMatch} teamsById={teamsById} />

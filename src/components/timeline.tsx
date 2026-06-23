@@ -28,12 +28,12 @@ const CIRCLE_PX = 14;
 const SCROLL_MS = 200;
 
 const stageStyles: Record<MatchStage, string> = {
-  group: "border-sky-500 bg-sky-500/20",
-  "round-of-32": "border-violet-500 bg-violet-500/20",
-  "round-of-16": "border-fuchsia-500 bg-fuchsia-500/20",
-  "quarter-final": "border-amber-500 bg-amber-500/20",
-  "semi-final": "border-orange-500 bg-orange-500/20",
-  final: "border-rose-500 bg-rose-500/20",
+  group: "border-hermes bg-hermes/20",
+  "round-of-32": "border-average-green bg-average-green/20",
+  "round-of-16": "border-hermes/70 bg-hermes/15",
+  "quarter-final": "border-average-green/70 bg-average-green/15",
+  "semi-final": "border-torch-red/70 bg-torch-red/15",
+  final: "border-torch-red bg-torch-red/20",
 };
 
 function getStageForDay(day: number): MatchStage {
@@ -110,7 +110,7 @@ function PreTournamentLabel({ label, animate }: { label: TimelineLabel; animate:
 
 function getCircleStyle(day: number, stage: MatchStage): string {
   if (day === PRE_TOURNAMENT_DAY) {
-    return "border-zinc-400 bg-zinc-400/20 dark:border-zinc-500 dark:bg-zinc-500/20";
+    return "border-light-gray bg-light-gray/20 dark:border-light-gray/40 dark:bg-light-gray/15";
   }
   return stageStyles[stage];
 }
@@ -166,12 +166,17 @@ type TimelineDayPickerProps = {
   day: number;
   onDayChange: (day: number) => void;
   isSimulating?: boolean;
+  triggerClassName?: string;
 };
+
+const TRIGGER_BASE_CLASS =
+  "relative z-10 inline-flex h-7 shrink-0 cursor-pointer items-center text-xs font-medium leading-none text-inherit outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/50 disabled:cursor-not-allowed disabled:opacity-70 dark:hover:bg-black/10 dark:focus-visible:ring-hermes/50";
 
 export function TimelineDayPicker({
   day,
   onDayChange,
   isSimulating = false,
+  triggerClassName = "rounded-full px-1.5",
 }: TimelineDayPickerProps) {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -309,7 +314,7 @@ export function TimelineDayPicker({
         ref={panelRef}
         role="listbox"
         aria-label="Start from"
-        className={`fixed z-[100] min-w-[10rem] rounded-lg border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-600 dark:bg-zinc-800 ${
+        className={`fixed z-[100] min-w-[10rem] rounded-lg border border-light-gray bg-background py-1 shadow-lg dark:border-light-gray/25 dark:bg-dark-heather ${
           position ? "visible" : "invisible"
         }`}
         style={
@@ -328,8 +333,8 @@ export function TimelineDayPicker({
             ) === timelineLabelKey(formatTimelineStartLabel(day, stage))}
             className={`flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs leading-none whitespace-nowrap ${
               index === highlightIndex
-                ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-700 dark:text-zinc-100"
-                : "text-zinc-700 hover:bg-zinc-50 dark:text-zinc-200 dark:hover:bg-zinc-700/60"
+                ? "bg-light-gray/30 text-dark-heather dark:bg-light-gray/15 dark:text-light-gray"
+                : "text-dark-heather hover:bg-light-gray/20 dark:text-light-gray dark:hover:bg-light-gray/10"
             }`}
             onMouseEnter={() => setHighlightIndex(index)}
             onClick={() => handleSelect(option.day)}
@@ -352,7 +357,7 @@ export function TimelineDayPicker({
         disabled={isSimulating}
         onClick={handleTriggerClick}
         onKeyDown={handleTriggerKeyDown}
-        className="relative z-10 inline-flex h-7 shrink-0 cursor-pointer items-center rounded-full px-1.5 text-xs font-medium leading-none text-inherit outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/50 disabled:cursor-not-allowed disabled:opacity-70 dark:hover:bg-black/10 dark:focus-visible:ring-zinc-400"
+        className={`${TRIGGER_BASE_CLASS} ${triggerClassName}`}
       >
         <TimelineInlineDisplay day={day} animate={isSimulating} />
       </button>

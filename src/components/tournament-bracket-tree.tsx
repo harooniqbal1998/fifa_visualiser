@@ -4,6 +4,7 @@ import type { MatchStage } from "@/types";
 import type { Team } from "@/types";
 import { BracketSlotPopover } from "@/components/bracket-slot-popover";
 import { getFlagUrl } from "@/lib/flags";
+import { KNOCKOUT_LABELS } from "@/lib/match-context-label";
 import type { CollisionEvent } from "@/lib/simulation/types";
 import {
   STAGE_ORDER,
@@ -11,14 +12,6 @@ import {
   type SlotCandidate,
   type TournamentStructureView,
 } from "@/lib/tournament-structure";
-
-const STAGE_LABELS: Record<Exclude<MatchStage, "group">, string> = {
-  "round-of-32": "R32",
-  "round-of-16": "R16",
-  "quarter-final": "QF",
-  "semi-final": "SF",
-  final: "Final",
-};
 
 type TournamentBracketTreeProps = {
   structure: TournamentStructureView;
@@ -31,7 +24,7 @@ function TeamFlag({ isoCode, className = "h-3.5 w-3.5" }: { isoCode: string; cla
     <img
       src={getFlagUrl(isoCode)}
       alt=""
-      className={`shrink-0 rounded-full object-cover ring-1 ring-zinc-200 dark:ring-zinc-600 ${className}`}
+      className={`shrink-0 rounded-full object-cover ring-1 ring-light-gray dark:ring-light-gray/30 ${className}`}
     />
   );
 }
@@ -60,7 +53,7 @@ function StackedFlagAvatars({
             >
               <TeamFlag
                 isoCode={team?.isoCode ?? ""}
-                className="h-3.5 w-3.5 ring-white dark:ring-zinc-900"
+                className="h-3.5 w-3.5 ring-white dark:ring-dark-heather"
               />
             </div>
           );
@@ -91,12 +84,12 @@ function BracketTeamRow({
     <div
       className={`flex min-h-[1.25rem] items-center gap-1 px-1.5 py-0.5 text-[10px] leading-tight ${
         isWinner
-          ? "font-semibold text-zinc-900 dark:text-zinc-50"
+          ? "font-semibold text-dark-heather dark:text-light-gray"
           : isLoser
-            ? "text-zinc-400 line-through dark:text-zinc-500"
+            ? "text-light-gray/60 line-through dark:text-light-gray/45"
             : isPlaceholder
-              ? "text-zinc-400 dark:text-zinc-500"
-              : "text-zinc-700 dark:text-zinc-200"
+              ? "text-dark-heather/55 dark:text-light-gray/55"
+              : "text-dark-heather dark:text-light-gray"
       }`}
     >
       {showStack ? (
@@ -131,7 +124,7 @@ function BracketMatchCard({
   const awayWon = played && winnerId === awayId;
 
   return (
-    <div className="w-[7.5rem] shrink-0 overflow-hidden border border-zinc-200 dark:border-zinc-700">
+    <div className="w-full overflow-hidden border border-light-gray dark:border-light-gray/25">
       <BracketTeamRow
         participant={match.home}
         candidates={active ? undefined : match.homeCandidates}
@@ -139,7 +132,7 @@ function BracketMatchCard({
         isWinner={homeWon}
         isLoser={awayWon}
       />
-      <div className="border-t border-zinc-200 dark:border-zinc-700" />
+      <div className="border-t border-light-gray dark:border-light-gray/25" />
       <BracketTeamRow
         participant={match.away}
         candidates={active ? undefined : match.awayCandidates}
@@ -148,7 +141,7 @@ function BracketMatchCard({
         isLoser={homeWon}
       />
       {played && match.homeScore !== undefined && match.awayScore !== undefined ? (
-        <div className="border-t border-zinc-200 px-1.5 py-0.5 text-center font-mono text-[9px] text-zinc-400 dark:border-zinc-700">
+        <div className="border-t border-light-gray px-1.5 py-0.5 text-center font-mono text-[9px] text-dark-heather/55 dark:border-light-gray/25 dark:text-light-gray/55">
           {match.homeScore}–{match.awayScore}
         </div>
       ) : null}
@@ -170,9 +163,9 @@ function StageColumn({
   if (stage === "group") return null;
 
   return (
-    <div className="flex shrink-0 flex-col">
-      <div className="mb-2 text-center text-[10px] font-semibold uppercase tracking-wide text-zinc-500">
-        {STAGE_LABELS[stage]}
+    <div className="flex min-w-0 flex-1 flex-col">
+      <div className="mb-2 text-center text-[9px] font-semibold leading-tight text-dark-heather/55 dark:text-light-gray/55">
+        {KNOCKOUT_LABELS[stage]}
       </div>
       <div className="flex flex-1 flex-col justify-around gap-3">
         {matches.map((match) => (
@@ -202,17 +195,17 @@ export function TournamentBracketTree({
   );
 
   return (
-    <div className="overflow-x-auto pb-2">
-      <div className="flex min-w-max items-stretch gap-4 px-1">
+    <div className="pb-2">
+      <div className="flex w-full items-stretch gap-2 px-1">
         {STAGE_ORDER.map((stage, stageIndex) => {
           const stageMatches = matchesByStage[stage];
           if (!stageMatches?.length) return null;
 
           return (
-            <div key={stage} className="flex items-stretch gap-4">
+            <div key={stage} className="flex min-w-0 flex-1 items-stretch">
               {stageIndex > 0 ? (
                 <div
-                  className="w-3 shrink-0 self-stretch border-l border-dashed border-zinc-300 dark:border-zinc-600"
+                  className="mr-2 w-px shrink-0 self-stretch border-l border-dashed border-light-gray dark:border-light-gray/30"
                   aria-hidden
                 />
               ) : null}

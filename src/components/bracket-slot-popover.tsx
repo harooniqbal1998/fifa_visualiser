@@ -31,7 +31,7 @@ function TeamFlag({ isoCode }: { isoCode: string }) {
     <img
       src={getFlagUrl(isoCode)}
       alt=""
-      className="h-3 w-3 shrink-0 rounded-full object-cover ring-1 ring-zinc-200 dark:ring-zinc-600"
+      className="h-3 w-3 shrink-0 rounded-full object-cover ring-1 ring-light-gray dark:ring-light-gray/30"
     />
   );
 }
@@ -143,7 +143,7 @@ export function BracketSlotPopover({
       <div
         ref={panelRef}
         role="tooltip"
-        className={`fixed z-[100] min-w-max rounded border border-zinc-200 bg-white px-2 py-1 text-[10px] leading-snug text-zinc-700 shadow-md dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 ${
+        className={`fixed z-[100] min-w-max rounded border border-light-gray bg-background px-2 py-1 text-[10px] leading-snug text-dark-heather shadow-md dark:border-light-gray/25 dark:bg-dark-heather dark:text-light-gray ${
           position ? "visible" : "invisible"
         }`}
         style={
@@ -161,7 +161,7 @@ export function BracketSlotPopover({
             >
               <TeamFlag isoCode={team?.isoCode ?? ""} />
               <span>{team?.name ?? candidate.teamId}</span>
-              <span className="text-zinc-500 dark:text-zinc-400">
+              <span className="text-dark-heather/55 dark:text-light-gray/55">
                 {(candidate.probability * 100).toFixed(1)}%
               </span>
             </div>
@@ -176,7 +176,7 @@ export function BracketSlotPopover({
         ref={triggerRef}
         tabIndex={0}
         aria-label={ariaLabel}
-        className="inline-flex shrink-0 cursor-default outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 dark:focus-visible:ring-zinc-500"
+        className="inline-flex shrink-0 cursor-default outline-none focus-visible:ring-2 focus-visible:ring-hermes/50"
         onPointerEnter={handlePointerEnter}
         onPointerLeave={handlePointerLeave}
         onClick={handleClick}

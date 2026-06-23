@@ -1,3 +1,4 @@
+import { brandColors, withAlpha } from "@/lib/brand-colors";
 import type { PetalLayoutConfig } from "@/components/viz/petal/petal-config";
 import type { DisplayState } from "@/components/viz/petal/canvas/display-state";
 import type { ActiveMatch } from "@/components/viz/petal/canvas/match-controller";
@@ -50,7 +51,7 @@ export function drawConnectors(
     const away = displayState.teams.get(match.away);
     if (!home || !away) continue;
 
-    ctx.strokeStyle = "rgba(113, 113, 122, 0.5)";
+    ctx.strokeStyle = withAlpha(brandColors.lightGray, 0.5);
     ctx.globalAlpha = 0.7;
     ctx.beginPath();
     ctx.moveTo(home.x, home.y);

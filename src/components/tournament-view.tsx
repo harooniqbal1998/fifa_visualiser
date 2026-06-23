@@ -11,10 +11,6 @@ import { MatchSpotlightBar } from "@/components/match-spotlight-bar";
 import { DEFAULT_PETAL_CONFIG } from "@/components/viz/petal/petal-config";
 import { teamsById } from "@/data/teams";
 import {
-  DebugToggleButton,
-  ProbabilityDebugPanel,
-} from "@/components/probability-debug-panel";
-import {
   PetalSimulationVisualization,
   type PetalSimulationVisualizationRef,
   type SimulationSessionPhase,
@@ -28,14 +24,11 @@ import { getScriptedResultsUpToDay } from "@/lib/simulation/advancement";
 import { buildTournamentStructureView } from "@/lib/tournament-structure";
 import { TournamentStructureDrawer } from "@/components/tournament-structure-drawer";
 
-const isDev = process.env.NODE_ENV === "development";
-
 export function TournamentView() {
   const { min } = getDayRange();
   const teams = getTeams();
   const [day, setDay] = useState(min);
   const [sessionPhase, setSessionPhase] = useState<SimulationSessionPhase>("idle");
-  const [debugOpen, setDebugOpen] = useState(false);
   const [liveProbabilityState, setLiveProbabilityState] = useState<ProbabilityState | null>(
     null,
   );
@@ -45,38 +38,6 @@ export function TournamentView() {
   const [structureOpen, setStructureOpen] = useState(false);
   const snapshot = getSnapshotByDay(day) ?? getSnapshotByDay(min)!;
   const petalVizRef = useRef<PetalSimulationVisualizationRef>(null);
-
-  const idleReplay = useMemo(() => {
-    if (!isDev || !debugOpen || sessionPhase !== "idle") return null;
-    const rng = createSeededRng(42 + day);
-    return replayTournamentToDay(day, rng, DEFAULT_PROBABILITY_CONFIG);
-  }, [debugOpen, sessionPhase, day]);
-
-  const debugProbabilityState = isDev
-    ? sessionPhase === "idle"
-      ? (idleReplay?.probability ?? null)
-      : liveProbabilityState
-    : null;
-
-  const debugGroupResults = isDev
-    ? sessionPhase === "idle"
-      ? (idleReplay?.groupResults ??
-        getScriptedResultsUpToDay(day).filter((r) => r.stage === "group"))
-      : liveGroupResults
-    : [];
-
-  const debugKnockoutResults = isDev
-    ? sessionPhase === "idle"
-      ? (idleReplay?.knockoutResults ??
-        getScriptedResultsUpToDay(day).filter((r) => r.stage !== "group"))
-      : liveKnockoutResults
-    : [];
-
-  const debugMethod: "opening" | "bracket_analytical" = isDev
-    ? day === 0 && debugGroupResults.length === 0
-      ? "opening"
-      : "bracket_analytical"
-    : "opening";
 
   const structureGroupResults =
     sessionPhase === "idle"
@@ -127,6 +88,19 @@ export function TournamentView() {
     petalVizRef.current?.resetSimulation(day);
   };
 
+  const handleDayChange = (newDay: number) => {
+    if (sessionPhase !== "running") {
+      setSessionPhase("idle");
+      setLiveProbabilityState(null);
+      setLiveGroupResults([]);
+      setLiveKnockoutResults([]);
+      setDay(newDay);
+      petalVizRef.current?.resetSimulation(newDay);
+      return;
+    }
+    setDay(newDay);
+  };
+
   const handleSimulatingChange = (simulating: boolean) => {
     if (simulating) {
       setSessionPhase("running");
@@ -148,7 +122,7 @@ export function TournamentView() {
             sessionPhase={sessionPhase}
             onSimulatingChange={handleSimulatingChange}
             onSessionComplete={handleSessionComplete}
-            onDayChange={setDay}
+            onDayChange={handleDayChange}
             onProbabilityStateUpdate={({ state, groupResults, knockoutResults }) => {
               setLiveProbabilityState(state);
               setLiveGroupResults(groupResults);
@@ -156,22 +130,6 @@ export function TournamentView() {
             }}
             onActiveMatchesChange={setActiveMatches}
           />
-          {isDev ? (
-            <>
-              <div className="absolute right-4 top-4 z-40">
-                <DebugToggleButton open={debugOpen} onToggle={() => setDebugOpen((v) => !v)} />
-              </div>
-              <ProbabilityDebugPanel
-                open={debugOpen}
-                onClose={() => setDebugOpen(false)}
-                day={day}
-                probabilityState={debugProbabilityState}
-                groupResults={debugGroupResults}
-                knockoutResults={debugKnockoutResults}
-                method={debugMethod}
-              />
-            </>
-          ) : null}
         </div>
         <TournamentStructureDrawer
           open={structureOpen}
@@ -193,7 +151,7 @@ export function TournamentView() {
           <div className="pointer-events-auto w-max max-w-[40vw]">
             <SimulationPill
               day={day}
-              onDayChange={setDay}
+              onDayChange={handleDayChange}
               sessionPhase={sessionPhase}
               onPlay={handlePlay}
               onStop={handleStop}

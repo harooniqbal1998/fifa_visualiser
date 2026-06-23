@@ -231,7 +231,7 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
       isSimulatingRef.current = props.isSimulating;
       freezeLayoutRef.current = props.freezeLayout;
       displayStateRef.current.transitionDurationMs = props.config.rankTransitionDurationMs;
-      if (!props.isSimulating && !props.freezeLayout && props.eliminated) {
+      if (!props.isSimulating && props.eliminated) {
         eliminatedRef.current = new Set(props.eliminated);
       }
       if (props.showGuideRings !== undefined) {

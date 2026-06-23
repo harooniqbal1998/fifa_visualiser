@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { forwardRef } from "react";
 import { TimelineDayPicker } from "@/components/timeline";
 import type { SimulationSessionPhase } from "@/components/viz/petal/petal-simulation-visualization";
@@ -41,11 +42,21 @@ function RestartIcon() {
   );
 }
 
-function BracketIcon() {
+function BracketIcon({ className = "" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-3 w-3" aria-hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={`h-3 w-3 ${className}`} aria-hidden>
       <path d="M4 6h4v4H4zM16 6h4v4h-4zM4 14h4v4H4zM16 14h4v4h-4z" strokeLinejoin="round" />
       <path d="M8 8h3M13 8h3M8 16h3M13 16h3" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function InfoIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-3 w-3 text-dark-heather/50 dark:text-light-gray/50" aria-hidden>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 11v5" strokeLinecap="round" />
+      <circle cx="12" cy="8" r="0.75" fill="currentColor" stroke="none" />
     </svg>
   );
 }
@@ -74,7 +85,7 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
     return (
       <div
         ref={ref}
-        className="flex w-full flex-row items-center gap-2 rounded-full border border-zinc-200 bg-white/90 px-2.5 py-1.5 shadow-lg backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90"
+        className="flex w-full flex-row items-center gap-2 rounded-full border border-light-gray bg-background/90 px-2.5 py-1.5 shadow-lg backdrop-blur dark:border-light-gray/25 dark:bg-dark-heather/90"
       >
         {isRunning ? (
           <>
@@ -83,7 +94,7 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
               title="Stop simulation"
               aria-label="Stop simulation"
               onClick={onStop}
-              className="relative z-0 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-zinc-300 hover:bg-zinc-50 dark:border-zinc-600 dark:hover:bg-zinc-800"
+              className="relative z-0 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-light-gray hover:bg-light-gray/20 dark:border-light-gray/30 dark:hover:bg-light-gray/10"
             >
               <StopIcon />
             </button>
@@ -94,19 +105,23 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
             />
           </>
         ) : (
-          <div className="relative flex h-7 shrink-0 items-center rounded-full bg-zinc-900 pr-1 text-white dark:bg-zinc-100 dark:text-zinc-900">
+          <div className="relative flex h-7 shrink-0 items-center rounded-full bg-hermes text-white dark:bg-light-gray dark:text-dark-heather">
             <button
               type="button"
               title={isCompleted ? "Restart simulation" : playTitle}
               aria-label={isCompleted ? "Restart simulation" : playTitle}
               onClick={isCompleted ? onRestart : onPlay}
               disabled={!isCompleted && !canPlay}
-              className="relative z-0 flex h-7 shrink-0 items-center gap-1.5 rounded-l-full pl-2.5 text-xs font-medium hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-zinc-200"
+              className="relative z-0 flex h-7 shrink-0 items-center gap-1.5 rounded-l-full pl-2.5 text-xs font-medium hover:bg-hermes/90 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-light-gray/80"
             >
               {isCompleted ? <RestartIcon /> : <PlayIcon />}
               {isCompleted ? "Restart from" : "Play from"}
             </button>
-            <TimelineDayPicker day={day} onDayChange={onDayChange} />
+            <TimelineDayPicker
+              day={day}
+              onDayChange={onDayChange}
+              triggerClassName="rounded-r-full pl-1.5 pr-2.5"
+            />
           </div>
         )}
 
@@ -117,15 +132,26 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
             aria-label="Tournament structure"
             aria-expanded={tournamentStructureOpen}
             onClick={onTournamentStructureClick}
-            className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border hover:bg-zinc-50 dark:hover:bg-zinc-800 ${
-              tournamentStructureOpen
-                ? "border-zinc-900 bg-zinc-100 dark:border-zinc-100 dark:bg-zinc-800"
-                : "border-zinc-300 dark:border-zinc-600"
-            }`}
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-light-gray hover:bg-light-gray/20 dark:border-light-gray/30 dark:hover:bg-light-gray/10"
           >
-            <BracketIcon />
+            <BracketIcon
+              className={
+                tournamentStructureOpen
+                  ? "text-dark-heather/70 dark:text-light-gray/70"
+                  : "text-dark-heather/50 dark:text-light-gray/50"
+              }
+            />
           </button>
         ) : null}
+
+        <Link
+          href="/how-it-works"
+          title="How it works"
+          aria-label="How it works"
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-light-gray hover:bg-light-gray/20 dark:border-light-gray/30 dark:hover:bg-light-gray/10"
+        >
+          <InfoIcon />
+        </Link>
       </div>
     );
   },

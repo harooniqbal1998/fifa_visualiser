@@ -103,7 +103,7 @@ export const PetalCanvas = forwardRef<PetalCanvasRef, PetalCanvasProps>(
       if (wasFrozen && !freezeLayout) {
         runtimeRef.current.syncLayoutTargets();
       } else if (!isSimulating && !freezeLayout) {
-        runtimeRef.current.syncLayoutTargets();
+        runtimeRef.current.resetLayout();
       }
 
       prevFreezeLayoutRef.current = freezeLayout;

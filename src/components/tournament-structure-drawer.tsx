@@ -23,35 +23,27 @@ export function TournamentStructureDrawer({
 }: TournamentStructureDrawerProps) {
   return (
     <aside
-      className={`flex h-full min-h-0 shrink-0 flex-col overflow-hidden border-l border-zinc-200 bg-white transition-[width,flex] duration-200 ease-out dark:border-zinc-700 dark:bg-zinc-900 ${
+      className={`flex h-full min-h-0 shrink-0 flex-col overflow-hidden border-l border-light-gray bg-background transition-[width,flex] duration-200 ease-out dark:border-light-gray/25 dark:bg-dark-heather ${
         open ? "min-w-0 flex-1" : "w-0 border-l-0"
       }`}
       aria-hidden={!open}
       aria-label="Tournament structure"
       {...(!open ? { inert: true } : {})}
     >
-      <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
-        <section className="shrink-0 border-b border-zinc-200 px-4 py-2 dark:border-zinc-700">
-          <h3 className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-zinc-400">
-            Groups
-          </h3>
+      <div className="min-h-0 flex-1 snap-y snap-mandatory overflow-y-auto [scrollbar-width:thin]">
+        <section className="shrink-0 snap-start snap-always px-4 py-3">
           <TournamentGroupsPanel
             structure={structure}
             teamsById={teamsById}
             day={day}
           />
         </section>
-        <section className="flex min-h-0 flex-1 flex-col px-4 py-3">
-          <h3 className="mb-2 shrink-0 text-xs font-semibold uppercase tracking-wide text-zinc-500">
-            Knockout
-          </h3>
-          <div className="min-h-0 flex-1 overflow-auto">
-            <TournamentBracketTree
-              structure={structure}
-              teamsById={teamsById}
-              activeMatches={activeMatches}
-            />
-          </div>
+        <section className="min-h-full shrink-0 snap-start snap-always px-4 pb-3 pt-1">
+          <TournamentBracketTree
+            structure={structure}
+            teamsById={teamsById}
+            activeMatches={activeMatches}
+          />
         </section>
       </div>
     </aside>

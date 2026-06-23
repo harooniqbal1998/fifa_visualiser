@@ -1,7 +1,7 @@
 import type { MatchStage } from "@/types";
 import type { CollisionEvent } from "@/lib/simulation/types";
 
-const KNOCKOUT_LABELS: Record<Exclude<MatchStage, "group">, string> = {
+export const KNOCKOUT_LABELS: Record<Exclude<MatchStage, "group">, string> = {
   "round-of-32": "Round of 32",
   "round-of-16": "Round of 16",
   "quarter-final": "Quarter-final",

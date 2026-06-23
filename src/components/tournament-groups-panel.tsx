@@ -17,7 +17,7 @@ function TeamFlag({ isoCode }: { isoCode: string }) {
     <img
       src={getFlagUrl(isoCode)}
       alt=""
-      className="h-4 w-4 shrink-0 rounded-full object-cover ring-1 ring-zinc-200 dark:ring-zinc-600"
+      className="h-4 w-4 shrink-0 rounded-full object-cover ring-1 ring-light-gray dark:ring-light-gray/30"
     />
   );
 }
@@ -49,8 +49,8 @@ function GroupCard({
   showAdvancement: boolean;
 }) {
   return (
-    <div className="w-1/3 shrink-0 border-r border-zinc-200 p-2 last:border-r-0 dark:border-zinc-700">
-      <div className="mb-1.5 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+    <div className="min-w-[8rem] shrink-0 rounded-lg border border-light-gray p-2 dark:border-light-gray/25">
+      <div className="mb-1 text-[10px] font-semibold text-dark-heather/55 dark:text-light-gray/55">
         Group {groupId}
       </div>
       <div className="space-y-1">
@@ -67,17 +67,17 @@ function GroupCard({
                 eliminated
                   ? "opacity-40"
                   : advancing
-                    ? "rounded bg-emerald-500/10 px-0.5"
+                    ? "rounded bg-average-green/10 px-0.5"
                     : ""
               }`}
             >
-              <span className="w-3 shrink-0 text-zinc-400">{index + 1}</span>
+              <span className="w-3 shrink-0 text-dark-heather/55 dark:text-light-gray/55">{index + 1}</span>
               <TeamFlag isoCode={team?.isoCode ?? ""} />
-              <span className="min-w-0 flex-1 truncate text-zinc-800 dark:text-zinc-100">
+              <span className="min-w-0 flex-1 truncate text-dark-heather dark:text-light-gray">
                 {team?.name ?? row.teamId}
               </span>
-              <span className="shrink-0 font-mono text-zinc-500">{row.points}</span>
-              <span className="w-6 shrink-0 text-right font-mono text-zinc-400">
+              <span className="shrink-0 font-mono text-dark-heather/55 dark:text-light-gray/55">{row.points}</span>
+              <span className="w-6 shrink-0 text-right font-mono text-dark-heather/55 dark:text-light-gray/55">
                 {row.gd > 0 ? `+${row.gd}` : row.gd}
               </span>
             </div>
@@ -96,7 +96,7 @@ export function TournamentGroupsPanel({
   const showAdvancement = day >= 12 && structure.advancingThirdGroups.length > 0;
 
   return (
-    <div className="flex flex-row overflow-x-auto border-t border-zinc-200 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden dark:border-zinc-700">
+    <div className="flex flex-row gap-2 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
       {groups.map((group) => {
         const rows = structure.standings[group.id] ?? [];
         return (

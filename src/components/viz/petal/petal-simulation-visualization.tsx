@@ -4,6 +4,7 @@ import {
   forwardRef,
   useCallback,
   useImperativeHandle,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -98,6 +99,7 @@ export const PetalSimulationVisualization = forwardRef<
   const groupResultsRef = useRef<SimMatchResult[]>([]);
   const knockoutResultsRef = useRef<SimMatchResult[]>([]);
   const probabilityStateRef = useRef<ProbabilityState | null>(null);
+  const prevSnapshotDayRef = useRef(snapshot.day);
 
   const [liveProbabilities, setLiveProbabilities] = useState<Record<string, number> | null>(
     null,
@@ -233,6 +235,16 @@ export const PetalSimulationVisualization = forwardRef<
     },
     [snapshot, computeLayout, clearActiveMatches],
   );
+
+  useLayoutEffect(() => {
+    if (sessionPhase === "running") {
+      prevSnapshotDayRef.current = snapshot.day;
+      return;
+    }
+    if (prevSnapshotDayRef.current === snapshot.day) return;
+    prevSnapshotDayRef.current = snapshot.day;
+    resetSimulation(snapshot.day);
+  }, [snapshot.day, sessionPhase, resetSimulation]);
 
   const startSimulation = useCallback(async () => {
     if (sessionPhase === "running") return;
