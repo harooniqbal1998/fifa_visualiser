@@ -11,6 +11,9 @@ export function resolveR32Match(
   groupResults: SimMatchResult[],
   advancingThirdGroups?: string[],
 ): { home?: string; away?: string } {
+  if (groupResults.length === 0) {
+    return {};
+  }
   const standings = buildStandingsFromGroupResults(groupResults);
   const thirdGroups =
     advancingThirdGroups ??

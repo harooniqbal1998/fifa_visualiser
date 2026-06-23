@@ -10,8 +10,11 @@ const KNOCKOUT_LABELS: Record<Exclude<MatchStage, "group">, string> = {
 };
 
 export type TimelineLabel =
+  | { kind: "pre-tournament" }
   | { kind: "group"; md: 1 | 2 | 3 }
   | { kind: "knockout"; label: string };
+
+export const PRE_TOURNAMENT_DAY = 0;
 
 function groupMatchdayFromDay(day: number): 1 | 2 | 3 {
   if (day <= 4) return 1;
@@ -26,6 +29,9 @@ function groupMatchdayFromId(matchId: string): number | null {
 }
 
 export function formatTimelineStartLabel(day: number, stage: MatchStage): TimelineLabel {
+  if (day === PRE_TOURNAMENT_DAY) {
+    return { kind: "pre-tournament" };
+  }
   if (stage === "group") {
     return { kind: "group", md: groupMatchdayFromDay(day) };
   }
@@ -33,11 +39,13 @@ export function formatTimelineStartLabel(day: number, stage: MatchStage): Timeli
 }
 
 export function timelineLabelToString(label: TimelineLabel): string {
+  if (label.kind === "pre-tournament") return "Pre-tournament";
   if (label.kind === "group") return `Matchday ${label.md}`;
   return label.label;
 }
 
 export function timelineLabelKey(label: TimelineLabel): string {
+  if (label.kind === "pre-tournament") return "pre-tournament";
   if (label.kind === "group") return `group-${label.md}`;
   return `knockout-${label.label}`;
 }

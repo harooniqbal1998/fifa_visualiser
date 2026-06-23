@@ -13,6 +13,7 @@ import { snapshotsByDay } from "@/data/snapshots";
 import { computeGroupStandings } from "@/lib/standings";
 import {
   formatTimelineStartLabel,
+  PRE_TOURNAMENT_DAY,
   timelineLabelKey,
   timelineLabelToString,
 } from "@/lib/match-context-label";
@@ -31,10 +32,11 @@ export function getSnapshotByDay(day: number) {
   return snapshotsByDay[day];
 }
 
+export { PRE_TOURNAMENT_DAY };
+
 export function getDayRange(): { min: number; max: number } {
-  const min = timelineDays[0]?.day ?? 0;
-  const max = timelineDays[timelineDays.length - 1]?.day ?? min;
-  return { min, max };
+  const max = timelineDays[timelineDays.length - 1]?.day ?? PRE_TOURNAMENT_DAY;
+  return { min: PRE_TOURNAMENT_DAY, max };
 }
 
 export function getTimelineDays() {
@@ -47,7 +49,14 @@ export function getGroupStandings(day: number) {
 
 export function getTimelineStartOptions(): TimelineStartOption[] {
   const seen = new Set<string>();
-  const options: TimelineStartOption[] = [];
+  const options: TimelineStartOption[] = [
+    {
+      day: PRE_TOURNAMENT_DAY,
+      label: timelineLabelToString({ kind: "pre-tournament" }),
+      stage: "group",
+    },
+  ];
+  seen.add("pre-tournament");
 
   for (const day of getSimStartDays()) {
     const entry = timelineDays.find((e) => e.day === day);

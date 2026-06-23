@@ -12,6 +12,7 @@ import { createPortal } from "react-dom";
 import type { MatchStage } from "@/types";
 import {
   formatTimelineStartLabel,
+  PRE_TOURNAMENT_DAY,
   timelineLabelKey,
   timelineLabelToString,
   type TimelineLabel,
@@ -66,7 +67,7 @@ function VerticalTicker({
   const translateY = scrolling && animate ? "-100%" : "0%";
 
   return (
-    <span className="relative inline-block h-[1em] overflow-hidden align-bottom">
+    <span className="relative inline-flex h-[1.125rem] items-center overflow-hidden">
       <span
         className="block transition-transform ease-out"
         style={{
@@ -90,7 +91,7 @@ function VerticalTicker({
 function GroupLabel({ label, animate }: { label: TimelineLabel; animate: boolean }) {
   if (label.kind !== "group") return null;
   return (
-    <span className="inline-flex items-baseline gap-1 whitespace-nowrap">
+    <span className="inline-flex items-center gap-1 whitespace-nowrap leading-none">
       <span>Matchday</span>
       <VerticalTicker value={String(label.md)} animate={animate} />
     </span>
@@ -100,6 +101,36 @@ function GroupLabel({ label, animate }: { label: TimelineLabel; animate: boolean
 function KnockoutLabel({ label, animate }: { label: TimelineLabel; animate: boolean }) {
   if (label.kind !== "knockout") return null;
   return <VerticalTicker value={label.label} animate={animate} />;
+}
+
+function PreTournamentLabel({ label, animate }: { label: TimelineLabel; animate: boolean }) {
+  if (label.kind !== "pre-tournament") return null;
+  return <VerticalTicker value="Pre-tournament" animate={animate} />;
+}
+
+function getCircleStyle(day: number, stage: MatchStage): string {
+  if (day === PRE_TOURNAMENT_DAY) {
+    return "border-zinc-400 bg-zinc-400/20 dark:border-zinc-500 dark:bg-zinc-500/20";
+  }
+  return stageStyles[stage];
+}
+
+function TimelineStageCircle({
+  day,
+  stage,
+  className = "",
+}: {
+  day: number;
+  stage: MatchStage;
+  className?: string;
+}) {
+  return (
+    <span
+      aria-hidden
+      className={`box-border shrink-0 rounded-full border-2 ${getCircleStyle(day, stage)} ${className}`}
+      style={{ width: CIRCLE_PX, height: CIRCLE_PX }}
+    />
+  );
 }
 
 type TimelineInlineDisplayProps = {
@@ -116,15 +147,13 @@ export function TimelineInlineDisplay({
 
   return (
     <span
-      className="inline-flex items-center gap-1.5 whitespace-nowrap"
+      className="inline-flex items-center gap-1.5 whitespace-nowrap leading-none"
       aria-live={animate ? "polite" : undefined}
     >
-      <span
-        aria-hidden
-        className={`shrink-0 rounded-full border-2 ${stageStyles[stage]}`}
-        style={{ width: CIRCLE_PX, height: CIRCLE_PX }}
-      />
-      {label.kind === "group" ? (
+      <TimelineStageCircle day={day} stage={stage} />
+      {label.kind === "pre-tournament" ? (
+        <PreTournamentLabel label={label} animate={animate} />
+      ) : label.kind === "group" ? (
         <GroupLabel label={label} animate={animate} />
       ) : (
         <KnockoutLabel label={label} animate={animate} />
@@ -151,7 +180,7 @@ export function TimelineDayPicker({
   const [mounted, setMounted] = useState(false);
   const [highlightIndex, setHighlightIndex] = useState(0);
 
-  const simStartKey = getSimStartDays().join(",");
+  const simStartKey = `0,${getSimStartDays().join(",")}`;
   const options = useMemo(
     () => getTimelineStartOptions(),
     [simStartKey],
@@ -297,7 +326,7 @@ export function TimelineDayPicker({
             aria-selected={timelineLabelKey(
               formatTimelineStartLabel(option.day, option.stage),
             ) === timelineLabelKey(formatTimelineStartLabel(day, stage))}
-            className={`flex w-full items-center px-3 py-1.5 text-left text-xs whitespace-nowrap ${
+            className={`flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs leading-none whitespace-nowrap ${
               index === highlightIndex
                 ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-700 dark:text-zinc-100"
                 : "text-zinc-700 hover:bg-zinc-50 dark:text-zinc-200 dark:hover:bg-zinc-700/60"
@@ -305,7 +334,8 @@ export function TimelineDayPicker({
             onMouseEnter={() => setHighlightIndex(index)}
             onClick={() => handleSelect(option.day)}
           >
-            {option.label}
+            <TimelineStageCircle day={option.day} stage={option.stage} />
+            <span>{option.label}</span>
           </button>
         ))}
       </div>
@@ -322,7 +352,7 @@ export function TimelineDayPicker({
         disabled={isSimulating}
         onClick={handleTriggerClick}
         onKeyDown={handleTriggerKeyDown}
-        className="relative z-10 inline-flex shrink-0 cursor-pointer items-center rounded-full px-1.5 py-0.5 text-xs font-medium text-inherit outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/50 disabled:cursor-not-allowed disabled:opacity-70 dark:hover:bg-black/10 dark:focus-visible:ring-zinc-400"
+        className="relative z-10 inline-flex h-7 shrink-0 cursor-pointer items-center rounded-full px-1.5 text-xs font-medium leading-none text-inherit outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/50 disabled:cursor-not-allowed disabled:opacity-70 dark:hover:bg-black/10 dark:focus-visible:ring-zinc-400"
       >
         <TimelineInlineDisplay day={day} animate={isSimulating} />
       </button>

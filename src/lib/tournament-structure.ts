@@ -1,4 +1,5 @@
 import type { MatchStage } from "@/types";
+import { PRE_TOURNAMENT_DAY } from "@/lib/match-context-label";
 import { matches } from "@/data/matches";
 import { KNOCKOUT_TREE } from "@/data/knockout-bracket";
 import {
@@ -130,6 +131,7 @@ function shouldAttachSlotCandidates(
   matchPlayed: boolean,
   sideHasTeamId: boolean,
 ): boolean {
+  if (day === PRE_TOURNAMENT_DAY) return false;
   if (matchPlayed) return false;
   if (matchId.startsWith("r32-") && day < 12) return true;
   return !sideHasTeamId;
