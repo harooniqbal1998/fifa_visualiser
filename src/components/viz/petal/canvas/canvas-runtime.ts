@@ -5,6 +5,7 @@ import type { PetalLayoutConfig } from "@/components/viz/petal/petal-config";
 import {
   computeEliminatedBottomY,
   computePetalPositions,
+  interpolateLayout,
   type PetalLayoutResult,
 } from "@/components/viz/petal/petal-layout";
 import {
@@ -12,6 +13,7 @@ import {
   applyTargetStandingRanks,
   clearDroppedTeams,
   createDisplayState,
+  getPositionTransitionProgress,
   markTeamsDropped,
   resetDisplayFromLayout,
   setDropTargetsYOnly,
@@ -65,6 +67,7 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
   };
   const sizingRef = { current: getVizSizing() };
   const layoutRef: MutableRefObject<PetalLayoutResult | null> = { current: null };
+  const layoutStartRef: MutableRefObject<PetalLayoutResult | null> = { current: null };
   const configRef: MutableRefObject<PetalLayoutConfig> = {
     current: {} as PetalLayoutConfig,
   };
@@ -87,7 +90,7 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
 
   const recomputeLayout = () => {
     const { width, height } = sizeRef.current;
-    layoutRef.current = computePetalPositions(
+    return computePetalPositions(
       teamsRef.current,
       probabilitiesRef.current,
       standingsRef.current,
@@ -98,7 +101,43 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
       sizingRef.current,
       eliminatedRef.current,
     );
-    return layoutRef.current;
+  };
+
+  const commitLayoutTransition = (newLayout: PetalLayoutResult) => {
+    const state = displayStateRef.current;
+    const currentTarget = layoutRef.current;
+    const currentStart = layoutStartRef.current;
+    const timestamp = state.lastTimestamp ?? performance.now();
+
+    let startLayout: PetalLayoutResult;
+    if (currentTarget && currentStart) {
+      const progress = getPositionTransitionProgress(state, timestamp);
+      startLayout =
+        progress < 1
+          ? interpolateLayout(currentStart, currentTarget, progress)
+          : currentTarget;
+    } else if (currentTarget) {
+      startLayout = currentTarget;
+    } else {
+      startLayout = newLayout;
+    }
+
+    layoutStartRef.current = startLayout;
+    layoutRef.current = newLayout;
+    return newLayout;
+  };
+
+  const getVisualLayout = (): PetalLayoutResult | null => {
+    const target = layoutRef.current;
+    const start = layoutStartRef.current;
+    if (!target) return null;
+    if (!start) return target;
+
+    const timestamp = displayStateRef.current.lastTimestamp ?? performance.now();
+    const progress = getPositionTransitionProgress(displayStateRef.current, timestamp);
+    if (progress >= 1) return target;
+
+    return interpolateLayout(start, target, progress);
   };
 
   const paint = () => {
@@ -144,7 +183,7 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
       height,
       dpr,
       config: configRef.current,
-      layout: layoutRef.current,
+      layout: getVisualLayout() ?? layoutRef.current,
       displayState: displayStateRef.current,
       matchController: matchControllerRef.current,
       flags: flagsRef.current,
@@ -207,20 +246,21 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
       sizingRef.current = getVizSizing();
       sizeRef.current = { width, height };
       if (!freezeLayoutRef.current) {
-        const layout = recomputeLayout();
+        const layout = commitLayoutTransition(recomputeLayout());
         setTargetsFromLayout(displayStateRef.current, layout, { syncStandingRanks: true });
       }
       paint();
     },
 
     resetLayout() {
-      const layout = recomputeLayout();
+      const layout = commitLayoutTransition(recomputeLayout());
+      layoutStartRef.current = layout;
       resetDisplayFromLayout(displayStateRef.current, layout);
       paint();
     },
 
     syncLayoutTargets() {
-      const layout = recomputeLayout();
+      const layout = commitLayoutTransition(recomputeLayout());
       setTargetsFromLayout(displayStateRef.current, layout, { syncStandingRanks: true });
       const radii = Object.fromEntries(layout.teams.map((n) => [n.id, n.r]));
       setRadiusTargets(displayStateRef.current, radii);
@@ -307,7 +347,7 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
         },
 
         setLayoutTargets(layout, borderTeamIds?: string[], positionOnlyTeamIds?: string[]) {
-          layoutRef.current = layout;
+          commitLayoutTransition(layout);
           setTargetsFromLayout(displayStateRef.current, layout, {
             deferTransition: true,
             borderTeamIds,
@@ -316,12 +356,13 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
         },
 
         syncRadiusTargetsFromLayout(layout) {
-          layoutRef.current = layout;
+          commitLayoutTransition(layout);
           const radii = Object.fromEntries(layout.teams.map((n) => [n.id, n.r]));
           setRadiusTargets(displayStateRef.current, radii);
         },
 
         resetDisplay(layout) {
+          layoutStartRef.current = layout;
           layoutRef.current = layout;
           resetDisplayFromLayout(displayStateRef.current, layout);
           paint();

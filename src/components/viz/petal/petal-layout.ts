@@ -305,3 +305,33 @@ export function computePetalPositions(
     usableRadius,
   };
 }
+
+function lerpPoint(a: PetalPoint, b: PetalPoint, t: number): PetalPoint {
+  return { x: lerp(a.x, b.x, t), y: lerp(a.y, b.y, t) };
+}
+
+export function interpolateLayout(
+  start: PetalLayoutResult,
+  end: PetalLayoutResult,
+  t: number,
+): PetalLayoutResult {
+  const groupCenters: Record<string, PetalPoint> = {};
+  for (const id of GROUP_IDS) {
+    const startCenter = start.groupCenters[id] ?? end.groupCenters[id];
+    const endCenter = end.groupCenters[id];
+    if (!startCenter || !endCenter) continue;
+    groupCenters[id] = lerpPoint(startCenter, endCenter, t);
+  }
+
+  return {
+    teams: end.teams,
+    canvasCenter: lerpPoint(start.canvasCenter, end.canvasCenter, t),
+    groupCenters,
+    groupAngles: end.groupAngles,
+    groupRingRadius: lerp(start.groupRingRadius, end.groupRingRadius, t),
+    innerRingRadius: lerp(start.innerRingRadius, end.innerRingRadius, t),
+    spreadRad: lerp(start.spreadRad, end.spreadRad, t),
+    spreadTan: lerp(start.spreadTan, end.spreadTan, t),
+    usableRadius: lerp(start.usableRadius, end.usableRadius, t),
+  };
+}

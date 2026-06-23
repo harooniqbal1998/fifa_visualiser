@@ -342,6 +342,35 @@ function tickRankBorderFade(state: DisplayState, timestamp: number): void {
   }
 }
 
+export function getPositionTransitionProgress(
+  state: DisplayState,
+  timestamp: number,
+  epsilon = 0.5,
+): number {
+  let hasActiveTransitions = false;
+
+  for (const [id, entry] of state.teams.entries()) {
+    if (state.droppedTeamIds.has(id)) continue;
+
+    if (
+      Math.abs(entry.x - entry.targetX) > epsilon ||
+      Math.abs(entry.y - entry.targetY) > epsilon ||
+      Math.abs(entry.r - entry.targetR) > epsilon
+    ) {
+      hasActiveTransitions = true;
+      break;
+    }
+  }
+
+  if (!hasActiveTransitions) return 1;
+  if (state.transitionStartedAt === null) return 0;
+
+  const elapsed = timestamp - state.transitionStartedAt;
+  return state.transitionDurationMs > 0
+    ? Math.min(1, elapsed / state.transitionDurationMs)
+    : 1;
+}
+
 export function tickDisplayState(state: DisplayState, timestamp: number): void {
   state.lastTimestamp = timestamp;
   tickRankBorderFade(state, timestamp);
