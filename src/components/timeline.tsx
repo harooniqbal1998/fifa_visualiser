@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  type RefObject,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -167,7 +168,24 @@ type TimelineDayPickerProps = {
   onDayChange: (day: number) => void;
   isSimulating?: boolean;
   triggerClassName?: string;
+  /** Lower z-index sibling; pointer events in its bounds are forwarded to it. */
+  delegateTargetRef?: RefObject<HTMLButtonElement | null>;
 };
+
+function pointerIsOverElement(
+  clientX: number,
+  clientY: number,
+  element: HTMLElement | null,
+): boolean {
+  if (!element) return false;
+  const rect = element.getBoundingClientRect();
+  return (
+    clientX >= rect.left &&
+    clientX <= rect.right &&
+    clientY >= rect.top &&
+    clientY <= rect.bottom
+  );
+}
 
 const TRIGGER_BASE_CLASS =
   "relative z-10 inline-flex h-7 shrink-0 cursor-pointer items-center text-xs font-medium leading-none text-inherit outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/50 disabled:cursor-not-allowed disabled:opacity-70 dark:hover:bg-black/10 dark:focus-visible:ring-hermes/50";
@@ -177,6 +195,7 @@ export function TimelineDayPicker({
   onDayChange,
   isSimulating = false,
   triggerClassName = "rounded-full px-1.5",
+  delegateTargetRef,
 }: TimelineDayPickerProps) {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -272,9 +291,26 @@ export function TimelineDayPicker({
     setOpen(false);
   };
 
+  const shouldDelegateToSibling = useCallback(
+    (clientX: number, clientY: number) => {
+      const delegate = delegateTargetRef?.current;
+      if (!delegate || delegate.disabled) return false;
+      return pointerIsOverElement(clientX, clientY, delegate);
+    },
+    [delegateTargetRef],
+  );
+
+  const handleTriggerPointerDown = (event: React.PointerEvent<HTMLButtonElement>) => {
+    if (!shouldDelegateToSibling(event.clientX, event.clientY)) return;
+    event.preventDefault();
+    event.stopPropagation();
+    delegateTargetRef?.current?.click();
+  };
+
   const handleTriggerClick = (event: React.MouseEvent) => {
     event.stopPropagation();
     if (isSimulating) return;
+    if (shouldDelegateToSibling(event.clientX, event.clientY)) return;
     setOpen((prev) => !prev);
   };
 
@@ -355,6 +391,7 @@ export function TimelineDayPicker({
         aria-haspopup="listbox"
         aria-expanded={open}
         disabled={isSimulating}
+        onPointerDown={handleTriggerPointerDown}
         onClick={handleTriggerClick}
         onKeyDown={handleTriggerKeyDown}
         className={`${TRIGGER_BASE_CLASS} ${triggerClassName}`}

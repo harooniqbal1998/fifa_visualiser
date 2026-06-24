@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { forwardRef } from "react";
+import { forwardRef, useRef } from "react";
 import { TimelineDayPicker } from "@/components/timeline";
 import type { SimulationSessionPhase } from "@/components/viz/petal/petal-simulation-visualization";
 import { isSimStartDay } from "@/lib/tournament";
@@ -75,6 +75,7 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
     },
     ref,
   ) {
+    const playButtonRef = useRef<HTMLButtonElement>(null);
     const isRunning = sessionPhase === "running";
     const isCompleted = sessionPhase === "completed";
     const canPlay = sessionPhase !== "idle" || isSimStartDay(day);
@@ -107,6 +108,7 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
         ) : (
           <div className="relative flex h-7 shrink-0 items-center rounded-full bg-hermes text-white dark:bg-light-gray dark:text-dark-heather">
             <button
+              ref={playButtonRef}
               type="button"
               title={isCompleted ? "Restart simulation" : playTitle}
               aria-label={isCompleted ? "Restart simulation" : playTitle}
@@ -120,6 +122,7 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
             <TimelineDayPicker
               day={day}
               onDayChange={onDayChange}
+              delegateTargetRef={playButtonRef}
               triggerClassName="rounded-r-full pl-1.5 pr-2.5"
             />
           </div>
