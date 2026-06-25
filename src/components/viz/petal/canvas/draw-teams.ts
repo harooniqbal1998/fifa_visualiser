@@ -1,5 +1,5 @@
 import { drawFlagCover } from "@/lib/flags";
-import { brandColors, withAlpha } from "@/lib/brand-colors";
+import { brandColors, getCanvasPalette, withAlpha } from "@/lib/brand-colors";
 import type { StandingRank } from "@/components/viz/petal/canvas/display-state";
 import type { TeamDrawItem } from "@/components/viz/petal/canvas/types";
 
@@ -114,7 +114,7 @@ export function drawTeam(
 
   ctx.beginPath();
   ctx.arc(x, y, r, 0, Math.PI * 2);
-  ctx.fillStyle = brandColors.darkHeather;
+  ctx.fillStyle = getCanvasPalette().placeholderFill;
   ctx.globalAlpha = isEliminated ? eliminatedOpacity : baseAlpha * 0.95;
   ctx.fill();
 

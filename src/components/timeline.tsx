@@ -37,6 +37,15 @@ const stageStyles: Record<MatchStage, string> = {
   final: "border-torch-red bg-torch-red/20",
 };
 
+const onPrimaryStageStyles: Record<MatchStage, string> = {
+  group: "border-white/80 bg-white/25",
+  "round-of-32": "border-white/80 bg-white/20",
+  "round-of-16": "border-white/70 bg-white/20",
+  "quarter-final": "border-white/70 bg-white/15",
+  "semi-final": "border-white/70 bg-white/15",
+  final: "border-white/90 bg-white/25",
+};
+
 function getStageForDay(day: number): MatchStage {
   return getTimelineDays().find((entry) => entry.day === day)?.stage ?? "group";
 }
@@ -109,26 +118,34 @@ function PreTournamentLabel({ label, animate }: { label: TimelineLabel; animate:
   return <VerticalTicker value="Pre-tournament" animate={animate} />;
 }
 
-function getCircleStyle(day: number, stage: MatchStage): string {
+function getCircleStyle(
+  day: number,
+  stage: MatchStage,
+  variant: "default" | "onPrimary" = "default",
+): string {
   if (day === PRE_TOURNAMENT_DAY) {
-    return "border-light-gray bg-light-gray/20 dark:border-light-gray/40 dark:bg-light-gray/15";
+    return variant === "onPrimary"
+      ? "border-white/60 bg-white/15"
+      : "border-light-gray bg-light-gray/20 dark:border-light-gray/40 dark:bg-light-gray/15";
   }
-  return stageStyles[stage];
+  return variant === "onPrimary" ? onPrimaryStageStyles[stage] : stageStyles[stage];
 }
 
 function TimelineStageCircle({
   day,
   stage,
   className = "",
+  variant = "default",
 }: {
   day: number;
   stage: MatchStage;
   className?: string;
+  variant?: "default" | "onPrimary";
 }) {
   return (
     <span
       aria-hidden
-      className={`box-border shrink-0 rounded-full border-2 ${getCircleStyle(day, stage)} ${className}`}
+      className={`box-border shrink-0 rounded-full border-2 ${getCircleStyle(day, stage, variant)} ${className}`}
       style={{ width: CIRCLE_PX, height: CIRCLE_PX }}
     />
   );
@@ -137,28 +154,33 @@ function TimelineStageCircle({
 type TimelineInlineDisplayProps = {
   day: number;
   animate?: boolean;
+  circleVariant?: "default" | "onPrimary";
 };
 
 export function TimelineInlineDisplay({
   day,
   animate = false,
+  circleVariant = "default",
 }: TimelineInlineDisplayProps) {
   const stage = getStageForDay(day);
   const label = formatTimelineStartLabel(day, stage);
+  const truncate = circleVariant === "onPrimary";
 
   return (
     <span
-      className="inline-flex items-center gap-1.5 whitespace-nowrap leading-none"
+      className={`inline-flex min-w-0 items-center gap-1.5 leading-none ${truncate ? "" : "whitespace-nowrap"}`}
       aria-live={animate ? "polite" : undefined}
     >
-      <TimelineStageCircle day={day} stage={stage} />
-      {label.kind === "pre-tournament" ? (
-        <PreTournamentLabel label={label} animate={animate} />
-      ) : label.kind === "group" ? (
-        <GroupLabel label={label} animate={animate} />
-      ) : (
-        <KnockoutLabel label={label} animate={animate} />
-      )}
+      <TimelineStageCircle day={day} stage={stage} variant={circleVariant} />
+      <span className={truncate ? "min-w-0 truncate" : undefined}>
+        {label.kind === "pre-tournament" ? (
+          <PreTournamentLabel label={label} animate={animate} />
+        ) : label.kind === "group" ? (
+          <GroupLabel label={label} animate={animate} />
+        ) : (
+          <KnockoutLabel label={label} animate={animate} />
+        )}
+      </span>
     </span>
   );
 }
@@ -168,6 +190,7 @@ type TimelineDayPickerProps = {
   onDayChange: (day: number) => void;
   isSimulating?: boolean;
   triggerClassName?: string;
+  circleVariant?: "default" | "onPrimary";
   /** Lower z-index sibling; pointer events in its bounds are forwarded to it. */
   delegateTargetRef?: RefObject<HTMLButtonElement | null>;
 };
@@ -195,6 +218,7 @@ export function TimelineDayPicker({
   onDayChange,
   isSimulating = false,
   triggerClassName = "rounded-full px-1.5",
+  circleVariant = "default",
   delegateTargetRef,
 }: TimelineDayPickerProps) {
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -396,7 +420,7 @@ export function TimelineDayPicker({
         onKeyDown={handleTriggerKeyDown}
         className={`${TRIGGER_BASE_CLASS} ${triggerClassName}`}
       >
-        <TimelineInlineDisplay day={day} animate={isSimulating} />
+        <TimelineInlineDisplay day={day} animate={isSimulating} circleVariant={circleVariant} />
       </button>
       {panel && createPortal(panel, document.body)}
     </>

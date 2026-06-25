@@ -1,4 +1,4 @@
-import { brandColors, withAlpha } from "@/lib/brand-colors";
+import { getCanvasPalette } from "@/lib/brand-colors";
 import type { PetalLayoutResult } from "@/components/viz/petal/petal-layout";
 import { GROUP_IDS } from "@/components/viz/viz-math";
 
@@ -6,6 +6,7 @@ export function drawGuideRings(
   ctx: CanvasRenderingContext2D,
   layout: PetalLayoutResult,
 ): void {
+  const palette = getCanvasPalette();
   const { canvasCenter, groupRingRadius, innerRingRadius, groupCenters } = layout;
 
   ctx.save();
@@ -13,17 +14,17 @@ export function drawGuideRings(
   ctx.lineWidth = 1;
   ctx.setLineDash([4, 4]);
 
-  ctx.strokeStyle = withAlpha(brandColors.lightGray, 0.35);
+  ctx.strokeStyle = palette.guideRing;
   ctx.beginPath();
   ctx.arc(canvasCenter.x, canvasCenter.y, groupRingRadius, 0, Math.PI * 2);
   ctx.stroke();
 
-  ctx.strokeStyle = withAlpha(brandColors.lightGray, 0.2);
+  ctx.strokeStyle = palette.guideRingInner;
   ctx.beginPath();
   ctx.arc(canvasCenter.x, canvasCenter.y, innerRingRadius, 0, Math.PI * 2);
   ctx.stroke();
 
-  ctx.strokeStyle = withAlpha(brandColors.lightGray, 0.35);
+  ctx.strokeStyle = palette.guideRing;
   for (const groupId of GROUP_IDS) {
     const center = groupCenters[groupId];
     if (!center) continue;

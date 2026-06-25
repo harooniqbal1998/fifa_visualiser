@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -22,6 +22,13 @@ export const metadata: Metadata = {
       "Interactive visualisation of FIFA World Cup win probabilities across the tournament.",
     type: "website",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#474A4A" },
+  ],
 };
 
 export default function RootLayout({

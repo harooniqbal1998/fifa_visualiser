@@ -13,3 +13,27 @@ export function withAlpha(hex: string, alpha: number): string {
   const b = parseInt(hex.slice(5, 7), 16);
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
+
+export function isDarkMode(): boolean {
+  return (
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches
+  );
+}
+
+export type CanvasPalette = {
+  guideRing: string;
+  guideRingInner: string;
+  connector: string;
+  placeholderFill: string;
+};
+
+export function getCanvasPalette(): CanvasPalette {
+  const dark = isDarkMode();
+  return {
+    guideRing: withAlpha(brandColors.lightGray, dark ? 0.55 : 0.35),
+    guideRingInner: withAlpha(brandColors.lightGray, dark ? 0.35 : 0.2),
+    connector: withAlpha(brandColors.lightGray, dark ? 0.45 : 0.25),
+    placeholderFill: dark ? brandColors.lightGray : brandColors.darkHeather,
+  };
+}

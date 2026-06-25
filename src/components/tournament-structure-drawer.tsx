@@ -11,14 +11,24 @@ import { useStarredTeamsStore } from "@/stores/starred-teams-store";
 
 type TournamentStructureDrawerProps = {
   open: boolean;
+  onClose?: () => void;
   structure: TournamentStructureView;
   teamsById: Record<string, Team>;
   day: number;
   activeMatches?: CollisionEvent[];
 };
 
+function CloseIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4" aria-hidden>
+      <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export function TournamentStructureDrawer({
   open,
+  onClose,
   structure,
   teamsById,
   day,
@@ -36,13 +46,33 @@ export function TournamentStructureDrawer({
 
   return (
     <aside
-      className={`flex h-full min-h-0 shrink-0 flex-col overflow-hidden border-l border-light-gray bg-background transition-[width] duration-200 ease-out will-change-[width] dark:border-light-gray/25 dark:bg-dark-heather ${
-        open ? "w-1/2 min-w-0" : "w-0 border-l-0"
-      }`}
+      className={`flex min-h-0 shrink-0 flex-col overflow-hidden bg-background dark:bg-dark-heather ${
+        open
+          ? "max-md:fixed max-md:inset-0 max-md:z-40 max-md:w-full md:relative md:h-full md:w-1/2 md:min-w-0 md:border-l md:border-light-gray dark:md:border-light-gray/25"
+          : "max-md:pointer-events-none max-md:invisible max-md:w-0 md:relative md:h-full md:w-0 md:border-l-0"
+      } md:transition-[width] md:duration-200 md:ease-out md:will-change-[width]`}
       aria-hidden={!open}
       aria-label="Tournament structure"
       {...(!open ? { inert: true } : {})}
     >
+      {open ? (
+        <div className="flex shrink-0 items-center justify-between border-b border-light-gray px-4 py-3 md:hidden dark:border-light-gray/25">
+          <span className="text-sm font-medium text-dark-heather dark:text-light-gray">
+            Tournament structure
+          </span>
+          {onClose ? (
+            <button
+              type="button"
+              title="Close tournament structure"
+              aria-label="Close tournament structure"
+              onClick={onClose}
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-light-gray text-dark-heather hover:bg-light-gray/20 dark:border-light-gray/30 dark:text-light-gray dark:hover:bg-light-gray/10"
+            >
+              <CloseIcon />
+            </button>
+          ) : null}
+        </div>
+      ) : null}
       {open && showPathFilter ? (
         <div className="flex shrink-0 items-center justify-between border-b border-light-gray px-4 py-2 dark:border-light-gray/25">
           <span className="text-[11px] font-medium text-dark-heather dark:text-light-gray">

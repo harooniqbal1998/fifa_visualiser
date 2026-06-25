@@ -94,13 +94,13 @@ export function TournamentView() {
     [toggleStar],
   );
 
-  const handlePlay = useCallback(() => {
-    petalVizRef.current?.startSimulation();
+  const handlePlay = useCallback(async () => {
+    await petalVizRef.current?.startSimulation();
   }, []);
 
-  const handleStop = useCallback(() => {
-    petalVizRef.current?.stopSimulation();
+  const handleStop = useCallback(async () => {
     setSessionPhaseSync("frozen");
+    await petalVizRef.current?.stopSimulation();
   }, []);
 
   const handleRestart = useCallback(() => {
@@ -158,7 +158,9 @@ export function TournamentView() {
   return (
     <div className="relative h-full w-full min-h-0">
       <div className="relative flex h-full min-h-0 flex-row gap-4">
-        <div className="relative min-h-0 min-w-0 flex-1">
+        <div
+          className={`relative min-h-0 min-w-0 flex-1 ${structureOpen ? "max-md:hidden" : ""}`}
+        >
           <PetalSimulationVisualization
             ref={petalVizRef}
             teams={teams}
@@ -175,13 +177,16 @@ export function TournamentView() {
         </div>
         <TournamentStructureDrawer
           open={structureOpen}
+          onClose={() => setStructureOpen(false)}
           structure={tournamentStructure}
           teamsById={teamsById}
           day={day}
           activeMatches={activeMatches}
         />
       </div>
-      <div className="pointer-events-none absolute inset-x-0 bottom-4 z-50 flex justify-center px-4">
+      <div
+        className={`pointer-events-none absolute inset-x-0 bottom-[max(1rem,env(safe-area-inset-bottom))] z-50 flex justify-center px-4 ${structureOpen ? "max-md:hidden" : ""}`}
+      >
         <div className="flex w-full max-w-md flex-col items-center gap-2">
           {activeMatches.length > 0 ? (
             <MatchSpotlightBar
@@ -198,7 +203,7 @@ export function TournamentView() {
               liveState={liveProbabilityState}
               snapshot={snapshot}
             />
-            <div className="w-max max-w-[40vw] shrink-0">
+            <div className="w-full max-w-full md:w-max md:max-w-none">
               <SimulationPill
                 day={day}
                 onDayChange={handleDayChange}

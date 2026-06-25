@@ -226,6 +226,13 @@ export const PetalCanvas = forwardRef<PetalCanvasRef, PetalCanvasProps>(
       return () => runtimeRef.current.stopLoop();
     }, []);
 
+    useEffect(() => {
+      const mq = window.matchMedia("(prefers-color-scheme: dark)");
+      const onChange = () => runtimeRef.current.paint();
+      mq.addEventListener("change", onChange);
+      return () => mq.removeEventListener("change", onChange);
+    }, []);
+
     return (
       <div ref={containerRef} className="h-full min-h-0 w-full">
         <canvas

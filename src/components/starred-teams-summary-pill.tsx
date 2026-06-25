@@ -54,7 +54,7 @@ export function StarredTeamsSummaryPill({
   });
 
   return (
-    <div className="flex flex-row flex-wrap items-center justify-center gap-2">
+    <div className="flex max-w-[calc(100vw-2rem)] flex-row flex-wrap items-center justify-center gap-2">
       {summaries.map((summary) => {
         const team = teamsById[summary.teamId];
         if (!team) return null;
@@ -62,7 +62,7 @@ export function StarredTeamsSummaryPill({
         return (
           <div
             key={summary.teamId}
-            className="flex h-7 shrink-0 items-center gap-1.5 rounded-full bg-hermes px-2.5 text-xs font-medium text-white dark:bg-light-gray dark:text-dark-heather"
+            className="flex h-7 shrink-0 items-center gap-1.5 rounded-full bg-hermes px-2.5 text-xs font-medium text-white"
             title={`${team.name} ${summary.winPct}% ${formatDelta(summary.deltaPct)}`}
           >
             <TeamFlagAvatar isoCode={team.isoCode} size={14} />

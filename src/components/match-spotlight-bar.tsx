@@ -123,7 +123,7 @@ export function MatchSpotlightBar({
       : "translate-y-full opacity-0";
 
   return (
-    <div className="w-max rounded-xl border border-light-gray/80 bg-background/85 px-3 py-1 shadow-sm backdrop-blur dark:border-light-gray/25 dark:bg-dark-heather/85">
+    <div className="max-w-[calc(100vw-2rem)] w-max rounded-xl border border-light-gray/80 bg-background/85 px-3 py-1 shadow-sm backdrop-blur dark:border-light-gray/25 dark:bg-dark-heather/85">
       <div className="relative grid overflow-hidden">
         <div className="invisible col-start-1 row-start-1" aria-hidden>
           <MatchupRow match={currentMatch} teamsById={teamsById} />

@@ -1,4 +1,4 @@
-import { brandColors, withAlpha } from "@/lib/brand-colors";
+import { getCanvasPalette } from "@/lib/brand-colors";
 import type { PetalLayoutConfig } from "@/components/viz/petal/petal-config";
 import type { DisplayState } from "@/components/viz/petal/canvas/display-state";
 import type { ActiveMatch } from "@/components/viz/petal/canvas/match-controller";
@@ -46,12 +46,14 @@ export function drawConnectors(
   ctx.lineWidth = config.connectorWidth;
   ctx.lineCap = "round";
 
+  const palette = getCanvasPalette();
+
   for (const match of activeMatches) {
     const home = displayState.teams.get(match.home);
     const away = displayState.teams.get(match.away);
     if (!home || !away) continue;
 
-    ctx.strokeStyle = withAlpha(brandColors.lightGray, 0.5);
+    ctx.strokeStyle = palette.connector;
     ctx.globalAlpha = 0.7;
     ctx.beginPath();
     ctx.moveTo(home.x, home.y);

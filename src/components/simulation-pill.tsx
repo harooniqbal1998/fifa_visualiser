@@ -86,7 +86,7 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
     return (
       <div
         ref={ref}
-        className="flex w-max max-w-[40vw] shrink-0 flex-row items-center gap-2 rounded-full border border-light-gray bg-background/90 px-2.5 py-1.5 shadow-lg backdrop-blur dark:border-light-gray/25 dark:bg-dark-heather/90"
+        className="flex w-full max-w-full flex-row items-center gap-2 overflow-hidden rounded-full border border-light-gray bg-background/90 px-2.5 py-1.5 shadow-lg backdrop-blur md:w-max md:max-w-none dark:border-light-gray/25 dark:bg-dark-heather/90"
       >
         {isRunning ? (
           <>
@@ -106,7 +106,7 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
             />
           </>
         ) : (
-          <div className="relative flex h-7 shrink-0 items-center rounded-full bg-hermes text-white dark:bg-light-gray dark:text-dark-heather">
+          <div className="relative flex h-7 min-w-0 items-center rounded-full bg-hermes text-white">
             <button
               ref={playButtonRef}
               type="button"
@@ -114,7 +114,7 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
               aria-label={isCompleted ? "Restart simulation" : playTitle}
               onClick={isCompleted ? onRestart : onPlay}
               disabled={!isCompleted && !canPlay}
-              className="relative z-0 flex h-7 shrink-0 items-center gap-1.5 rounded-l-full pl-2.5 text-xs font-medium hover:bg-hermes/90 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-light-gray/80"
+              className="relative z-0 flex h-7 shrink-0 items-center gap-1.5 rounded-l-full pl-2.5 text-xs font-medium hover:bg-hermes/90 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isCompleted ? <RestartIcon /> : <PlayIcon />}
               {isCompleted ? "Restart from" : "Play from"}
@@ -123,7 +123,8 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
               day={day}
               onDayChange={onDayChange}
               delegateTargetRef={playButtonRef}
-              triggerClassName="rounded-r-full pl-1.5 pr-2.5"
+              triggerClassName="min-w-0 rounded-r-full pl-1.5 pr-2.5"
+              circleVariant="onPrimary"
             />
           </div>
         )}
