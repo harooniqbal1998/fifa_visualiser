@@ -1,0 +1,53 @@
+name: Update tournament data
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Skip after tournament end
+        id: window
+        run: |
+          TODAY=$(date -u +%Y%m%d)
+          if [ "$TODAY" -gt 20260720 ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "Tournament ended; skipping update."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.window.outputs.skip != 'true'
+
+      - uses: actions/setup-node@v4
+        if: steps.window.outputs.skip != 'true'
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        if: steps.window.outputs.skip != 'true'
+        run: npm ci
+
+      - name: Update tournament data
+        if: steps.window.outputs.skip != 'true'
+        run: npm run update:tournament
+
+      - name: Commit and push if changed
+        if: steps.window.outputs.skip != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/data/actual-results.ts src/data/snapshots.ts
+          if git diff --staged --quiet; then
+            echo "No data changes; skipping commit."
+            exit 0
+          fi
+          git commit -m "chore(data): refresh tournament results and snapshots"
+          git push
