@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { memo, useCallback, useMemo, useRef, useState } from "react";
 import {
   getDayRange,
   getSnapshotByDay,
@@ -38,16 +38,12 @@ export function TournamentView() {
   const [structureOpen, setStructureOpen] = useState(false);
   const snapshot = getSnapshotByDay(day) ?? getSnapshotByDay(min)!;
   const petalVizRef = useRef<PetalSimulationVisualizationRef>(null);
+  const sessionPhaseRef = useRef<SimulationSessionPhase>("idle");
 
-  const structureGroupResults =
-    sessionPhase === "idle"
-      ? getScriptedResultsUpToDay(day).filter((r) => r.stage === "group")
-      : liveGroupResults;
-
-  const structureKnockoutResults =
-    sessionPhase === "idle"
-      ? getScriptedResultsUpToDay(day).filter((r) => r.stage !== "group")
-      : liveKnockoutResults;
+  const setSessionPhaseSync = (phase: SimulationSessionPhase) => {
+    sessionPhaseRef.current = phase;
+    setSessionPhase(phase);
+  };
 
   const structureEloRatings = useMemo(() => {
     const replayElo = replayTournamentToDay(
@@ -63,34 +59,41 @@ export function TournamentView() {
     return liveProbabilityState?.eloRatings ?? replayElo;
   }, [sessionPhase, day, liveProbabilityState]);
 
-  const tournamentStructure = useMemo(
-    () =>
-      buildTournamentStructureView(day, structureGroupResults, structureKnockoutResults, {
-        eloRatings: structureEloRatings,
-      }),
-    [day, structureGroupResults, structureKnockoutResults, structureEloRatings],
-  );
+  const tournamentStructure = useMemo(() => {
+    const groupResults =
+      sessionPhase === "idle"
+        ? getScriptedResultsUpToDay(day).filter((r) => r.stage === "group")
+        : liveGroupResults;
+    const knockoutResults =
+      sessionPhase === "idle"
+        ? getScriptedResultsUpToDay(day).filter((r) => r.stage !== "group")
+        : liveKnockoutResults;
 
-  const handlePlay = () => {
+    return buildTournamentStructureView(day, groupResults, knockoutResults, {
+      eloRatings: structureEloRatings,
+    });
+  }, [day, sessionPhase, liveGroupResults, liveKnockoutResults, structureEloRatings]);
+
+  const handlePlay = useCallback(() => {
     petalVizRef.current?.startSimulation();
-  };
+  }, []);
 
-  const handleStop = () => {
+  const handleStop = useCallback(() => {
     petalVizRef.current?.stopSimulation();
-    setSessionPhase("frozen");
-  };
+    setSessionPhaseSync("frozen");
+  }, []);
 
-  const handleRestart = () => {
-    setSessionPhase("idle");
+  const handleRestart = useCallback(() => {
+    setSessionPhaseSync("idle");
     setLiveProbabilityState(null);
     setLiveGroupResults([]);
     setLiveKnockoutResults([]);
     petalVizRef.current?.resetSimulation(day);
-  };
+  }, [day]);
 
-  const handleDayChange = (newDay: number) => {
-    if (sessionPhase !== "running") {
-      setSessionPhase("idle");
+  const handleDayChange = useCallback((newDay: number) => {
+    if (sessionPhaseRef.current !== "running") {
+      setSessionPhaseSync("idle");
       setLiveProbabilityState(null);
       setLiveGroupResults([]);
       setLiveKnockoutResults([]);
@@ -99,17 +102,38 @@ export function TournamentView() {
       return;
     }
     setDay(newDay);
-  };
+  }, []);
 
-  const handleSimulatingChange = (simulating: boolean) => {
+  const handleSimulatingChange = useCallback((simulating: boolean) => {
     if (simulating) {
-      setSessionPhase("running");
+      setSessionPhaseSync("running");
     }
-  };
+  }, []);
 
-  const handleSessionComplete = (_winnerId: string) => {
-    setSessionPhase("completed");
-  };
+  const handleSessionComplete = useCallback((_winnerId: string) => {
+    setSessionPhaseSync("completed");
+  }, []);
+
+  const handleProbabilityStateUpdate = useCallback(
+    ({
+      state,
+      groupResults,
+      knockoutResults,
+    }: {
+      state: ProbabilityState;
+      groupResults: SimMatchResult[];
+      knockoutResults: SimMatchResult[];
+    }) => {
+      setLiveProbabilityState(state);
+      setLiveGroupResults(groupResults);
+      setLiveKnockoutResults(knockoutResults);
+    },
+    [],
+  );
+
+  const handleTournamentStructureClick = useCallback(() => {
+    setStructureOpen((open) => !open);
+  }, []);
 
   return (
     <div className="relative h-full w-full min-h-0">
@@ -123,11 +147,7 @@ export function TournamentView() {
             onSimulatingChange={handleSimulatingChange}
             onSessionComplete={handleSessionComplete}
             onDayChange={handleDayChange}
-            onProbabilityStateUpdate={({ state, groupResults, knockoutResults }) => {
-              setLiveProbabilityState(state);
-              setLiveGroupResults(groupResults);
-              setLiveKnockoutResults(knockoutResults);
-            }}
+            onProbabilityStateUpdate={handleProbabilityStateUpdate}
             onActiveMatchesChange={setActiveMatches}
           />
         </div>
@@ -156,7 +176,7 @@ export function TournamentView() {
               onPlay={handlePlay}
               onStop={handleStop}
               onRestart={handleRestart}
-              onTournamentStructureClick={() => setStructureOpen((open) => !open)}
+              onTournamentStructureClick={handleTournamentStructureClick}
               tournamentStructureOpen={structureOpen}
             />
           </div>

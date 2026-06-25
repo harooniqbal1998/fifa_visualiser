@@ -2,6 +2,7 @@
 
 import {
   forwardRef,
+  memo,
   useCallback,
   useImperativeHandle,
   useLayoutEffect,
@@ -81,10 +82,9 @@ function upsertMatchResult(
   return [...results.filter((r) => r.matchId !== result.matchId), result];
 }
 
-export const PetalSimulationVisualization = forwardRef<
-  PetalSimulationVisualizationRef,
-  PetalSimulationVisualizationProps
->(function PetalSimulationVisualization(
+export const PetalSimulationVisualization = memo(
+  forwardRef<PetalSimulationVisualizationRef, PetalSimulationVisualizationProps>(
+    function PetalSimulationVisualization(
   { teams, snapshot, sessionPhase, onSimulatingChange, onSessionComplete, onDayChange, onProbabilityStateUpdate, onActiveMatchesChange },
   ref,
 ) {
@@ -124,9 +124,13 @@ export const PetalSimulationVisualization = forwardRef<
     ? (liveProbabilities ?? snapshot.probabilities)
     : snapshot.probabilities;
 
-  const standings = useLiveData
-    ? (liveStandings ?? getGroupStandings(snapshot.day))
-    : getGroupStandings(snapshot.day);
+  const standings = useMemo(
+    () =>
+      useLiveData
+        ? (liveStandings ?? getGroupStandings(snapshot.day))
+        : getGroupStandings(snapshot.day),
+    [useLiveData, liveStandings, snapshot.day],
+  );
 
   const bracketDepths = useLiveData
     ? (liveBracketDepths ?? snapshot.bracketDepths ?? {})
@@ -410,4 +414,5 @@ export const PetalSimulationVisualization = forwardRef<
       />
     </section>
   );
-});
+  }),
+);

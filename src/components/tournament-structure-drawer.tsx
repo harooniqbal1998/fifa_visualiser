@@ -23,14 +23,18 @@ export function TournamentStructureDrawer({
 }: TournamentStructureDrawerProps) {
   return (
     <aside
-      className={`flex h-full min-h-0 shrink-0 flex-col overflow-hidden border-l border-light-gray bg-background transition-[width,flex] duration-200 ease-out dark:border-light-gray/25 dark:bg-dark-heather ${
-        open ? "min-w-0 flex-1" : "w-0 border-l-0"
+      className={`flex h-full min-h-0 shrink-0 flex-col overflow-hidden border-l border-light-gray bg-background transition-[width] duration-200 ease-out will-change-[width] dark:border-light-gray/25 dark:bg-dark-heather ${
+        open ? "w-1/2 min-w-0" : "w-0 border-l-0"
       }`}
       aria-hidden={!open}
       aria-label="Tournament structure"
       {...(!open ? { inert: true } : {})}
     >
-      <div className="min-h-0 flex-1 snap-y snap-mandatory overflow-y-auto [scrollbar-width:thin]">
+      <div
+        className={`min-h-0 flex-1 snap-y snap-mandatory overflow-y-auto [scrollbar-width:thin] ${
+          open ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      >
         <section className="shrink-0 snap-start snap-always px-4 py-3">
           <TournamentGroupsPanel
             structure={structure}

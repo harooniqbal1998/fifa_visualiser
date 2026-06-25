@@ -14,6 +14,7 @@ import {
   clearDroppedTeams,
   createDisplayState,
   getPositionTransitionProgress,
+  isDisplaySettled,
   markTeamsDropped,
   resetDisplayFromLayout,
   setDropTargetsYOnly,
@@ -140,17 +141,82 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
     return interpolateLayout(start, target, progress);
   };
 
+  let cachedDpr = 1;
+  let cachedBackingW = 0;
+  let cachedBackingH = 0;
+
+  const syncCanvasBackingStore = () => {
+    if (!canvasEl) return;
+    const { width, height } = sizeRef.current;
+    const dpr = window.devicePixelRatio || 1;
+    const backingW = Math.round(width * dpr);
+    const backingH = Math.round(height * dpr);
+
+    if (
+      backingW === cachedBackingW &&
+      backingH === cachedBackingH &&
+      dpr === cachedDpr
+    ) {
+      return;
+    }
+
+    cachedBackingW = backingW;
+    cachedBackingH = backingH;
+    cachedDpr = dpr;
+
+    canvasEl.width = backingW;
+    canvasEl.height = backingH;
+    canvasEl.style.width = `${width}px`;
+    canvasEl.style.height = `${height}px`;
+
+    const ctx = canvasEl.getContext("2d");
+    if (ctx) {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+  };
+
+  const isLayoutTransitioning = () => {
+    const target = layoutRef.current;
+    const start = layoutStartRef.current;
+    if (!target || !start) return false;
+    const timestamp = displayStateRef.current.lastTimestamp ?? performance.now();
+    return getPositionTransitionProgress(displayStateRef.current, timestamp) < 1;
+  };
+
+  const needsContinuousRender = () =>
+    !isDisplaySettled(displayStateRef.current) ||
+    matchControllerRef.current.hasActiveMatches() ||
+    isLayoutTransitioning();
+
+  const syncLoopState = () => {
+    if (needsContinuousRender()) {
+      loop.start();
+    } else {
+      loop.stop();
+    }
+  };
+
+  const applyResize = (width: number, height: number) => {
+    sizingRef.current = getVizSizing();
+    sizeRef.current = { width, height };
+    syncCanvasBackingStore();
+    if (!freezeLayoutRef.current) {
+      const layout = recomputeLayout();
+      layoutRef.current = layout;
+      layoutStartRef.current = layout;
+      resetDisplayFromLayout(displayStateRef.current, layout);
+    }
+    paint();
+    syncLoopState();
+  };
+
   const paint = () => {
     if (!canvasEl) return;
     const ctx = canvasEl.getContext("2d");
     if (!ctx) return;
 
     const { width, height } = sizeRef.current;
-    const dpr = window.devicePixelRatio || 1;
-    canvasEl.width = width * dpr;
-    canvasEl.height = height * dpr;
-    canvasEl.style.width = `${width}px`;
-    canvasEl.style.height = `${height}px`;
+    const dpr = cachedDpr || window.devicePixelRatio || 1;
 
     const teamMeta = new Map(
       teamsRef.current.map((t) => [
@@ -198,6 +264,9 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
     onFrame(timestamp) {
       tickDisplayState(displayStateRef.current, timestamp);
       paint();
+      if (!needsContinuousRender()) {
+        loop.stop();
+      }
     },
   });
 
@@ -207,6 +276,11 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
 
     setCanvasElement(canvas) {
       canvasEl = canvas;
+      if (canvas) {
+        syncCanvasBackingStore();
+        paint();
+        syncLoopState();
+      }
     },
 
     setTeams(teams) {
@@ -243,13 +317,15 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
     },
 
     updateSize(width, height) {
-      sizingRef.current = getVizSizing();
-      sizeRef.current = { width, height };
-      if (!freezeLayoutRef.current) {
-        const layout = commitLayoutTransition(recomputeLayout());
-        setTargetsFromLayout(displayStateRef.current, layout, { syncStandingRanks: true });
+      const prev = sizeRef.current;
+      if (
+        Math.abs(prev.width - width) < 1 &&
+        Math.abs(prev.height - height) < 1
+      ) {
+        return;
       }
-      paint();
+
+      applyResize(width, height);
     },
 
     resetLayout() {
@@ -257,6 +333,7 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
       layoutStartRef.current = layout;
       resetDisplayFromLayout(displayStateRef.current, layout);
       paint();
+      syncLoopState();
     },
 
     syncLayoutTargets() {
@@ -264,6 +341,7 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
       setTargetsFromLayout(displayStateRef.current, layout, { syncStandingRanks: true });
       const radii = Object.fromEntries(layout.teams.map((n) => [n.id, n.r]));
       setRadiusTargets(displayStateRef.current, radii);
+      syncLoopState();
     },
 
     paint,
@@ -279,6 +357,7 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
     getRefApi(): PetalCanvasRef {
       return {
         playMatch(event) {
+          loop.start();
           return matchControllerRef.current.playMatch(event);
         },
 
@@ -286,6 +365,7 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
           borderTeamIds: string[] = [],
           positionTeamIds?: string[],
         ) {
+          loop.start();
           const config = configRef.current;
           displayStateRef.current.transitionDurationMs = config.rankTransitionDurationMs;
 
@@ -313,6 +393,7 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
         },
 
         async eliminateTeams(teamIds) {
+          loop.start();
           for (const id of teamIds) {
             eliminatedRef.current.add(id);
           }
@@ -353,12 +434,14 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
             borderTeamIds,
             positionOnlyTeamIds,
           });
+          syncLoopState();
         },
 
         syncRadiusTargetsFromLayout(layout) {
           commitLayoutTransition(layout);
           const radii = Object.fromEntries(layout.teams.map((n) => [n.id, n.r]));
           setRadiusTargets(displayStateRef.current, radii);
+          syncLoopState();
         },
 
         resetDisplay(layout) {
@@ -366,6 +449,7 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
           layoutRef.current = layout;
           resetDisplayFromLayout(displayStateRef.current, layout);
           paint();
+          syncLoopState();
         },
 
         setEliminated(eliminated) {
