@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useEffect, useImperativeHandle, useLayoutEffect, useRef } from "react";
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from "react";
 import type { Team } from "@/types";
 import type { StandingRow } from "@/lib/standings";
 import type { PetalLayoutConfig } from "@/components/viz/petal/petal-config";
@@ -22,6 +22,8 @@ type PetalCanvasProps = {
   freezeLayout?: boolean;
   showGuideRings?: boolean;
   showRankBorders?: boolean;
+  starredTeamIds?: string[];
+  onTeamClick?: (teamId: string) => void;
 };
 
 export const PetalCanvas = forwardRef<PetalCanvasRef, PetalCanvasProps>(
@@ -37,11 +39,13 @@ export const PetalCanvas = forwardRef<PetalCanvasRef, PetalCanvasProps>(
       freezeLayout = false,
       showGuideRings = true,
       showRankBorders = true,
+      starredTeamIds = [],
+      onTeamClick,
     } = props;
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const runtimeRef = useRef(createPetalCanvasRuntime());
-    const prevFreezeLayoutRef = useRef(freezeLayout);
+    const [hoveredTeamId, setHoveredTeamId] = useState<string | null>(null);
     const prevStandingsRef = useRef(standings);
     const prevBracketDepthsRef = useRef(bracketDepths);
     const prevProbabilitiesRef = useRef(probabilities);
@@ -50,6 +54,39 @@ export const PetalCanvas = forwardRef<PetalCanvasRef, PetalCanvasProps>(
     const prevShowGuideRingsRef = useRef(showGuideRings);
     const prevShowRankBordersRef = useRef(showRankBorders);
     const prevTeamsRef = useRef(teams);
+    const prevStarredTeamIdsRef = useRef(starredTeamIds);
+    const starredTeamIdsKeyRef = useRef(starredTeamIds.join("\0"));
+
+    const getCanvasCoords = useCallback((clientX: number, clientY: number) => {
+      const canvas = canvasRef.current;
+      if (!canvas) return null;
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top,
+      };
+    }, []);
+
+    const handleCanvasClick = useCallback(
+      (event: React.MouseEvent<HTMLCanvasElement>) => {
+        if (!onTeamClick) return;
+        const coords = getCanvasCoords(event.clientX, event.clientY);
+        if (!coords) return;
+        const teamId = runtimeRef.current.hitTest(coords.x, coords.y);
+        if (teamId) onTeamClick(teamId);
+      },
+      [getCanvasCoords, onTeamClick],
+    );
+
+    const handleCanvasMouseMove = useCallback(
+      (event: React.MouseEvent<HTMLCanvasElement>) => {
+        const coords = getCanvasCoords(event.clientX, event.clientY);
+        if (!coords) return;
+        const teamId = runtimeRef.current.hitTest(coords.x, coords.y);
+        setHoveredTeamId(teamId);
+      },
+      [getCanvasCoords],
+    );
 
     useImperativeHandle(ref, () => runtimeRef.current.getRefApi(), []);
 
@@ -109,12 +146,12 @@ export const PetalCanvas = forwardRef<PetalCanvasRef, PetalCanvasProps>(
         eliminated,
         showGuideRings,
         showRankBorders,
+        starredTeamIds,
       });
       runtimeRef.current.resetLayout();
     }, [teams]);
 
     useLayoutEffect(() => {
-      const wasFrozen = prevFreezeLayoutRef.current;
       const standingsChanged = !standingsEqual(prevStandingsRef.current, standings);
       const bracketDepthsChanged = prevBracketDepthsRef.current !== bracketDepths;
       const probabilitiesChanged = prevProbabilitiesRef.current !== probabilities;
@@ -123,6 +160,8 @@ export const PetalCanvas = forwardRef<PetalCanvasRef, PetalCanvasProps>(
       const showGuideRingsChanged = prevShowGuideRingsRef.current !== showGuideRings;
       const showRankBordersChanged = prevShowRankBordersRef.current !== showRankBorders;
       const teamsChanged = prevTeamsRef.current !== teams;
+      const starredKey = starredTeamIds.join("\0");
+      const starredChanged = starredTeamIdsKeyRef.current !== starredKey;
 
       prevStandingsRef.current = standings;
       prevBracketDepthsRef.current = bracketDepths;
@@ -132,6 +171,8 @@ export const PetalCanvas = forwardRef<PetalCanvasRef, PetalCanvasProps>(
       prevShowGuideRingsRef.current = showGuideRings;
       prevShowRankBordersRef.current = showRankBorders;
       prevTeamsRef.current = teams;
+      prevStarredTeamIdsRef.current = starredTeamIds;
+      starredTeamIdsKeyRef.current = starredKey;
 
       runtimeRef.current.syncFromProps({
         teams,
@@ -144,6 +185,7 @@ export const PetalCanvas = forwardRef<PetalCanvasRef, PetalCanvasProps>(
         eliminated,
         showGuideRings,
         showRankBorders,
+        starredTeamIds,
       });
 
       const layoutInputsChanged =
@@ -156,14 +198,14 @@ export const PetalCanvas = forwardRef<PetalCanvasRef, PetalCanvasProps>(
         showRankBordersChanged ||
         teamsChanged;
 
-      if (wasFrozen && !freezeLayout) {
-        runtimeRef.current.syncLayoutTargets();
-      } else if (!isSimulating && !freezeLayout && layoutInputsChanged) {
-        runtimeRef.current.resetLayout();
+      if (starredChanged) {
+        runtimeRef.current.setStarredTeamIds(starredTeamIds);
       }
 
-      prevFreezeLayoutRef.current = freezeLayout;
-    }, [standings, bracketDepths, config, probabilities, isSimulating, teams, eliminated, freezeLayout, showGuideRings, showRankBorders]);
+      if (!isSimulating && !freezeLayout && layoutInputsChanged) {
+        runtimeRef.current.resetLayout();
+      }
+    }, [standings, bracketDepths, config, probabilities, isSimulating, teams, eliminated, freezeLayout, showGuideRings, showRankBorders, starredTeamIds]);
 
     useEffect(() => {
       const flags = runtimeRef.current.flagsRef.current;
@@ -186,7 +228,14 @@ export const PetalCanvas = forwardRef<PetalCanvasRef, PetalCanvasProps>(
 
     return (
       <div ref={containerRef} className="h-full min-h-0 w-full">
-        <canvas ref={canvasRef} className="h-full w-full" aria-hidden="true" />
+        <canvas
+          ref={canvasRef}
+          className={`h-full w-full ${onTeamClick ? "pointer-events-auto" : ""} ${hoveredTeamId ? "cursor-pointer" : ""}`}
+          aria-label="Tournament team visualization"
+          onClick={handleCanvasClick}
+          onMouseMove={handleCanvasMouseMove}
+          onMouseLeave={() => setHoveredTeamId(null)}
+        />
       </div>
     );
   },

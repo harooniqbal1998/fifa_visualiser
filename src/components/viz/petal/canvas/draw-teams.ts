@@ -31,7 +31,7 @@ function drawRankBorder(
   eliminatedOpacity: number,
   showRankBorders: boolean,
 ) {
-  if (!showRankBorders || team.rankBorderOpacity <= 0 || isEliminated) {
+  if (team.isStarred || !showRankBorders || team.rankBorderOpacity <= 0 || isEliminated) {
     return;
   }
 
@@ -48,12 +48,61 @@ function drawRankBorder(
   ctx.stroke();
 }
 
+export function drawStarredRing(
+  ctx: CanvasRenderingContext2D,
+  team: TeamDrawItem,
+  rotationRad: number,
+) {
+  if (!team.isStarred || team.isParticipant) return;
+
+  const { x, y, r } = team;
+  const ringRadius = r + 10;
+
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(rotationRad);
+  ctx.translate(-x, -y);
+
+  // Dark underlay so dashes read on both light page bg and dark bubbles.
+  ctx.beginPath();
+  ctx.arc(x, y, ringRadius, 0, Math.PI * 2);
+  ctx.strokeStyle = withAlpha(brandColors.darkHeather, 0.55);
+  ctx.lineWidth = 4;
+  ctx.setLineDash([]);
+  ctx.globalAlpha = 1;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(x, y, ringRadius, 0, Math.PI * 2);
+  ctx.strokeStyle = withAlpha(brandColors.hermes, 0.95);
+  ctx.lineWidth = 2.5;
+  ctx.setLineDash([6, 4]);
+  ctx.globalAlpha = 1;
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.restore();
+}
+
+export function drawStarredRings(
+  ctx: CanvasRenderingContext2D,
+  teams: TeamDrawItem[],
+  starRotationRad: number,
+) {
+  const starred = teams.filter((t) => t.isStarred && !t.isParticipant);
+  starred.sort((a, b) => a.renderLayer - b.renderLayer);
+  for (const team of starred) {
+    drawStarredRing(ctx, team, starRotationRad);
+  }
+}
+
 export function drawTeam(
   ctx: CanvasRenderingContext2D,
   team: TeamDrawItem,
   flags: Map<string, HTMLImageElement>,
   eliminatedOpacity: number,
   showRankBorders: boolean,
+  starRotationRad = 0,
 ) {
   const { x, y, r, opacity, isWinner, isParticipant } = team;
   const isEliminated = team.isEliminated && !isParticipant;
@@ -69,11 +118,14 @@ export function drawTeam(
   ctx.globalAlpha = isEliminated ? eliminatedOpacity : baseAlpha * 0.95;
   ctx.fill();
 
-  const stroke = getStrokeStyle(team);
-  ctx.strokeStyle = stroke.color;
-  ctx.lineWidth = stroke.width;
-  ctx.globalAlpha = isEliminated ? eliminatedOpacity : baseAlpha;
-  ctx.stroke();
+  const showDefaultStroke = !team.isStarred || isParticipant || isWinner || team.isLoser;
+  if (showDefaultStroke) {
+    const stroke = getStrokeStyle(team);
+    ctx.strokeStyle = stroke.color;
+    ctx.lineWidth = stroke.width;
+    ctx.globalAlpha = isEliminated ? eliminatedOpacity : baseAlpha;
+    ctx.stroke();
+  }
 
   drawRankBorder(ctx, team, baseAlpha, isEliminated, eliminatedOpacity, showRankBorders);
 
@@ -112,9 +164,10 @@ export function drawTeams(
   flags: Map<string, HTMLImageElement>,
   eliminatedOpacity: number,
   showRankBorders: boolean,
+  starRotationRad = 0,
 ) {
   const sorted = [...teams].sort((a, b) => a.renderLayer - b.renderLayer);
   for (const team of sorted) {
-    drawTeam(ctx, team, flags, eliminatedOpacity, showRankBorders);
+    drawTeam(ctx, team, flags, eliminatedOpacity, showRankBorders, starRotationRad);
   }
 }

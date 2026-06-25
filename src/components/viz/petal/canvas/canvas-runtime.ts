@@ -25,9 +25,10 @@ import {
   waitUntilSettled,
 } from "@/components/viz/petal/canvas/display-state";
 import { buildTeamDrawItems, renderFrame } from "@/components/viz/petal/canvas/frame-renderer";
+import { hitTestTeam } from "@/components/viz/petal/canvas/hit-test";
 import { createMatchController } from "@/components/viz/petal/canvas/match-controller";
 import { createRenderLoop } from "@/components/viz/petal/canvas/render-loop";
-import type { PetalCanvasRef } from "@/components/viz/petal/canvas/types";
+import type { PetalCanvasRef, TeamDrawItem } from "@/components/viz/petal/canvas/types";
 import { computeFixedRenderLayer, getVizSizing } from "@/components/viz/viz-math";
 
 export type PetalCanvasRuntime = {
@@ -48,7 +49,10 @@ export type PetalCanvasRuntime = {
     eliminated?: Set<string>;
     showGuideRings?: boolean;
     showRankBorders?: boolean;
+    starredTeamIds?: string[];
   }) => void;
+  setStarredTeamIds: (ids: string[]) => void;
+  hitTest: (canvasX: number, canvasY: number) => string | null;
   updateSize: (width: number, height: number) => void;
   resetLayout: () => void;
   syncLayoutTargets: () => void;
@@ -81,6 +85,9 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
   const eliminatedRef: MutableRefObject<Set<string>> = { current: new Set() };
   const showGuideRingsRef: MutableRefObject<boolean> = { current: true };
   const showRankBordersRef: MutableRefObject<boolean> = { current: true };
+  const starredTeamIdsRef: MutableRefObject<Set<string>> = { current: new Set() };
+  const starRotationRef: MutableRefObject<number> = { current: 0 };
+  const lastDrawTeamsRef: MutableRefObject<TeamDrawItem[]> = { current: [] };
 
   const displayStateRef = { current: createDisplayState(200) };
   const matchControllerRef = {
@@ -186,7 +193,8 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
   const needsContinuousRender = () =>
     !isDisplaySettled(displayStateRef.current) ||
     matchControllerRef.current.hasActiveMatches() ||
-    isLayoutTransitioning();
+    isLayoutTransitioning() ||
+    starredTeamIdsRef.current.size > 0;
 
   const syncLoopState = () => {
     if (needsContinuousRender()) {
@@ -241,7 +249,14 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
       flags: flagsRef.current,
       teamMeta,
       eliminated: eliminatedRef.current,
+      starredTeamIds: starredTeamIdsRef.current,
     });
+
+    lastDrawTeamsRef.current = drawTeams;
+
+    if (starredTeamIdsRef.current.size > 0) {
+      starRotationRef.current += 0.02;
+    }
 
     renderFrame({
       ctx,
@@ -257,6 +272,7 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
       eliminated: eliminatedRef.current,
       showGuideRings: showGuideRingsRef.current,
       showRankBorders: showRankBordersRef.current,
+      starRotationRad: starRotationRef.current,
     });
   };
 
@@ -314,6 +330,20 @@ export function createPetalCanvasRuntime(): PetalCanvasRuntime {
       if (props.showRankBorders !== undefined) {
         showRankBordersRef.current = props.showRankBorders;
       }
+      if (props.starredTeamIds !== undefined) {
+        starredTeamIdsRef.current = new Set(props.starredTeamIds);
+        syncLoopState();
+      }
+    },
+
+    setStarredTeamIds(ids) {
+      starredTeamIdsRef.current = new Set(ids);
+      paint();
+      syncLoopState();
+    },
+
+    hitTest(canvasX, canvasY) {
+      return hitTestTeam(canvasX, canvasY, lastDrawTeamsRef.current);
     },
 
     updateSize(width, height) {

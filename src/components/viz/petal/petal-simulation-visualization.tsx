@@ -19,6 +19,7 @@ import { computePetalPositions } from "@/components/viz/petal/petal-layout";
 import {
   createSimulationSeed,
   DEFAULT_ANIMATION_PARAMS,
+  type AnimationParams,
 } from "@/lib/simulation/animation-params";
 import {
   buildSimulationBootstrap,
@@ -27,7 +28,7 @@ import {
 import { buildStandingsFromGroupResults } from "@/lib/simulation/group-advancement";
 import { getEliminatedFromResults } from "@/lib/simulation/bracket-state";
 import type { ProbabilityState } from "@/lib/probability/types";
-import type { CollisionEvent, SimMatchResult } from "@/lib/simulation/types";
+import type { CollisionEvent, SimMatchResult, SimulationRunState } from "@/lib/simulation/types";
 import { runSimulation } from "@/lib/simulation/simulation-engine";
 import { getVizSizing } from "@/components/viz/viz-math";
 
@@ -52,6 +53,8 @@ type PetalSimulationVisualizationProps = {
     knockoutResults: SimMatchResult[];
   }) => void;
   onActiveMatchesChange?: (matches: CollisionEvent[]) => void;
+  starredTeamIds?: string[];
+  onTeamClick?: (teamId: string) => void;
 };
 
 function getSnapshotEliminated(snapshot: Snapshot): Set<string> {
@@ -82,10 +85,16 @@ function upsertMatchResult(
   return [...results.filter((r) => r.matchId !== result.matchId), result];
 }
 
+type SimulationCheckpoint = {
+  seed: number;
+  params: AnimationParams;
+  runState: SimulationRunState;
+};
+
 export const PetalSimulationVisualization = memo(
   forwardRef<PetalSimulationVisualizationRef, PetalSimulationVisualizationProps>(
     function PetalSimulationVisualization(
-  { teams, snapshot, sessionPhase, onSimulatingChange, onSessionComplete, onDayChange, onProbabilityStateUpdate, onActiveMatchesChange },
+  { teams, snapshot, sessionPhase, onSimulatingChange, onSessionComplete, onDayChange, onProbabilityStateUpdate, onActiveMatchesChange, starredTeamIds = [], onTeamClick },
   ref,
 ) {
   const canvasRef = useRef<PetalCanvasRef>(null);
@@ -100,6 +109,8 @@ export const PetalSimulationVisualization = memo(
   const knockoutResultsRef = useRef<SimMatchResult[]>([]);
   const probabilityStateRef = useRef<ProbabilityState | null>(null);
   const prevSnapshotDayRef = useRef(snapshot.day);
+  const checkpointRef = useRef<SimulationCheckpoint | null>(null);
+  const simulationRunRef = useRef<Promise<SimulationRunState> | null>(null);
 
   const [liveProbabilities, setLiveProbabilities] = useState<Record<string, number> | null>(
     null,
@@ -196,16 +207,33 @@ export const PetalSimulationVisualization = memo(
     }
   }, []);
 
-  const stopSimulation = useCallback(() => {
+  const stopSimulation = useCallback(async () => {
     abortRef.current = true;
-    onSimulatingChange(false);
     canvasRef.current?.stop();
     clearActiveMatches();
+
+    const run = simulationRunRef.current;
+    if (run) {
+      const runState = await run;
+      if (checkpointRef.current) {
+        checkpointRef.current = { ...checkpointRef.current, runState };
+      }
+    }
+
+    onSimulatingChange(false);
   }, [onSimulatingChange, clearActiveMatches]);
 
   const resetSimulation = useCallback(
-    (restoreDay?: number) => {
+    async (restoreDay?: number) => {
       abortRef.current = true;
+
+      const run = simulationRunRef.current;
+      if (run) {
+        await run;
+      }
+      checkpointRef.current = null;
+      simulationRunRef.current = null;
+
       setLiveProbabilities(null);
       setLiveStandings(null);
       setLiveBracketDepths(null);
@@ -253,31 +281,55 @@ export const PetalSimulationVisualization = memo(
   const startSimulation = useCallback(async () => {
     if (sessionPhase === "running") return;
 
-    const startDay = snapshot.day;
-    const simulationSeed = createSimulationSeed();
-    const params = { ...DEFAULT_ANIMATION_PARAMS, simulationSeed };
-    const bootstrap = buildSimulationBootstrap(startDay);
+    if (simulationRunRef.current) {
+      await simulationRunRef.current;
+    }
+
+    const isResume = sessionPhase === "frozen" && checkpointRef.current !== null;
+
+    let params: AnimationParams;
+    let startDay: number;
+    let initialState: SimulationRunState | undefined;
+    let resume = false;
+
+    if (isResume) {
+      const checkpoint = checkpointRef.current!;
+      params = checkpoint.params;
+      initialState = checkpoint.runState;
+      startDay = checkpoint.runState.day;
+      resume = true;
+    } else {
+      const simulationSeed = createSimulationSeed();
+      params = { ...DEFAULT_ANIMATION_PARAMS, simulationSeed };
+      startDay = snapshot.day;
+      const bootstrap = buildSimulationBootstrap(startDay);
+
+      probabilitiesRef.current = { ...bootstrap.probabilities };
+      standingsRef.current = bootstrap.standings;
+      bracketDepthsRef.current = bootstrap.bracketDepths;
+      groupResultsRef.current = bootstrap.runState.groupResults;
+      knockoutResultsRef.current = bootstrap.runState.results;
+      probabilityStateRef.current = bootstrap.runState.probability;
+      eliminatedRef.current = new Set(bootstrap.eliminated);
+
+      setLiveProbabilities({ ...bootstrap.probabilities });
+      setLiveStandings(bootstrap.standings);
+      setLiveBracketDepths(bootstrap.bracketDepths);
+      setLiveEliminated(new Set(bootstrap.eliminated));
+
+      canvasRef.current?.setProbabilities(bootstrap.probabilities);
+
+      checkpointRef.current = {
+        seed: simulationSeed,
+        params,
+        runState: bootstrap.runState,
+      };
+    }
 
     abortRef.current = false;
     onSimulatingChange(true);
 
-    probabilitiesRef.current = { ...bootstrap.probabilities };
-    standingsRef.current = bootstrap.standings;
-    bracketDepthsRef.current = bootstrap.bracketDepths;
-    groupResultsRef.current = bootstrap.runState.groupResults;
-    knockoutResultsRef.current = bootstrap.runState.results;
-    probabilityStateRef.current = bootstrap.runState.probability;
-    eliminatedRef.current = new Set(bootstrap.eliminated);
-
-    setLiveProbabilities({ ...bootstrap.probabilities });
-    setLiveStandings(bootstrap.standings);
-    setLiveBracketDepths(bootstrap.bracketDepths);
-    setLiveEliminated(new Set(bootstrap.eliminated));
-
-    // Canvas already reflects idle snapshot layout — keep display state on play.
-    canvasRef.current?.setProbabilities(bootstrap.probabilities);
-
-    await runSimulation(
+    simulationRunRef.current = runSimulation(
       params,
       {
         onDayChange: (day) => {
@@ -373,8 +425,13 @@ export const PetalSimulationVisualization = memo(
         },
         shouldAbort: () => abortRef.current,
       },
-      { startDay },
+      { startDay, initialState, resume },
     );
+
+    const runState = await simulationRunRef.current;
+    if (checkpointRef.current) {
+      checkpointRef.current = { ...checkpointRef.current, runState };
+    }
   }, [
     sessionPhase,
     onSimulatingChange,
@@ -411,6 +468,8 @@ export const PetalSimulationVisualization = memo(
         isSimulating={isSimulating}
         freezeLayout={freezeLayout}
         showRankBorders={snapshot.day < 12}
+        starredTeamIds={starredTeamIds}
+        onTeamClick={onTeamClick}
       />
     </section>
   );

@@ -40,6 +40,7 @@ export type TeamDrawItem = {
   rankBorderOpacity: number;
   bracketDepth: number;
   isEliminated: boolean;
+  isStarred: boolean;
 };
 
 export type DrawFrameContext = {

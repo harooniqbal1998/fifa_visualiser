@@ -7,12 +7,13 @@ import {
   isWinner,
 } from "@/components/viz/petal/canvas/draw-matches";
 import { drawGuideRings } from "@/components/viz/petal/canvas/draw-rings";
-import { drawTeams } from "@/components/viz/petal/canvas/draw-teams";
+import { drawStarredRings, drawTeams } from "@/components/viz/petal/canvas/draw-teams";
 import type { DrawFrameContext } from "@/components/viz/petal/canvas/types";
 
-export function renderFrame(frame: DrawFrameContext) {
+export function renderFrame(frame: DrawFrameContext & { starRotationRad?: number }) {
   const { ctx, width, height, dpr, config, layout, displayState, matchController, flags, teams } =
     frame;
+  const starRotationRad = frame.starRotationRad ?? 0;
 
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, width, height);
@@ -25,20 +26,23 @@ export function renderFrame(frame: DrawFrameContext) {
   const backgroundTeams = teams.filter((t) => !t.isParticipant);
   const participantTeams = teams.filter((t) => t.isParticipant);
 
-  drawTeams(ctx, backgroundTeams, flags, config.eliminatedOpacity, frame.showRankBorders);
+  drawTeams(ctx, backgroundTeams, flags, config.eliminatedOpacity, frame.showRankBorders, starRotationRad);
   drawConnectors(ctx, activeMatches, displayState, config);
-  drawTeams(ctx, participantTeams, flags, config.eliminatedOpacity, frame.showRankBorders);
+  drawTeams(ctx, participantTeams, flags, config.eliminatedOpacity, frame.showRankBorders, starRotationRad);
+  drawStarredRings(ctx, teams, starRotationRad);
 }
 
 export function buildTeamDrawItems(
   frame: Omit<DrawFrameContext, "teams" | "eliminated" | "showGuideRings" | "showRankBorders"> & {
     teamMeta: Map<string, { isoCode: string; renderLayer: number; probability: number }>;
     eliminated: Set<string>;
+    starredTeamIds?: Set<string>;
   },
 ) {
   const activeMatches = frame.matchController.getActiveMatches();
   const highlighted = getHighlightedTeamIds(activeMatches);
   const hasActive = frame.matchController.hasActiveMatches();
+  const starred = frame.starredTeamIds ?? new Set<string>();
 
   const layoutTeamsById = new Map(
     frame.layout?.teams.map((node) => [node.id, node]) ?? [],
@@ -63,6 +67,7 @@ export function buildTeamDrawItems(
       rankBorderOpacity: pos?.rankBorderOpacity ?? 1,
       bracketDepth: layoutNode?.bracketDepth ?? 0,
       isEliminated: frame.eliminated.has(id),
+      isStarred: starred.has(id),
     };
   });
 

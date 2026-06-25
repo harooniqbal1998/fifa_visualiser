@@ -8,25 +8,31 @@ export type RenderLoop = {
 
 export function createRenderLoop(callbacks: RenderLoopCallbacks): RenderLoop {
   let rafId: number | null = null;
+  let running = false;
 
   const frame = (timestamp: number) => {
+    if (!running) return;
     callbacks.onFrame(timestamp);
-    rafId = requestAnimationFrame(frame);
+    if (running) {
+      rafId = requestAnimationFrame(frame);
+    }
   };
 
   return {
     start() {
-      if (rafId !== null) return;
+      if (running) return;
+      running = true;
       rafId = requestAnimationFrame(frame);
     },
     stop() {
+      running = false;
       if (rafId !== null) {
         cancelAnimationFrame(rafId);
         rafId = null;
       }
     },
     isRunning() {
-      return rafId !== null;
+      return running;
     },
   };
 }
