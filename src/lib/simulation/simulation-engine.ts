@@ -61,6 +61,8 @@ export type SimulationOptions = {
   startDay: number;
   stopAfterDay?: number;
   groupStageOnly?: boolean;
+  initialState?: SimulationRunState;
+  resume?: boolean;
 };
 
 export async function runSimulation(
@@ -68,20 +70,28 @@ export async function runSimulation(
   callbacks: SimulationCallbacks,
   options: SimulationOptions,
 ): Promise<SimulationRunState> {
-  const state = buildSimulationBootstrap(options.startDay).runState;
-  const rng = createSeededRng(params.simulationSeed);
+  const state =
+    options.initialState ?? buildSimulationBootstrap(options.startDay).runState;
+  const timelineStartDay = options.initialState?.day ?? options.startDay;
+  let rngState = options.initialState?.rngState ?? (params.simulationSeed || 1);
+  const rng = () => {
+    rngState = (rngState * 48271) % 0x7fffffff;
+    return rngState / 0x7fffffff;
+  };
   const config = params.probabilityConfig;
-  const timelineDays = getTimelineDays().filter((entry) => entry.day >= options.startDay);
+  const timelineDays = getTimelineDays().filter((entry) => entry.day >= timelineStartDay);
 
-  emitProbabilityUpdate(state, callbacks);
-  callbacks.onBracketStateChange(
-    buildBracketState(
-      state.day,
-      state.results,
-      state.groupResults,
-      state.probability.eliminated,
-    ),
-  );
+  if (!options.resume) {
+    emitProbabilityUpdate(state, callbacks);
+    callbacks.onBracketStateChange(
+      buildBracketState(
+        state.day,
+        state.results,
+        state.groupResults,
+        state.probability.eliminated,
+      ),
+    );
+  }
 
   for (const entry of timelineDays) {
     if (callbacks.shouldAbort()) break;
@@ -99,7 +109,7 @@ export async function runSimulation(
     await delay(params.dayPauseMs, callbacks.shouldAbort);
     if (callbacks.shouldAbort()) break;
 
-    if (entry.day === 12 && options.startDay <= 12) {
+    if (entry.day === 12 && timelineStartDay <= 12 && !state.advancingThirdGroups) {
       const beforeEliminated = new Set(state.probability.eliminated);
       const standings = buildStandingsFromGroupResults(state.groupResults);
       const thirdRng = createSeededRng(params.simulationSeed + 12);
@@ -257,5 +267,6 @@ export async function runSimulation(
     callbacks.onComplete(state);
   }
 
+  state.rngState = rngState;
   return state;
 }

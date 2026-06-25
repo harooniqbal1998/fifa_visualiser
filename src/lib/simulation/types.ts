@@ -54,4 +54,6 @@ export type SimulationRunState = {
   groupResults: SimMatchResult[];
   /** Locked at day-12 cut; must match R32 bracket resolution. */
   advancingThirdGroups?: string[];
+  /** LCG cursor for deterministic resume after pause. */
+  rngState?: number;
 };
