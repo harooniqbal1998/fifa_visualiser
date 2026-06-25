@@ -26,13 +26,20 @@ type BracketSlotPopoverProps = {
   children: ReactNode;
 };
 
+const BRACKET_FLAG_PX = 16;
+
 function TeamFlag({ isoCode }: { isoCode: string }) {
   return (
-    <img
-      src={getFlagUrl(isoCode)}
-      alt=""
-      className="h-3 w-3 shrink-0 rounded-full object-cover ring-1 ring-light-gray dark:ring-light-gray/30"
-    />
+    <span
+      className="inline-block shrink-0 overflow-hidden rounded-full ring-1 ring-light-gray dark:ring-light-gray/30"
+      style={{ width: BRACKET_FLAG_PX, height: BRACKET_FLAG_PX }}
+    >
+      <img
+        src={getFlagUrl(isoCode)}
+        alt=""
+        className="block size-full object-cover"
+      />
+    </span>
   );
 }
 

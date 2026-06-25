@@ -86,7 +86,7 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
     return (
       <div
         ref={ref}
-        className="flex w-full flex-row items-center gap-2 rounded-full border border-light-gray bg-background/90 px-2.5 py-1.5 shadow-lg backdrop-blur dark:border-light-gray/25 dark:bg-dark-heather/90"
+        className="flex w-max max-w-[40vw] shrink-0 flex-row items-center gap-2 rounded-full border border-light-gray bg-background/90 px-2.5 py-1.5 shadow-lg backdrop-blur dark:border-light-gray/25 dark:bg-dark-heather/90"
       >
         {isRunning ? (
           <>

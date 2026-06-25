@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   getDayRange,
   getSnapshotByDay,
@@ -8,6 +8,7 @@ import {
 } from "@/lib/tournament";
 import { SimulationPill } from "@/components/simulation-pill";
 import { MatchSpotlightBar } from "@/components/match-spotlight-bar";
+import { StarredTeamsSummaryPill } from "@/components/starred-teams-summary-pill";
 import { DEFAULT_PETAL_CONFIG } from "@/components/viz/petal/petal-config";
 import { teamsById } from "@/data/teams";
 import {
@@ -23,6 +24,7 @@ import type { CollisionEvent, SimMatchResult } from "@/lib/simulation/types";
 import { getScriptedResultsUpToDay } from "@/lib/simulation/advancement";
 import { buildTournamentStructureView } from "@/lib/tournament-structure";
 import { TournamentStructureDrawer } from "@/components/tournament-structure-drawer";
+import { useStarredTeamsStore } from "@/stores/starred-teams-store";
 
 export function TournamentView() {
   const { min } = getDayRange();
@@ -36,6 +38,9 @@ export function TournamentView() {
   const [liveKnockoutResults, setLiveKnockoutResults] = useState<SimMatchResult[]>([]);
   const [activeMatches, setActiveMatches] = useState<CollisionEvent[]>([]);
   const [structureOpen, setStructureOpen] = useState(false);
+  const starredTeamIds = useStarredTeamsStore((s) => s.starredTeamIds);
+  const toggleStar = useStarredTeamsStore((s) => s.toggleStar);
+  const unstar = useStarredTeamsStore((s) => s.unstar);
   const snapshot = getSnapshotByDay(day) ?? getSnapshotByDay(min)!;
   const petalVizRef = useRef<PetalSimulationVisualizationRef>(null);
   const sessionPhaseRef = useRef<SimulationSessionPhase>("idle");
@@ -73,6 +78,21 @@ export function TournamentView() {
       eloRatings: structureEloRatings,
     });
   }, [day, sessionPhase, liveGroupResults, liveKnockoutResults, structureEloRatings]);
+
+  useEffect(() => {
+    for (const id of starredTeamIds) {
+      if (tournamentStructure.eliminatedTeamIds.has(id)) {
+        unstar(id);
+      }
+    }
+  }, [tournamentStructure.eliminatedTeamIds, starredTeamIds, unstar]);
+
+  const handleTeamClick = useCallback(
+    (teamId: string) => {
+      toggleStar(teamId);
+    },
+    [toggleStar],
+  );
 
   const handlePlay = useCallback(() => {
     petalVizRef.current?.startSimulation();
@@ -149,6 +169,8 @@ export function TournamentView() {
             onDayChange={handleDayChange}
             onProbabilityStateUpdate={handleProbabilityStateUpdate}
             onActiveMatchesChange={setActiveMatches}
+            starredTeamIds={starredTeamIds}
+            onTeamClick={handleTeamClick}
           />
         </div>
         <TournamentStructureDrawer
@@ -168,17 +190,26 @@ export function TournamentView() {
               holdDurationMs={DEFAULT_PETAL_CONFIG.matchHoldDurationMs}
             />
           ) : null}
-          <div className="pointer-events-auto w-max max-w-[40vw]">
-            <SimulationPill
+          <div className="pointer-events-auto flex max-w-[90vw] flex-col items-center gap-2">
+            <StarredTeamsSummaryPill
+              starredTeamIds={starredTeamIds}
               day={day}
-              onDayChange={handleDayChange}
               sessionPhase={sessionPhase}
-              onPlay={handlePlay}
-              onStop={handleStop}
-              onRestart={handleRestart}
-              onTournamentStructureClick={handleTournamentStructureClick}
-              tournamentStructureOpen={structureOpen}
+              liveState={liveProbabilityState}
+              snapshot={snapshot}
             />
+            <div className="w-max max-w-[40vw] shrink-0">
+              <SimulationPill
+                day={day}
+                onDayChange={handleDayChange}
+                sessionPhase={sessionPhase}
+                onPlay={handlePlay}
+                onStop={handleStop}
+                onRestart={handleRestart}
+                onTournamentStructureClick={handleTournamentStructureClick}
+                tournamentStructureOpen={structureOpen}
+              />
+            </div>
           </div>
         </div>
       </div>

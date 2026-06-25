@@ -188,7 +188,7 @@ function pointerIsOverElement(
 }
 
 const TRIGGER_BASE_CLASS =
-  "relative z-10 inline-flex h-7 shrink-0 cursor-pointer items-center text-xs font-medium leading-none text-inherit outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/50 disabled:cursor-not-allowed disabled:opacity-70 dark:hover:bg-black/10 dark:focus-visible:ring-hermes/50";
+  "relative z-10 inline-flex h-7 shrink-0 cursor-pointer items-center text-xs font-medium leading-none text-inherit outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/50 disabled:cursor-default disabled:opacity-70 dark:hover:bg-black/10 dark:focus-visible:ring-hermes/50";
 
 export function TimelineDayPicker({
   day,

@@ -1,8 +1,10 @@
 "use client";
 
 import { groups } from "@/data/groups";
+import { StarToggleButton } from "@/components/star-toggle-button";
+import { TeamFlagAvatar } from "@/components/team-flag-avatar";
+import { useStarredTeamsStore } from "@/stores/starred-teams-store";
 import type { Team } from "@/types";
-import { getFlagUrl } from "@/lib/flags";
 import type { TournamentStructureView } from "@/lib/tournament-structure";
 import type { StandingRow } from "@/lib/standings";
 
@@ -12,15 +14,7 @@ type TournamentGroupsPanelProps = {
   day: number;
 };
 
-function TeamFlag({ isoCode }: { isoCode: string }) {
-  return (
-    <img
-      src={getFlagUrl(isoCode)}
-      alt=""
-      className="h-4 w-4 shrink-0 rounded-full object-cover ring-1 ring-light-gray dark:ring-light-gray/30"
-    />
-  );
-}
+const GROUP_FLAG_PX = 16;
 
 function isAdvancingTeam(
   groupId: string,
@@ -41,15 +35,19 @@ function GroupCard({
   structure,
   teamsById,
   showAdvancement,
+  starredTeamIds,
+  toggleStar,
 }: {
   groupId: string;
   rows: StandingRow[];
   structure: TournamentStructureView;
   teamsById: Record<string, Team>;
   showAdvancement: boolean;
+  starredTeamIds: Set<string>;
+  toggleStar: (teamId: string) => void;
 }) {
   return (
-    <div className="min-w-[8rem] shrink-0 rounded-lg border border-light-gray p-2 dark:border-light-gray/25">
+    <div className="w-[12rem] shrink-0 rounded-lg border border-light-gray p-2 dark:border-light-gray/25">
       <div className="mb-1 text-[10px] font-semibold text-dark-heather/55 dark:text-light-gray/55">
         Group {groupId}
       </div>
@@ -59,11 +57,12 @@ function GroupCard({
           const eliminated = structure.eliminatedTeamIds.has(row.teamId);
           const advancing =
             showAdvancement && isAdvancingTeam(groupId, index, structure);
+          const starred = starredTeamIds.has(row.teamId);
 
           return (
             <div
               key={row.teamId}
-              className={`flex items-center gap-1.5 text-[11px] leading-tight ${
+              className={`flex items-center gap-1 text-[11px] leading-tight ${
                 eliminated
                   ? "opacity-40"
                   : advancing
@@ -71,15 +70,21 @@ function GroupCard({
                     : ""
               }`}
             >
-              <span className="w-3 shrink-0 text-dark-heather/55 dark:text-light-gray/55">{index + 1}</span>
-              <TeamFlag isoCode={team?.isoCode ?? ""} />
+              <StarToggleButton
+                starred={starred}
+                onToggle={() => toggleStar(row.teamId)}
+                blockedTitle={
+                  !starred && starredTeamIds.size >= 3 ? "Max 3 teams" : undefined
+                }
+              />
+              <TeamFlagAvatar
+                isoCode={team?.isoCode ?? ""}
+                size={GROUP_FLAG_PX}
+              />
               <span className="min-w-0 flex-1 truncate text-dark-heather dark:text-light-gray">
                 {team?.name ?? row.teamId}
               </span>
-              <span className="shrink-0 font-mono text-dark-heather/55 dark:text-light-gray/55">{row.points}</span>
-              <span className="w-6 shrink-0 text-right font-mono text-dark-heather/55 dark:text-light-gray/55">
-                {row.gd > 0 ? `+${row.gd}` : row.gd}
-              </span>
+              <span className="shrink-0 font-mono font-bold text-dark-heather/55 dark:text-light-gray/55">{row.points}</span>
             </div>
           );
         })}
@@ -93,6 +98,9 @@ export function TournamentGroupsPanel({
   teamsById,
   day,
 }: TournamentGroupsPanelProps) {
+  const starredTeamIds = useStarredTeamsStore((s) => s.starredTeamIds);
+  const toggleStar = useStarredTeamsStore((s) => s.toggleStar);
+  const starredSet = new Set(starredTeamIds);
   const showAdvancement = day >= 12 && structure.advancingThirdGroups.length > 0;
 
   return (
@@ -106,6 +114,8 @@ export function TournamentGroupsPanel({
             rows={rows}
             structure={structure}
             teamsById={teamsById}
+            starredTeamIds={starredSet}
+            toggleStar={toggleStar}
             showAdvancement={showAdvancement}
           />
         );
