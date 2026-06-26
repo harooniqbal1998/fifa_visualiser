@@ -156,7 +156,7 @@ export function TournamentView() {
   }, []);
 
   return (
-    <div className="relative h-full w-full min-h-0">
+    <div className="relative h-full min-h-0 w-full max-md:min-h-dvh">
       <div className="relative flex h-full min-h-0 flex-row gap-4">
         <div
           className={`relative min-h-0 min-w-0 flex-1 ${structureOpen ? "max-md:hidden" : ""}`}

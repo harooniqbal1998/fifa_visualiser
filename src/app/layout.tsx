@@ -25,9 +25,11 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
+  viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#474A4A" },
+    { media: "(max-width: 767px)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: light) and (min-width: 768px)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark) and (min-width: 768px)", color: "#474A4A" },
   ],
 };
 
@@ -39,9 +41,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full min-h-dvh bg-background antialiased`}
     >
-      <body className="flex h-full w-full flex-col">{children}</body>
+      <body className="flex min-h-dvh h-full w-full flex-col bg-background">{children}</body>
     </html>
   );
 }

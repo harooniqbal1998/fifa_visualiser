@@ -15,10 +15,9 @@ export function withAlpha(hex: string, alpha: number): string {
 }
 
 export function isDarkMode(): boolean {
-  return (
-    typeof window !== "undefined" &&
-    window.matchMedia("(prefers-color-scheme: dark)").matches
-  );
+  if (typeof window === "undefined") return false;
+  if (window.matchMedia("(max-width: 767px)").matches) return false;
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
 }
 
 export type CanvasPalette = {

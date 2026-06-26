@@ -227,10 +227,15 @@ export const PetalCanvas = forwardRef<PetalCanvasRef, PetalCanvasProps>(
     }, []);
 
     useEffect(() => {
-      const mq = window.matchMedia("(prefers-color-scheme: dark)");
+      const darkMq = window.matchMedia("(prefers-color-scheme: dark)");
+      const mobileMq = window.matchMedia("(max-width: 767px)");
       const onChange = () => runtimeRef.current.paint();
-      mq.addEventListener("change", onChange);
-      return () => mq.removeEventListener("change", onChange);
+      darkMq.addEventListener("change", onChange);
+      mobileMq.addEventListener("change", onChange);
+      return () => {
+        darkMq.removeEventListener("change", onChange);
+        mobileMq.removeEventListener("change", onChange);
+      };
     }, []);
 
     return (

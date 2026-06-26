@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (@media (prefers-color-scheme: dark) and (min-width: 768px));
+
 :root {
   --background: #ffffff;
 
@@ -15,6 +17,8 @@
 
 html {
   font-size: clamp(16px, 0.875rem + 0.35vw, 22px);
+  min-height: 100dvh;
+  background: var(--background);
 }
 
 @theme inline {
@@ -29,14 +33,23 @@ html {
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) and (min-width: 768px) {
   :root {
-    --background: #0a0a0a;
+    --background: #474A4A;
     --foreground: var(--light-gray);
   }
 }
 
+@media (max-width: 767px) {
+  :root {
+    --background: #ffffff;
+    --foreground: var(--dark-heather);
+    color-scheme: light;
+  }
+}
+
 body {
+  min-height: 100dvh;
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;

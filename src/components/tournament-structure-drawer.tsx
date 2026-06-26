@@ -46,9 +46,9 @@ export function TournamentStructureDrawer({
 
   return (
     <aside
-      className={`flex min-h-0 shrink-0 flex-col overflow-hidden bg-background dark:bg-dark-heather ${
+      className={`flex min-h-0 shrink-0 flex-col overflow-hidden bg-background max-md:min-h-dvh dark:bg-dark-heather ${
         open
-          ? "max-md:fixed max-md:inset-0 max-md:z-40 max-md:w-full md:relative md:h-full md:w-1/2 md:min-w-0 md:border-l md:border-light-gray dark:md:border-light-gray/25"
+          ? "max-md:fixed max-md:inset-0 max-md:z-40 max-md:w-full max-md:pt-[env(safe-area-inset-top)] max-md:pb-[env(safe-area-inset-bottom)] md:relative md:h-full md:w-1/2 md:min-w-0 md:border-l md:border-light-gray dark:md:border-light-gray/25"
           : "max-md:pointer-events-none max-md:invisible max-md:w-0 md:relative md:h-full md:w-0 md:border-l-0"
       } md:transition-[width] md:duration-200 md:ease-out md:will-change-[width]`}
       aria-hidden={!open}
