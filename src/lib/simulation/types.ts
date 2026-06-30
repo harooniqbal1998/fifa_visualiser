@@ -38,7 +38,10 @@ export type SimulationCallbacks = {
   onEliminations: (event: EliminationEvent) => Promise<void>;
   onProbabilitiesUpdate: (probabilities: Record<string, number>) => void;
   onProbabilityDeltas?: (deltas: import("@/lib/probability/types").ProbUpdateEvent[]) => void;
-  onProbabilityStateUpdate?: (state: import("@/lib/probability/types").ProbabilityState) => void;
+  onProbabilityStateUpdate?: (
+    state: import("@/lib/probability/types").ProbabilityState,
+    meta?: { advancingThirdGroups?: string[] },
+  ) => void;
   onBracketStateChange: (state: {
     possibleOpponents: Record<string, string[]>;
     bracketDepths: Record<string, number>;

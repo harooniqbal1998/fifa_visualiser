@@ -1,7 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Team } from "@/types";
+import { TimelineDayPicker } from "@/components/timeline";
+import type { SimulationSessionPhase } from "@/components/viz/petal/petal-simulation-visualization";
 import { TournamentBracketTree } from "@/components/tournament-bracket-tree";
 import { TournamentGroupsPanel } from "@/components/tournament-groups-panel";
 import { getStarredPathMatchIds } from "@/lib/starred-teams/team-bracket-path";
@@ -15,6 +17,8 @@ type TournamentStructureDrawerProps = {
   structure: TournamentStructureView;
   teamsById: Record<string, Team>;
   day: number;
+  sessionPhase: SimulationSessionPhase;
+  onDayChange: (day: number) => void;
   activeMatches?: CollisionEvent[];
 };
 
@@ -32,10 +36,17 @@ export function TournamentStructureDrawer({
   structure,
   teamsById,
   day,
+  sessionPhase,
+  onDayChange,
   activeMatches = [],
 }: TournamentStructureDrawerProps) {
   const starredTeamIds = useStarredTeamsStore((s) => s.starredTeamIds);
   const [pathFilterActive, setPathFilterActive] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const groupsSectionRef = useRef<HTMLElement>(null);
+  const bracketSectionRef = useRef<HTMLElement>(null);
+  const isSimulating = sessionPhase === "running";
+  const showKnockout = day >= 13;
 
   const starredPathMatchIds = useMemo(
     () => getStarredPathMatchIds(starredTeamIds, structure),
@@ -44,9 +55,15 @@ export function TournamentStructureDrawer({
 
   const showPathFilter = starredTeamIds.length > 0;
 
+  useEffect(() => {
+    if (!open) return;
+    const target = showKnockout ? bracketSectionRef.current : groupsSectionRef.current;
+    target?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [day, open, showKnockout]);
+
   return (
     <aside
-      className={`flex min-h-0 shrink-0 flex-col overflow-hidden bg-background max-md:min-h-dvh dark:bg-dark-heather ${
+      className={`flex min-h-0 shrink-0 flex-col overflow-hidden bg-transparent max-md:min-h-dvh ${
         open
           ? "max-md:fixed max-md:inset-0 max-md:z-40 max-md:w-full max-md:pt-[env(safe-area-inset-top)] max-md:pb-[env(safe-area-inset-bottom)] md:relative md:h-full md:w-1/2 md:min-w-0 md:border-l md:border-light-gray dark:md:border-light-gray/25"
           : "max-md:pointer-events-none max-md:invisible max-md:w-0 md:relative md:h-full md:w-0 md:border-l-0"
@@ -56,17 +73,24 @@ export function TournamentStructureDrawer({
       {...(!open ? { inert: true } : {})}
     >
       {open ? (
-        <div className="flex shrink-0 items-center justify-between border-b border-light-gray px-4 py-3 md:hidden dark:border-light-gray/25">
-          <span className="text-sm font-medium text-dark-heather dark:text-light-gray">
+        <div className="flex shrink-0 items-center justify-between gap-2 border-b border-light-gray px-4 py-3 dark:border-light-gray/25">
+          <span className="shrink-0 text-sm font-medium text-dark-heather md:hidden dark:text-light-gray">
             Tournament structure
           </span>
+          <div className="min-w-0 flex-1 md:flex-none">
+            <TimelineDayPicker
+              day={day}
+              onDayChange={onDayChange}
+              isSimulating={isSimulating}
+            />
+          </div>
           {onClose ? (
             <button
               type="button"
               title="Close tournament structure"
               aria-label="Close tournament structure"
               onClick={onClose}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-light-gray text-dark-heather hover:bg-light-gray/20 dark:border-light-gray/30 dark:text-light-gray dark:hover:bg-light-gray/10"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-light-gray text-dark-heather hover:bg-light-gray/20 md:hidden dark:border-light-gray/30 dark:text-light-gray dark:hover:bg-light-gray/10"
             >
               <CloseIcon />
             </button>
@@ -96,18 +120,25 @@ export function TournamentStructureDrawer({
         </div>
       ) : null}
       <div
+        ref={scrollContainerRef}
         className={`min-h-0 flex-1 snap-y snap-mandatory overflow-y-auto [scrollbar-width:thin] ${
           open ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       >
-        <section className="shrink-0 snap-start snap-always px-4 py-3">
+        <section
+          ref={groupsSectionRef}
+          className="shrink-0 snap-start snap-always px-4 py-3"
+        >
           <TournamentGroupsPanel
             structure={structure}
             teamsById={teamsById}
             day={day}
           />
         </section>
-        <section className="min-h-full shrink-0 snap-start snap-always px-4 pb-3 pt-1">
+        <section
+          ref={bracketSectionRef}
+          className="min-h-full shrink-0 snap-start snap-always px-4 pb-3 pt-1"
+        >
           <TournamentBracketTree
             structure={structure}
             teamsById={teamsById}

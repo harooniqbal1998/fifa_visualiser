@@ -2,6 +2,7 @@ import type { MatchStage } from "@/types";
 import { PRE_TOURNAMENT_DAY } from "@/lib/match-context-label";
 import { matches } from "@/data/matches";
 import { KNOCKOUT_TREE } from "@/data/knockout-bracket";
+import { formatWinnerFeederLabel, getFifaMatchNumber } from "@/data/knockout-match-numbers";
 import {
   R32_FIXTURES_BY_ID,
   type FixtureSlot,
@@ -38,6 +39,8 @@ const STAGE_ORDER: MatchStage[] = [
 const knockoutFixtureOrder = new Map(
   matches.filter((m) => m.stage !== "group").map((m, index) => [m.id, index]),
 );
+
+const NODE_BY_ID = new Map(ALL_KNOCKOUT_NODES.map((node) => [node.matchId, node]));
 
 export type BracketParticipant = {
   teamId?: string;
@@ -88,6 +91,27 @@ function r32Placeholder(matchId: string, side: "home" | "away"): string {
   return formatFixtureSlotLabel(slot);
 }
 
+function knockoutPlaceholder(matchId: string, side: "home" | "away"): string {
+  const node = NODE_BY_ID.get(matchId);
+  if (!node) return "TBD";
+  const child = side === "home" ? node.homeSource : node.awaySource;
+  if (!child) return "TBD";
+  return formatWinnerFeederLabel(child.matchId);
+}
+
+export function getBracketMatchFeeders(matchId: string): [string, string] | null {
+  const node = NODE_BY_ID.get(matchId);
+  if (!node?.homeSource || !node.awaySource) return null;
+  return [
+    formatWinnerFeederLabel(node.homeSource.matchId),
+    formatWinnerFeederLabel(node.awaySource.matchId),
+  ];
+}
+
+export function getBracketMatchFifaNumber(matchId: string): number | undefined {
+  return getFifaMatchNumber(matchId);
+}
+
 function resolveParticipant(
   teamId: string | undefined,
   matchId: string,
@@ -99,7 +123,7 @@ function resolveParticipant(
   if (matchId.startsWith("r32-")) {
     return { label: r32Placeholder(matchId, side) };
   }
-  return { label: "TBD" };
+  return { label: knockoutPlaceholder(matchId, side) };
 }
 
 export function topSlotCandidates(
@@ -169,6 +193,7 @@ export function buildTournamentStructureView(
     day,
     knockoutResults,
     groupResults,
+    resolvedThirdGroups.length > 0 ? resolvedThirdGroups : undefined,
   );
 
   const resultByMatchId = new Map(

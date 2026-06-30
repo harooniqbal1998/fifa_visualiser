@@ -47,11 +47,19 @@ export function buildSimulationBootstrap(startDay: number): SimulationBootstrap 
   const replay = replayTournamentToDay(startDay - 1);
   const { probability, groupResults, knockoutResults } = replay;
 
+  let advancingThirdGroups: string[] | undefined;
+  if (startDay > 12 && groupResults.length > 0) {
+    const standings = buildStandingsFromGroupResults(groupResults);
+    const thirdRng = createSeededRng(BOOTSTRAP_STRUCTURE_SEED);
+    advancingThirdGroups = selectAdvancingThirdPlaceGroups(standings, thirdRng);
+  }
+
   const { bracketDepths } = buildBracketState(
     startDay,
     knockoutResults,
     groupResults,
     probability.eliminated,
+    { advancingThirdGroups },
   );
 
   const runState: SimulationRunState = {
@@ -59,13 +67,8 @@ export function buildSimulationBootstrap(startDay: number): SimulationBootstrap 
     probability,
     results: [...knockoutResults],
     groupResults: [...groupResults],
+    advancingThirdGroups,
   };
-
-  if (startDay > 12 && groupResults.length > 0) {
-    const standings = buildStandingsFromGroupResults(groupResults);
-    const thirdRng = createSeededRng(BOOTSTRAP_STRUCTURE_SEED);
-    runState.advancingThirdGroups = selectAdvancingThirdPlaceGroups(standings, thirdRng);
-  }
 
   return {
     runState,

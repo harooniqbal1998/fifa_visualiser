@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Team } from "@/types";
 import { getFlagUrl } from "@/lib/flags";
+import { formatMatchContextLabel } from "@/lib/match-context-label";
 import type { CollisionEvent } from "@/lib/simulation/types";
 
 const MIN_CAROUSEL_MS = 700;
@@ -124,6 +125,9 @@ export function MatchSpotlightBar({
 
   return (
     <div className="max-w-[calc(100vw-2rem)] w-max rounded-xl border border-light-gray/80 bg-background/85 px-3 py-1 shadow-sm backdrop-blur dark:border-light-gray/25 dark:bg-dark-heather/85">
+      <div className="mb-1 text-center text-[10px] font-medium uppercase tracking-wide text-dark-heather/55 dark:text-light-gray/55">
+        {formatMatchContextLabel(currentMatch)}
+      </div>
       <div className="relative grid overflow-hidden">
         <div className="invisible col-start-1 row-start-1" aria-hidden>
           <MatchupRow match={currentMatch} teamsById={teamsById} />

@@ -1,13 +1,14 @@
 "use client";
 
-import type { MatchStage } from "@/types";
+import type { BracketNode } from "@/data/knockout-bracket";
+import { KNOCKOUT_TREE } from "@/data/knockout-bracket";
 import type { Team } from "@/types";
 import { BracketSlotPopover } from "@/components/bracket-slot-popover";
 import { TeamFlagAvatar } from "@/components/team-flag-avatar";
-import { KNOCKOUT_LABELS } from "@/lib/match-context-label";
 import type { CollisionEvent } from "@/lib/simulation/types";
 import {
-  STAGE_ORDER,
+  getBracketMatchFeeders,
+  getBracketMatchFifaNumber,
   type BracketMatchView,
   type SlotCandidate,
   type TournamentStructureView,
@@ -23,7 +24,6 @@ type TournamentBracketTreeProps = {
 };
 
 const BRACKET_FLAG_PX = 16;
-/** Horizontal offset between stacked flags; must be < BRACKET_FLAG_PX to keep overlap. */
 const BRACKET_STACK_STEP_PX = 10;
 
 function TeamFlag({
@@ -45,11 +45,9 @@ function TeamFlag({
 function StackedFlagAvatars({
   candidates,
   teamsById,
-  starredTeamIds,
 }: {
   candidates: SlotCandidate[];
   teamsById: Record<string, Team>;
-  starredTeamIds?: Set<string>;
 }) {
   if (candidates.length === 0) return null;
 
@@ -91,14 +89,12 @@ function BracketTeamRow({
   teamsById,
   isWinner,
   isLoser,
-  starredTeamIds,
 }: {
   participant: BracketMatchView["home"];
   candidates?: SlotCandidate[];
   teamsById: Record<string, Team>;
   isWinner: boolean;
   isLoser: boolean;
-  starredTeamIds?: Set<string>;
 }) {
   const team = participant.teamId ? teamsById[participant.teamId] : undefined;
   const isPlaceholder = !participant.teamId;
@@ -112,16 +108,12 @@ function BracketTeamRow({
           : isLoser
             ? "text-light-gray/60 line-through dark:text-light-gray/45"
             : isPlaceholder
-              ? "text-dark-heather/55 dark:text-light-gray/55"
+              ? "text-dark-heather/55 italic dark:text-light-gray/55"
               : "text-dark-heather dark:text-light-gray"
       }`}
     >
       {showStack ? (
-        <StackedFlagAvatars
-          candidates={candidates!}
-          teamsById={teamsById}
-          starredTeamIds={starredTeamIds}
-        />
+        <StackedFlagAvatars candidates={candidates!} teamsById={teamsById} />
       ) : team ? (
         <TeamFlag isoCode={team.isoCode} />
       ) : null}
@@ -140,14 +132,12 @@ function BracketMatchCard({
   activeMatches,
   pathFilterActive,
   starredPathMatchIds,
-  starredTeamIds,
 }: {
   match: BracketMatchView;
   teamsById: Record<string, Team>;
   activeMatches?: CollisionEvent[];
   pathFilterActive?: boolean;
   starredPathMatchIds?: Set<string>;
-  starredTeamIds?: Set<string>;
 }) {
   const active = activeMatches?.find((m) => m.matchId === match.matchId);
   const winnerId = active?.winner ?? match.winnerId;
@@ -161,20 +151,27 @@ function BracketMatchCard({
     starredPathMatchIds &&
     starredPathMatchIds.size > 0 &&
     !starredPathMatchIds.has(match.matchId);
+  const fifaNumber = getBracketMatchFifaNumber(match.matchId);
+  const feeders = getBracketMatchFeeders(match.matchId);
 
   return (
     <div
-      className={`w-full overflow-hidden border border-light-gray transition-opacity dark:border-light-gray/25 ${
+      className={`w-[9.5rem] shrink-0 overflow-hidden border border-light-gray transition-opacity dark:border-light-gray/25 ${
         dimmed ? "opacity-30" : "opacity-100"
       }`}
     >
+      {fifaNumber !== undefined ? (
+        <div className="border-b border-light-gray bg-light-gray/10 px-2 py-0.5 text-center font-mono text-[9px] text-dark-heather/55 dark:border-light-gray/25 dark:bg-light-gray/5 dark:text-light-gray/55">
+          M{fifaNumber}
+          {feeders ? ` · ${feeders[0]} v ${feeders[1]}` : null}
+        </div>
+      ) : null}
       <BracketTeamRow
         participant={match.home}
         candidates={active ? undefined : match.homeCandidates}
         teamsById={teamsById}
         isWinner={homeWon}
         isLoser={awayWon}
-        starredTeamIds={starredTeamIds}
       />
       <div className="border-t border-light-gray dark:border-light-gray/25" />
       <BracketTeamRow
@@ -183,7 +180,6 @@ function BracketMatchCard({
         teamsById={teamsById}
         isWinner={awayWon}
         isLoser={homeWon}
-        starredTeamIds={starredTeamIds}
       />
       {played && match.homeScore !== undefined && match.awayScore !== undefined ? (
         <div className="border-t border-light-gray px-2 py-1 text-center font-mono text-[10px] text-dark-heather/55 dark:border-light-gray/25 dark:text-light-gray/55">
@@ -194,43 +190,80 @@ function BracketMatchCard({
   );
 }
 
-function StageColumn({
-  stage,
-  matches,
+function ConnectorLines() {
+  return (
+    <div
+      className="relative mx-1 w-4 shrink-0 self-stretch"
+      aria-hidden
+    >
+      <div className="absolute top-1/4 right-0 h-px w-full bg-light-gray dark:bg-light-gray/30" />
+      <div className="absolute bottom-1/4 right-0 h-px w-full bg-light-gray dark:bg-light-gray/30" />
+      <div className="absolute top-1/4 bottom-1/4 right-0 w-px bg-light-gray dark:bg-light-gray/30" />
+      <div className="absolute top-1/2 right-0 h-px w-full bg-light-gray dark:bg-light-gray/30" />
+    </div>
+  );
+}
+
+function BracketSubtree({
+  node,
+  matchById,
   teamsById,
   activeMatches,
   pathFilterActive,
   starredPathMatchIds,
-  starredTeamIds,
 }: {
-  stage: MatchStage;
-  matches: BracketMatchView[];
+  node: BracketNode;
+  matchById: Map<string, BracketMatchView>;
   teamsById: Record<string, Team>;
   activeMatches?: CollisionEvent[];
   pathFilterActive?: boolean;
   starredPathMatchIds?: Set<string>;
-  starredTeamIds?: Set<string>;
 }) {
-  if (stage === "group") return null;
+  const match = matchById.get(node.matchId);
+  if (!match) return null;
+
+  const hasChildren = node.homeSource && node.awaySource;
+
+  if (!hasChildren) {
+    return (
+      <BracketMatchCard
+        match={match}
+        teamsById={teamsById}
+        activeMatches={activeMatches}
+        pathFilterActive={pathFilterActive}
+        starredPathMatchIds={starredPathMatchIds}
+      />
+    );
+  }
 
   return (
-    <div className="flex min-w-0 flex-1 flex-col">
-      <div className="mb-2 text-center text-[10px] font-semibold leading-tight text-dark-heather/55 dark:text-light-gray/55">
-        {KNOCKOUT_LABELS[stage]}
+    <div className="flex items-center">
+      <div className="flex flex-col justify-around gap-6 py-2">
+        <BracketSubtree
+          node={node.homeSource!}
+          matchById={matchById}
+          teamsById={teamsById}
+          activeMatches={activeMatches}
+          pathFilterActive={pathFilterActive}
+          starredPathMatchIds={starredPathMatchIds}
+        />
+        <BracketSubtree
+          node={node.awaySource!}
+          matchById={matchById}
+          teamsById={teamsById}
+          activeMatches={activeMatches}
+          pathFilterActive={pathFilterActive}
+          starredPathMatchIds={starredPathMatchIds}
+        />
       </div>
-      <div className="flex flex-1 flex-col justify-around gap-4">
-        {matches.map((match) => (
-          <BracketMatchCard
-            key={match.matchId}
-            match={match}
-            teamsById={teamsById}
-            activeMatches={activeMatches}
-            pathFilterActive={pathFilterActive}
-            starredPathMatchIds={starredPathMatchIds}
-            starredTeamIds={starredTeamIds}
-          />
-        ))}
-      </div>
+      <ConnectorLines />
+      <BracketMatchCard
+        match={match}
+        teamsById={teamsById}
+        activeMatches={activeMatches}
+        pathFilterActive={pathFilterActive}
+        starredPathMatchIds={starredPathMatchIds}
+      />
     </div>
   );
 }
@@ -241,43 +274,22 @@ export function TournamentBracketTree({
   activeMatches,
   pathFilterActive = false,
   starredPathMatchIds,
-  starredTeamIds,
 }: TournamentBracketTreeProps) {
-  const matchesByStage = STAGE_ORDER.reduce(
-    (acc, stage) => {
-      acc[stage] = structure.bracketMatches.filter((m) => m.stage === stage);
-      return acc;
-    },
-    {} as Record<MatchStage, BracketMatchView[]>,
+  const matchById = new Map(
+    structure.bracketMatches.map((match) => [match.matchId, match]),
   );
 
   return (
     <div className="pb-2">
-      <div className="flex w-full items-stretch gap-2 px-1">
-        {STAGE_ORDER.map((stage, stageIndex) => {
-          const stageMatches = matchesByStage[stage];
-          if (!stageMatches?.length) return null;
-
-          return (
-            <div key={stage} className="flex min-w-0 flex-1 items-stretch">
-              {stageIndex > 0 ? (
-                <div
-                  className="mr-2 w-px shrink-0 self-stretch border-l border-dashed border-light-gray dark:border-light-gray/30"
-                  aria-hidden
-                />
-              ) : null}
-              <StageColumn
-                stage={stage}
-                matches={stageMatches}
-                teamsById={teamsById}
-                activeMatches={activeMatches}
-                pathFilterActive={pathFilterActive}
-                starredPathMatchIds={starredPathMatchIds}
-                starredTeamIds={starredTeamIds}
-              />
-            </div>
-          );
-        })}
+      <div className="overflow-x-auto pb-2">
+        <BracketSubtree
+          node={KNOCKOUT_TREE}
+          matchById={matchById}
+          teamsById={teamsById}
+          activeMatches={activeMatches}
+          pathFilterActive={pathFilterActive}
+          starredPathMatchIds={starredPathMatchIds}
+        />
       </div>
     </div>
   );

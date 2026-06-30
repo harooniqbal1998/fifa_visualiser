@@ -54,7 +54,9 @@ function emitProbabilityUpdate(
   if (feed.lastDeltas && callbacks.onProbabilityDeltas) {
     callbacks.onProbabilityDeltas(feed.lastDeltas);
   }
-  callbacks.onProbabilityStateUpdate?.(state.probability);
+  callbacks.onProbabilityStateUpdate?.(state.probability, {
+    advancingThirdGroups: state.advancingThirdGroups,
+  });
 }
 
 export type SimulationOptions = {
@@ -89,6 +91,7 @@ export async function runSimulation(
         state.results,
         state.groupResults,
         state.probability.eliminated,
+        { advancingThirdGroups: state.advancingThirdGroups },
       ),
     );
   }
@@ -104,6 +107,7 @@ export async function runSimulation(
         state.results,
         state.groupResults,
         state.probability.eliminated,
+        { advancingThirdGroups: state.advancingThirdGroups },
       ),
     );
     await delay(params.dayPauseMs, callbacks.shouldAbort);
@@ -133,6 +137,7 @@ export async function runSimulation(
           state.results,
           state.groupResults,
           state.probability.eliminated,
+          { advancingThirdGroups: state.advancingThirdGroups },
         ),
       );
 
@@ -226,6 +231,7 @@ export async function runSimulation(
       ]);
 
       state.probability = await recomputePromise;
+      if (callbacks.shouldAbort()) break;
 
       for (const { event } of events) {
 
@@ -236,13 +242,17 @@ export async function runSimulation(
             state.results,
             state.groupResults,
             state.probability.eliminated,
+            { advancingThirdGroups: state.advancingThirdGroups },
           ),
         );
 
         if (callbacks.onMatchResolved) {
           await callbacks.onMatchResolved(event, state.groupResults);
         }
+        if (callbacks.shouldAbort()) break;
       }
+
+      if (callbacks.shouldAbort()) break;
 
       await delay(params.batchPauseMs, callbacks.shouldAbort);
     }

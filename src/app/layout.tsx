@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { DM_Sans, Geist, Geist_Mono, Jost, Montserrat } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -11,6 +11,27 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+const fifaFutureBold = Jost({
+  variable: "--font-fifa-future-bold",
+  subsets: ["latin"],
+});
+
+const fifaMontserrat = Montserrat({
+  variable: "--font-fifa-montserrat",
+  subsets: ["latin"],
+});
+
+const fifaProximaNova = DM_Sans({
+  variable: "--font-fifa-proxima-nova",
+  subsets: ["latin"],
+});
+
+const fifaFontVariables = [
+  fifaFutureBold.variable,
+  fifaMontserrat.variable,
+  fifaProximaNova.variable,
+].join(" ");
 
 export const metadata: Metadata = {
   title: "FIFA26 visualizer",
@@ -41,7 +62,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full min-h-dvh bg-background antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${fifaFontVariables} h-full min-h-dvh bg-background antialiased`}
     >
       <body className="flex min-h-dvh h-full w-full flex-col bg-background">{children}</body>
     </html>

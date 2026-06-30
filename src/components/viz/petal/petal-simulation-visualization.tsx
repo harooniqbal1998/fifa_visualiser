@@ -35,9 +35,9 @@ import { getVizSizing } from "@/components/viz/viz-math";
 export type SimulationSessionPhase = "idle" | "running" | "frozen" | "completed";
 
 export type PetalSimulationVisualizationRef = {
-  stopSimulation: () => void;
-  startSimulation: () => void;
-  resetSimulation: (restoreDay?: number) => void;
+  stopSimulation: () => Promise<void>;
+  startSimulation: () => Promise<void>;
+  resetSimulation: (restoreDay?: number) => Promise<void>;
 };
 
 type PetalSimulationVisualizationProps = {
@@ -51,6 +51,7 @@ type PetalSimulationVisualizationProps = {
     state: ProbabilityState;
     groupResults: SimMatchResult[];
     knockoutResults: SimMatchResult[];
+    advancingThirdGroups?: string[];
   }) => void;
   onActiveMatchesChange?: (matches: CollisionEvent[]) => void;
   starredTeamIds?: string[];
@@ -107,10 +108,14 @@ export const PetalSimulationVisualization = memo(
   const eliminatedRef = useRef<Set<string>>(getSnapshotEliminated(snapshot));
   const groupResultsRef = useRef<SimMatchResult[]>([]);
   const knockoutResultsRef = useRef<SimMatchResult[]>([]);
+  const advancingThirdGroupsRef = useRef<string[] | undefined>(undefined);
   const probabilityStateRef = useRef<ProbabilityState | null>(null);
   const prevSnapshotDayRef = useRef(snapshot.day);
   const checkpointRef = useRef<SimulationCheckpoint | null>(null);
   const simulationRunRef = useRef<Promise<SimulationRunState> | null>(null);
+  const stopPromiseRef = useRef<Promise<void> | null>(null);
+  const sessionPhaseRef = useRef(sessionPhase);
+  sessionPhaseRef.current = sessionPhase;
 
   const [liveProbabilities, setLiveProbabilities] = useState<Record<string, number> | null>(
     null,
@@ -166,6 +171,7 @@ export const PetalSimulationVisualization = memo(
       standingsTable: Record<string, StandingRow[]>,
       depths: Record<string, number>,
       eliminatedSet: Set<string>,
+      advancingThirdGroups?: string[],
     ) => {
       const { width, height } = getCanvasSize();
       return computePetalPositions(
@@ -178,6 +184,7 @@ export const PetalSimulationVisualization = memo(
         DEFAULT_PETAL_CONFIG,
         getVizSizing(),
         eliminatedSet,
+        advancingThirdGroups,
       );
     },
     [teams],
@@ -195,6 +202,7 @@ export const PetalSimulationVisualization = memo(
       state: probState,
       groupResults: groupResultsRef.current,
       knockoutResults: knockoutResultsRef.current,
+      advancingThirdGroups: advancingThirdGroupsRef.current,
     });
   }, [onProbabilityStateUpdate]);
 
@@ -208,20 +216,27 @@ export const PetalSimulationVisualization = memo(
   }, []);
 
   const stopSimulation = useCallback(async () => {
-    abortRef.current = true;
-    canvasRef.current?.stop();
-    clearActiveMatches();
+    const stopWork = async () => {
+      abortRef.current = true;
+      canvasRef.current?.stop();
+      clearActiveMatches();
 
-    const run = simulationRunRef.current;
-    if (run) {
-      const runState = await run;
-      if (checkpointRef.current) {
-        checkpointRef.current = { ...checkpointRef.current, runState };
+      const run = simulationRunRef.current;
+      if (run) {
+        const runState = await run;
+        if (checkpointRef.current) {
+          checkpointRef.current = { ...checkpointRef.current, runState };
+        }
       }
-    }
+    };
 
-    onSimulatingChange(false);
-  }, [onSimulatingChange, clearActiveMatches]);
+    stopPromiseRef.current = stopWork();
+    try {
+      await stopPromiseRef.current;
+    } finally {
+      stopPromiseRef.current = null;
+    }
+  }, [clearActiveMatches]);
 
   const resetSimulation = useCallback(
     async (restoreDay?: number) => {
@@ -248,6 +263,7 @@ export const PetalSimulationVisualization = memo(
       bracketDepthsRef.current = restoreSnapshot.bracketDepths ?? {};
       groupResultsRef.current = [];
       knockoutResultsRef.current = [];
+      advancingThirdGroupsRef.current = undefined;
       probabilityStateRef.current = null;
 
       canvasRef.current?.stop();
@@ -279,13 +295,18 @@ export const PetalSimulationVisualization = memo(
   }, [snapshot.day, sessionPhase, resetSimulation]);
 
   const startSimulation = useCallback(async () => {
-    if (sessionPhase === "running") return;
+    if (stopPromiseRef.current) {
+      await stopPromiseRef.current;
+    }
+
+    if (sessionPhaseRef.current === "running") return;
 
     if (simulationRunRef.current) {
       await simulationRunRef.current;
     }
 
-    const isResume = sessionPhase === "frozen" && checkpointRef.current !== null;
+    const isResume =
+      sessionPhaseRef.current === "frozen" && checkpointRef.current !== null;
 
     let params: AnimationParams;
     let startDay: number;
@@ -297,6 +318,7 @@ export const PetalSimulationVisualization = memo(
       params = checkpoint.params;
       initialState = checkpoint.runState;
       startDay = checkpoint.runState.day;
+      advancingThirdGroupsRef.current = checkpoint.runState.advancingThirdGroups;
       resume = true;
     } else {
       const simulationSeed = createSimulationSeed();
@@ -310,6 +332,7 @@ export const PetalSimulationVisualization = memo(
       groupResultsRef.current = bootstrap.runState.groupResults;
       knockoutResultsRef.current = bootstrap.runState.results;
       probabilityStateRef.current = bootstrap.runState.probability;
+      advancingThirdGroupsRef.current = bootstrap.runState.advancingThirdGroups;
       eliminatedRef.current = new Set(bootstrap.eliminated);
 
       setLiveProbabilities({ ...bootstrap.probabilities });
@@ -360,6 +383,7 @@ export const PetalSimulationVisualization = memo(
               standingsRef.current,
               bracketDepthsRef.current,
               eliminatedRef.current,
+              advancingThirdGroupsRef.current,
             );
             canvasRef.current?.setLayoutTargets(layout);
             await canvasRef.current?.animateRankTransition();
@@ -374,6 +398,7 @@ export const PetalSimulationVisualization = memo(
             newStandings,
             bracketDepthsRef.current,
             eliminatedRef.current,
+            advancingThirdGroupsRef.current,
           );
           const matchTeams = [event.home, event.away];
           const groupId = teams.find((team) => team.id === event.home)?.group;
@@ -399,15 +424,20 @@ export const PetalSimulationVisualization = memo(
             standingsRef.current,
             bracketDepthsRef.current,
             eliminatedRef.current,
+            advancingThirdGroupsRef.current,
           );
           canvasRef.current?.syncRadiusTargetsFromLayout(layout);
         },
-        onProbabilityStateUpdate: (probState) => {
+        onProbabilityStateUpdate: (probState, meta) => {
           probabilityStateRef.current = probState;
+          if (meta?.advancingThirdGroups) {
+            advancingThirdGroupsRef.current = meta.advancingThirdGroups;
+          }
           onProbabilityStateUpdate?.({
             state: probState,
             groupResults: groupResultsRef.current,
             knockoutResults: knockoutResultsRef.current,
+            advancingThirdGroups: advancingThirdGroupsRef.current,
           });
         },
         onBracketStateChange: (state) => {
@@ -433,9 +463,9 @@ export const PetalSimulationVisualization = memo(
       checkpointRef.current = { ...checkpointRef.current, runState };
     }
   }, [
-    sessionPhase,
     onSimulatingChange,
     onSessionComplete,
+    onProbabilityStateUpdate,
     snapshot.day,
     computeLayout,
     onDayChange,

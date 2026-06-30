@@ -24,6 +24,7 @@ import type { CollisionEvent, SimMatchResult } from "@/lib/simulation/types";
 import { getScriptedResultsUpToDay } from "@/lib/simulation/advancement";
 import { buildTournamentStructureView } from "@/lib/tournament-structure";
 import { TournamentStructureDrawer } from "@/components/tournament-structure-drawer";
+import { FifaBackgroundTitle } from "@/components/fifa-background-title";
 import { useStarredTeamsStore } from "@/stores/starred-teams-store";
 
 export function TournamentView() {
@@ -36,6 +37,9 @@ export function TournamentView() {
   );
   const [liveGroupResults, setLiveGroupResults] = useState<SimMatchResult[]>([]);
   const [liveKnockoutResults, setLiveKnockoutResults] = useState<SimMatchResult[]>([]);
+  const [liveAdvancingThirdGroups, setLiveAdvancingThirdGroups] = useState<string[] | undefined>(
+    undefined,
+  );
   const [activeMatches, setActiveMatches] = useState<CollisionEvent[]>([]);
   const [structureOpen, setStructureOpen] = useState(false);
   const starredTeamIds = useStarredTeamsStore((s) => s.starredTeamIds);
@@ -76,8 +80,9 @@ export function TournamentView() {
 
     return buildTournamentStructureView(day, groupResults, knockoutResults, {
       eloRatings: structureEloRatings,
+      advancingThirdGroups: liveAdvancingThirdGroups,
     });
-  }, [day, sessionPhase, liveGroupResults, liveKnockoutResults, structureEloRatings]);
+  }, [day, sessionPhase, liveGroupResults, liveKnockoutResults, structureEloRatings, liveAdvancingThirdGroups]);
 
   useEffect(() => {
     for (const id of starredTeamIds) {
@@ -108,6 +113,7 @@ export function TournamentView() {
     setLiveProbabilityState(null);
     setLiveGroupResults([]);
     setLiveKnockoutResults([]);
+    setLiveAdvancingThirdGroups(undefined);
     petalVizRef.current?.resetSimulation(day);
   }, [day]);
 
@@ -117,6 +123,7 @@ export function TournamentView() {
       setLiveProbabilityState(null);
       setLiveGroupResults([]);
       setLiveKnockoutResults([]);
+      setLiveAdvancingThirdGroups(undefined);
       setDay(newDay);
       petalVizRef.current?.resetSimulation(newDay);
       return;
@@ -139,14 +146,17 @@ export function TournamentView() {
       state,
       groupResults,
       knockoutResults,
+      advancingThirdGroups,
     }: {
       state: ProbabilityState;
       groupResults: SimMatchResult[];
       knockoutResults: SimMatchResult[];
+      advancingThirdGroups?: string[];
     }) => {
       setLiveProbabilityState(state);
       setLiveGroupResults(groupResults);
       setLiveKnockoutResults(knockoutResults);
+      setLiveAdvancingThirdGroups(advancingThirdGroups);
     },
     [],
   );
@@ -157,9 +167,10 @@ export function TournamentView() {
 
   return (
     <div className="relative h-full min-h-0 w-full max-md:min-h-dvh">
-      <div className="relative flex h-full min-h-0 flex-row gap-4">
+      <FifaBackgroundTitle />
+      <div className="relative z-10 flex h-full min-h-0 flex-row gap-4 bg-transparent">
         <div
-          className={`relative min-h-0 min-w-0 flex-1 ${structureOpen ? "max-md:hidden" : ""}`}
+          className={`relative min-h-0 min-w-0 flex-1 bg-transparent ${structureOpen ? "max-md:hidden" : ""}`}
         >
           <PetalSimulationVisualization
             ref={petalVizRef}
@@ -181,6 +192,8 @@ export function TournamentView() {
           structure={tournamentStructure}
           teamsById={teamsById}
           day={day}
+          sessionPhase={sessionPhase}
+          onDayChange={handleDayChange}
           activeMatches={activeMatches}
         />
       </div>

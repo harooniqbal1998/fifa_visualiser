@@ -2,8 +2,17 @@ import type { MatchStage } from "@/types";
 import { teams } from "@/data/teams";
 import type { BracketNode } from "@/data/knockout-bracket";
 import { KNOCKOUT_TREE } from "@/data/knockout-bracket";
-import { getAdvancingTeamIds } from "@/lib/simulation/group-advancement";
+import {
+  getAdvancingTeamIdsFromThirdGroups,
+  buildStandingsFromGroupResults,
+  selectAdvancingThirdPlaceGroups,
+} from "@/lib/simulation/group-advancement";
 import { createSeededRng } from "@/lib/simulation/animation-params";
+import {
+  ALL_KNOCKOUT_NODES,
+  getKnockoutMatchMeta,
+  resolveNodeParticipants,
+} from "@/lib/simulation/bracket-resolver";
 import { resolveR32Match } from "@/lib/simulation/r32-resolver";
 import type { SimMatchResult } from "@/lib/simulation/types";
 
@@ -23,9 +32,25 @@ const STAGE_ELIM_DEPTH: Partial<Record<MatchStage, number>> = {
   final: 5,
 };
 
+const KNOCKOUT_STAGE_ORDER: MatchStage[] = [
+  "round-of-32",
+  "round-of-16",
+  "quarter-final",
+  "semi-final",
+  "final",
+];
+
+const NODES_BY_STAGE = KNOCKOUT_STAGE_ORDER.map((stage) =>
+  ALL_KNOCKOUT_NODES.filter((node) => getKnockoutMatchMeta(node.matchId)?.stage === stage),
+);
+
 export type BracketState = {
   possibleOpponents: Record<string, string[]>;
   bracketDepths: Record<string, number>;
+};
+
+export type BuildBracketStateOptions = {
+  advancingThirdGroups?: string[];
 };
 
 function getWinner(results: SimMatchResult[], matchId: string): string | undefined {
@@ -36,23 +61,62 @@ function collectNodeParticipants(
   node: BracketNode,
   results: SimMatchResult[],
   groupResults: SimMatchResult[],
+  advancingThirdGroups?: string[],
 ): string[] {
   const won = getWinner(results, node.matchId);
   if (won) return [won];
 
   if (node.matchId.startsWith("r32-")) {
-    const { home, away } = resolveR32Match(node.matchId, groupResults);
+    const { home, away } = resolveR32Match(node.matchId, groupResults, advancingThirdGroups);
     return [home, away].filter((id): id is string => Boolean(id));
   }
 
-  const teams: string[] = [];
+  const participantIds: string[] = [];
   if (node.homeSource) {
-    teams.push(...collectNodeParticipants(node.homeSource, results, groupResults));
+    participantIds.push(
+      ...collectNodeParticipants(node.homeSource, results, groupResults, advancingThirdGroups),
+    );
   }
   if (node.awaySource) {
-    teams.push(...collectNodeParticipants(node.awaySource, results, groupResults));
+    participantIds.push(
+      ...collectNodeParticipants(node.awaySource, results, groupResults, advancingThirdGroups),
+    );
   }
-  return teams;
+  return participantIds;
+}
+
+function findNextUnresolvedMatchForTeam(
+  teamId: string,
+  results: SimMatchResult[],
+  groupResults: SimMatchResult[],
+  advancingThirdGroups?: string[],
+): BracketNode | null {
+  for (const stageNodes of NODES_BY_STAGE) {
+    for (const node of stageNodes) {
+      if (getWinner(results, node.matchId)) continue;
+
+      const participants = collectNodeParticipants(
+        node,
+        results,
+        groupResults,
+        advancingThirdGroups,
+      );
+      if (participants.includes(teamId)) {
+        return node;
+      }
+
+      const { home, away } = resolveNodeParticipants(
+        node,
+        results,
+        groupResults,
+        advancingThirdGroups,
+      );
+      if (home === teamId || away === teamId) {
+        return node;
+      }
+    }
+  }
+  return null;
 }
 
 function getPossibleOpponentsForTeam(
@@ -61,6 +125,7 @@ function getPossibleOpponentsForTeam(
   results: SimMatchResult[],
   groupResults: SimMatchResult[],
   eliminated: Set<string>,
+  advancingThirdGroups?: string[],
 ): string[] {
   if (eliminated.has(teamId)) return [];
 
@@ -86,31 +151,37 @@ function getPossibleOpponentsForTeam(
       .map((entry) => entry.id);
   }
 
-  const opponents = new Set<string>();
+  const nextNode = findNextUnresolvedMatchForTeam(
+    teamId,
+    results,
+    groupResults,
+    advancingThirdGroups,
+  );
 
-  function walk(node: BracketNode) {
-    const branchTeams = collectNodeParticipants(node, results, groupResults);
-    if (branchTeams.includes(teamId)) {
-      for (const candidate of branchTeams) {
-        if (candidate !== teamId && !eliminated.has(candidate)) {
-          opponents.add(candidate);
-        }
-      }
-      return;
+  if (!nextNode) {
+    const finalists = collectNodeParticipants(
+      KNOCKOUT_TREE,
+      results,
+      groupResults,
+      advancingThirdGroups,
+    );
+    if (finalists.length === 2 && finalists.includes(teamId)) {
+      const other = finalists.find((id) => id !== teamId);
+      return other && !eliminated.has(other) ? [other] : [];
     }
-    if (node.homeSource) walk(node.homeSource);
-    if (node.awaySource) walk(node.awaySource);
+    return [];
   }
 
-  walk(KNOCKOUT_TREE);
+  const participants = collectNodeParticipants(
+    nextNode,
+    results,
+    groupResults,
+    advancingThirdGroups,
+  );
 
-  const finalists = collectNodeParticipants(KNOCKOUT_TREE, results, groupResults);
-  if (finalists.length === 2 && finalists.includes(teamId)) {
-    const other = finalists.find((id) => id !== teamId);
-    return other ? [other] : [];
-  }
-
-  return [...opponents].sort();
+  return participants
+    .filter((candidate) => candidate !== teamId && !eliminated.has(candidate))
+    .sort();
 }
 
 export function getTeamBracketDepth(
@@ -151,9 +222,11 @@ export function buildBracketState(
   results: SimMatchResult[],
   groupResults: SimMatchResult[],
   eliminated: Set<string>,
+  options?: BuildBracketStateOptions,
 ): BracketState {
   const possibleOpponents: Record<string, string[]> = {};
   const bracketDepths: Record<string, number> = {};
+  const advancingThirdGroups = options?.advancingThirdGroups;
 
   for (const team of teams) {
     possibleOpponents[team.id] = getPossibleOpponentsForTeam(
@@ -162,6 +235,7 @@ export function buildBracketState(
       results,
       groupResults,
       eliminated,
+      advancingThirdGroups,
     );
     bracketDepths[team.id] = getTeamBracketDepth(
       team.id,
@@ -179,11 +253,16 @@ export function getEliminatedFromResults(
   day: number,
   results: SimMatchResult[],
   groupResults: SimMatchResult[],
+  advancingThirdGroups?: string[],
 ): Set<string> {
   const eliminated = new Set<string>();
 
   if (day >= 12) {
-    const advancing = getAdvancingTeamIds(groupResults, createSeededRng(42 + day));
+    const standings = buildStandingsFromGroupResults(groupResults);
+    const thirdGroups =
+      advancingThirdGroups ??
+      selectAdvancingThirdPlaceGroups(standings, createSeededRng(42 + day));
+    const advancing = getAdvancingTeamIdsFromThirdGroups(standings, thirdGroups);
     for (const team of teams) {
       if (!advancing.has(team.id)) {
         eliminated.add(team.id);

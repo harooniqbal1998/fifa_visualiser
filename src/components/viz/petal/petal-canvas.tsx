@@ -239,7 +239,7 @@ export const PetalCanvas = forwardRef<PetalCanvasRef, PetalCanvasProps>(
     }, []);
 
     return (
-      <div ref={containerRef} className="h-full min-h-0 w-full">
+      <div ref={containerRef} className="h-full min-h-0 w-full bg-transparent">
         <canvas
           ref={canvasRef}
           className={`h-full w-full ${onTeamClick ? "pointer-events-auto" : ""} ${hoveredTeamId ? "cursor-pointer" : ""}`}

@@ -1,5 +1,6 @@
 import type { MatchStage } from "@/types";
 import type { CollisionEvent } from "@/lib/simulation/types";
+import { getFifaMatchNumber } from "@/data/knockout-match-numbers";
 
 export const KNOCKOUT_LABELS: Record<Exclude<MatchStage, "group">, string> = {
   "round-of-32": "Round of 32",
@@ -57,5 +58,7 @@ export function formatMatchContextLabel(
     const md = groupMatchdayFromId(event.matchId) ?? groupMatchdayFromDay(event.day);
     return `Group stage · MD${md}`;
   }
-  return KNOCKOUT_LABELS[event.stage];
+  const fifaNumber = getFifaMatchNumber(event.matchId);
+  const stageLabel = KNOCKOUT_LABELS[event.stage];
+  return fifaNumber !== undefined ? `${stageLabel} · M${fifaNumber}` : stageLabel;
 }

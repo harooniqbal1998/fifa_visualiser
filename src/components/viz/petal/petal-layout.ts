@@ -155,6 +155,7 @@ function computeKnockoutPosition(
   canvasCenter: PetalPoint,
   usableRadius: number,
   config: PetalLayoutConfig,
+  bracketHalf: BracketHalf | null,
 ): PetalPoint {
   if (bracketDepth <= 0) {
     return groupStagePos;
@@ -170,7 +171,23 @@ function computeKnockoutPosition(
   const minRadius = usableRadius * config.knockoutMinRadiusRatio;
   const cumulativePct = getCumulativePullPct(bracketDepth, config);
   const targetRadius = lerp(groupStageRadius, minRadius, cumulativePct / 100);
-  return pullTowardRadius(groupStagePos, canvasCenter, targetRadius);
+  const pulled = pullTowardRadius(groupStagePos, canvasCenter, targetRadius);
+
+  if (!bracketHalf) {
+    return pulled;
+  }
+
+  const halfSign = bracketHalf === "left" ? -1 : 1;
+  const offsetRad = halfSign * Math.min(bracketDepth, 5) * 0.035;
+  const cos = Math.cos(offsetRad);
+  const sin = Math.sin(offsetRad);
+  const pdx = pulled.x - canvasCenter.x;
+  const pdy = pulled.y - canvasCenter.y;
+
+  return {
+    x: canvasCenter.x + pdx * cos - pdy * sin,
+    y: canvasCenter.y + pdx * sin + pdy * cos,
+  };
 }
 
 function clampTeamX(
@@ -204,6 +221,7 @@ export function computePetalPositions(
   config: PetalLayoutConfig,
   sizing: VizSizing = getVizSizing(),
   eliminated: Set<string> = new Set(),
+  advancingThirdGroups?: string[],
 ): PetalLayoutResult {
   const usableRadius = Math.min(width, height);
   const canvasCenter = computeCanvasCenter(width, height, config);
@@ -212,10 +230,9 @@ export function computePetalPositions(
   const spreadRad = usableRadius * config.spreadRadRatio;
   const spreadTan = usableRadius * config.spreadTanRatio;
 
-  const advancingThirdGroups = selectAdvancingThirdPlaceGroups(
-    standings,
-    createSeededRng(42),
-  );
+  const resolvedThirdGroups =
+    advancingThirdGroups ??
+    selectAdvancingThirdPlaceGroups(standings, createSeededRng(42));
 
   const maxProbability = Math.max(
     ...teams.map((t) => probabilities[t.id] ?? 0),
@@ -248,7 +265,7 @@ export function computePetalPositions(
     const bracketHalf = getTeamBracketHalf(
       team.group,
       standingRank,
-      advancingThirdGroups,
+      resolvedThirdGroups,
     );
     const bracketDepth = bracketDepths[team.id] ?? 0;
     const groupCenter = groupCenters[team.group] ?? canvasCenter;
@@ -268,6 +285,7 @@ export function computePetalPositions(
       canvasCenter,
       usableRadius,
       config,
+      bracketHalf,
     );
 
     return {
