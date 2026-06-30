@@ -110,8 +110,10 @@ export async function runSimulation(
         { advancingThirdGroups: state.advancingThirdGroups },
       ),
     );
-    await delay(params.dayPauseMs, callbacks.shouldAbort);
-    if (callbacks.shouldAbort()) break;
+    if (entry.stage !== "group") {
+      await delay(params.dayPauseMs, callbacks.shouldAbort);
+      if (callbacks.shouldAbort()) break;
+    }
 
     if (entry.day === 12 && timelineStartDay <= 12 && !state.advancingThirdGroups) {
       const beforeEliminated = new Set(state.probability.eliminated);

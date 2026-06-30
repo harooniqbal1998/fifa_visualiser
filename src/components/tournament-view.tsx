@@ -134,6 +134,10 @@ export function TournamentView() {
   const handleSimulatingChange = useCallback((simulating: boolean) => {
     if (simulating) {
       setSessionPhaseSync("running");
+      return;
+    }
+    if (sessionPhaseRef.current === "running") {
+      setSessionPhaseSync("frozen");
     }
   }, []);
 
