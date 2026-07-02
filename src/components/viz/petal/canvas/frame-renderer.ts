@@ -33,7 +33,10 @@ export function renderFrame(frame: DrawFrameContext & { starRotationRad?: number
 }
 
 export function buildTeamDrawItems(
-  frame: Omit<DrawFrameContext, "teams" | "eliminated" | "showGuideRings" | "showRankBorders"> & {
+  frame: Omit<
+    DrawFrameContext,
+    "teams" | "eliminated" | "showGuideRings" | "showRankBorders"
+  > & {
     teamMeta: Map<string, { isoCode: string; renderLayer: number; probability: number }>;
     eliminated: Set<string>;
     starredTeamIds?: Set<string>;

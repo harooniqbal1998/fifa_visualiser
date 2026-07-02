@@ -1,15 +1,22 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { PRE_TOURNAMENT_DAY } from "@/lib/match-context-label";
 import {
   getDayRange,
+  getLatestDropdownStartDay,
   getSnapshotByDay,
   getTeams,
+  isDropdownStartDay,
 } from "@/lib/tournament";
 import { SimulationPill } from "@/components/simulation-pill";
 import { MatchSpotlightBar } from "@/components/match-spotlight-bar";
 import { StarredTeamsSummaryPill } from "@/components/starred-teams-summary-pill";
-import { DEFAULT_PETAL_CONFIG } from "@/components/viz/petal/petal-config";
+import { TournamentWinnerSpotlight } from "@/components/tournament-winner-spotlight";
+import {
+  DEFAULT_PETAL_CONFIG,
+  getMatchHoldDurationMs,
+} from "@/components/viz/petal/petal-config";
 import { teamsById } from "@/data/teams";
 import {
   PetalSimulationVisualization,
@@ -26,12 +33,15 @@ import { buildTournamentStructureView } from "@/lib/tournament-structure";
 import { TournamentStructureDrawer } from "@/components/tournament-structure-drawer";
 import { FifaBackgroundTitle } from "@/components/fifa-background-title";
 import { useStarredTeamsStore } from "@/stores/starred-teams-store";
+import type { TimelineDayPickerMode } from "@/components/timeline";
 
 export function TournamentView() {
   const { min } = getDayRange();
   const teams = getTeams();
   const [day, setDay] = useState(min);
+  const [playFromDay, setPlayFromDay] = useState(min);
   const [sessionPhase, setSessionPhase] = useState<SimulationSessionPhase>("idle");
+  const [winnerId, setWinnerId] = useState<string | null>(null);
   const [liveProbabilityState, setLiveProbabilityState] = useState<ProbabilityState | null>(
     null,
   );
@@ -53,6 +63,15 @@ export function TournamentView() {
     sessionPhaseRef.current = phase;
     setSessionPhase(phase);
   };
+
+  const pickerDay = sessionPhase === "completed" ? playFromDay : day;
+
+  const pickerMode: TimelineDayPickerMode =
+    sessionPhase === "running"
+      ? "inline-animated"
+      : sessionPhase === "paused"
+        ? "inline-static"
+        : "dropdown";
 
   const structureEloRatings = useMemo(() => {
     const replayElo = replayTournamentToDay(
@@ -85,6 +104,15 @@ export function TournamentView() {
   }, [day, sessionPhase, liveGroupResults, liveKnockoutResults, structureEloRatings, liveAdvancingThirdGroups]);
 
   useEffect(() => {
+    if (sessionPhase === "running" || sessionPhase === "paused" || sessionPhase === "completed") {
+      return;
+    }
+    if (!isDropdownStartDay(day)) {
+      setDay(getLatestDropdownStartDay());
+    }
+  }, [day, sessionPhase]);
+
+  useEffect(() => {
     for (const id of starredTeamIds) {
       if (tournamentStructure.eliminatedTeamIds.has(id)) {
         unstar(id);
@@ -100,48 +128,73 @@ export function TournamentView() {
   );
 
   const handlePlay = useCallback(async () => {
+    setPlayFromDay(day);
     await petalVizRef.current?.startSimulation();
-  }, []);
+  }, [day]);
 
-  const handleStop = useCallback(async () => {
-    setSessionPhaseSync("frozen");
+  const handlePlayAgain = useCallback(async () => {
+    setWinnerId(null);
+    setDay(playFromDay);
+    await petalVizRef.current?.resetSimulation(playFromDay);
+    await petalVizRef.current?.startSimulation();
+  }, [playFromDay]);
+
+  const handlePause = useCallback(async () => {
+    setSessionPhaseSync("paused");
     await petalVizRef.current?.stopSimulation();
   }, []);
 
-  const handleRestart = useCallback(() => {
+  const handleContinue = useCallback(async () => {
+    await petalVizRef.current?.startSimulation();
+  }, []);
+
+  const resetToPreTournament = useCallback(() => {
+    setSessionPhaseSync("idle");
+    setWinnerId(null);
+    setLiveProbabilityState(null);
+    setLiveGroupResults([]);
+    setLiveKnockoutResults([]);
+    setLiveAdvancingThirdGroups(undefined);
+    setDay(PRE_TOURNAMENT_DAY);
+    setPlayFromDay(PRE_TOURNAMENT_DAY);
+    petalVizRef.current?.resetSimulation(PRE_TOURNAMENT_DAY);
+  }, []);
+
+  const handleGoBackToStart = useCallback(() => {
+    resetToPreTournament();
+  }, [resetToPreTournament]);
+
+  const handlePickerDayChange = useCallback((newDay: number) => {
+    const phase = sessionPhaseRef.current;
+    if (phase === "running" || phase === "paused") {
+      return;
+    }
+    if (phase === "completed") {
+      setPlayFromDay(newDay);
+      return;
+    }
     setSessionPhaseSync("idle");
     setLiveProbabilityState(null);
     setLiveGroupResults([]);
     setLiveKnockoutResults([]);
     setLiveAdvancingThirdGroups(undefined);
-    petalVizRef.current?.resetSimulation(day);
-  }, [day]);
+    setDay(newDay);
+    setPlayFromDay(newDay);
+    petalVizRef.current?.resetSimulation(newDay);
+  }, []);
 
-  const handleDayChange = useCallback((newDay: number) => {
-    if (sessionPhaseRef.current !== "running") {
-      setSessionPhaseSync("idle");
-      setLiveProbabilityState(null);
-      setLiveGroupResults([]);
-      setLiveKnockoutResults([]);
-      setLiveAdvancingThirdGroups(undefined);
-      setDay(newDay);
-      petalVizRef.current?.resetSimulation(newDay);
-      return;
-    }
+  const handleSimDayChange = useCallback((newDay: number) => {
     setDay(newDay);
   }, []);
 
   const handleSimulatingChange = useCallback((simulating: boolean) => {
     if (simulating) {
       setSessionPhaseSync("running");
-      return;
-    }
-    if (sessionPhaseRef.current === "running") {
-      setSessionPhaseSync("frozen");
     }
   }, []);
 
-  const handleSessionComplete = useCallback((_winnerId: string) => {
+  const handleSessionComplete = useCallback((completedWinnerId: string) => {
+    setWinnerId(completedWinnerId);
     setSessionPhaseSync("completed");
   }, []);
 
@@ -173,9 +226,7 @@ export function TournamentView() {
     <div className="relative h-full min-h-0 w-full max-md:min-h-dvh">
       <FifaBackgroundTitle />
       <div className="relative z-10 flex h-full min-h-0 flex-row gap-4 bg-transparent">
-        <div
-          className={`relative min-h-0 min-w-0 flex-1 bg-transparent ${structureOpen ? "max-md:hidden" : ""}`}
-        >
+        <div className="relative min-h-0 min-w-0 flex-1 bg-transparent">
           <PetalSimulationVisualization
             ref={petalVizRef}
             teams={teams}
@@ -183,7 +234,7 @@ export function TournamentView() {
             sessionPhase={sessionPhase}
             onSimulatingChange={handleSimulatingChange}
             onSessionComplete={handleSessionComplete}
-            onDayChange={handleDayChange}
+            onDayChange={handleSimDayChange}
             onProbabilityStateUpdate={handleProbabilityStateUpdate}
             onActiveMatchesChange={setActiveMatches}
             starredTeamIds={starredTeamIds}
@@ -196,8 +247,9 @@ export function TournamentView() {
           structure={tournamentStructure}
           teamsById={teamsById}
           day={day}
-          sessionPhase={sessionPhase}
-          onDayChange={handleDayChange}
+          pickerDay={pickerDay}
+          pickerMode={pickerMode}
+          onPickerDayChange={handlePickerDayChange}
           activeMatches={activeMatches}
         />
       </div>
@@ -209,8 +261,14 @@ export function TournamentView() {
             <MatchSpotlightBar
               matches={activeMatches}
               teamsById={teamsById}
-              holdDurationMs={DEFAULT_PETAL_CONFIG.matchHoldDurationMs}
+              holdDurationMs={getMatchHoldDurationMs(
+                DEFAULT_PETAL_CONFIG,
+                activeMatches.some((match) => match.isKnockout),
+              )}
             />
+          ) : null}
+          {sessionPhase === "completed" && winnerId ? (
+            <TournamentWinnerSpotlight winnerId={winnerId} teamsById={teamsById} />
           ) : null}
           <div className="pointer-events-auto flex max-w-[90vw] flex-col items-center gap-2">
             <StarredTeamsSummaryPill
@@ -222,12 +280,14 @@ export function TournamentView() {
             />
             <div className="w-full max-w-full md:w-max md:max-w-none">
               <SimulationPill
-                day={day}
-                onDayChange={handleDayChange}
+                pickerDay={pickerDay}
+                onPickerDayChange={handlePickerDayChange}
                 sessionPhase={sessionPhase}
                 onPlay={handlePlay}
-                onStop={handleStop}
-                onRestart={handleRestart}
+                onPlayAgain={handlePlayAgain}
+                onPause={handlePause}
+                onContinue={handleContinue}
+                onGoBackToStart={handleGoBackToStart}
                 onTournamentStructureClick={handleTournamentStructureClick}
                 tournamentStructureOpen={structureOpen}
               />

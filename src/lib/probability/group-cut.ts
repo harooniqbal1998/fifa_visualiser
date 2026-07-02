@@ -20,13 +20,19 @@ export function applyGroupStageCut(
 ): ProbabilityState {
   const standings = buildStandingsFromGroupResults(groupResults);
   const advancing = getAdvancingTeamIdsFromThirdGroups(standings, advancingThirdGroups);
-  const eliminated = new Set(probability.eliminated);
+  const eliminated = new Set<string>();
   const before = { ...probability.probabilities };
 
   for (const team of teams) {
     if (!advancing.has(team.id)) {
       eliminated.add(team.id);
     }
+  }
+
+  for (const result of knockoutResults) {
+    if (result.stage === "group") continue;
+    const loser = result.winner === result.home ? result.away : result.home;
+    eliminated.add(loser);
   }
 
   const afterElim = zeroEliminated(probability.probabilities, eliminated);

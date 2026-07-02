@@ -2,11 +2,10 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Team } from "@/types";
-import { TimelineDayPicker } from "@/components/timeline";
-import type { SimulationSessionPhase } from "@/components/viz/petal/petal-simulation-visualization";
+import { TimelineDayPicker, type TimelineDayPickerMode } from "@/components/timeline";
 import { TournamentBracketTree } from "@/components/tournament-bracket-tree";
 import { TournamentGroupsPanel } from "@/components/tournament-groups-panel";
-import { getStarredPathMatchIds } from "@/lib/starred-teams/team-bracket-path";
+import { getRelevantMatchIds } from "@/lib/starred-teams/team-bracket-path";
 import type { CollisionEvent } from "@/lib/simulation/types";
 import type { TournamentStructureView } from "@/lib/tournament-structure";
 import { useStarredTeamsStore } from "@/stores/starred-teams-store";
@@ -17,8 +16,9 @@ type TournamentStructureDrawerProps = {
   structure: TournamentStructureView;
   teamsById: Record<string, Team>;
   day: number;
-  sessionPhase: SimulationSessionPhase;
-  onDayChange: (day: number) => void;
+  pickerDay: number;
+  pickerMode: TimelineDayPickerMode;
+  onPickerDayChange: (day: number) => void;
   activeMatches?: CollisionEvent[];
 };
 
@@ -36,8 +36,9 @@ export function TournamentStructureDrawer({
   structure,
   teamsById,
   day,
-  sessionPhase,
-  onDayChange,
+  pickerDay,
+  pickerMode,
+  onPickerDayChange,
   activeMatches = [],
 }: TournamentStructureDrawerProps) {
   const starredTeamIds = useStarredTeamsStore((s) => s.starredTeamIds);
@@ -45,11 +46,10 @@ export function TournamentStructureDrawer({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const groupsSectionRef = useRef<HTMLElement>(null);
   const bracketSectionRef = useRef<HTMLElement>(null);
-  const isSimulating = sessionPhase === "running";
   const showKnockout = day >= 13;
 
-  const starredPathMatchIds = useMemo(
-    () => getStarredPathMatchIds(starredTeamIds, structure),
+  const relevantMatchIds = useMemo(
+    () => getRelevantMatchIds(starredTeamIds, structure),
     [starredTeamIds, structure],
   );
 
@@ -73,50 +73,53 @@ export function TournamentStructureDrawer({
       {...(!open ? { inert: true } : {})}
     >
       {open ? (
-        <div className="flex shrink-0 items-center justify-between gap-2 border-b border-light-gray px-4 py-3 dark:border-light-gray/25">
-          <span className="shrink-0 text-sm font-medium text-dark-heather md:hidden dark:text-light-gray">
-            Tournament structure
-          </span>
-          <div className="min-w-0 flex-1 md:flex-none">
+        <div className="flex w-full shrink-0 flex-row items-center justify-between gap-2 border-b border-light-gray px-4 py-3 dark:border-light-gray/25">
+          <div className="flex min-w-0 items-center gap-2">
+            <span className="shrink-0 text-sm font-medium text-dark-heather md:hidden dark:text-light-gray">
+              Tournament structure
+            </span>
             <TimelineDayPicker
-              day={day}
-              onDayChange={onDayChange}
-              isSimulating={isSimulating}
+              day={pickerDay}
+              onDayChange={onPickerDayChange}
+              mode={pickerMode}
             />
           </div>
-          {onClose ? (
-            <button
-              type="button"
-              title="Close tournament structure"
-              aria-label="Close tournament structure"
-              onClick={onClose}
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-light-gray text-dark-heather hover:bg-light-gray/20 md:hidden dark:border-light-gray/30 dark:text-light-gray dark:hover:bg-light-gray/10"
-            >
-              <CloseIcon />
-            </button>
-          ) : null}
-        </div>
-      ) : null}
-      {open && showPathFilter ? (
-        <div className="flex shrink-0 items-center justify-between border-b border-light-gray px-4 py-2 dark:border-light-gray/25">
-          <span className="text-[11px] font-medium text-dark-heather dark:text-light-gray">
-            My teams only
-          </span>
-          <button
-            type="button"
-            role="switch"
-            aria-checked={pathFilterActive}
-            onClick={() => setPathFilterActive((active) => !active)}
-            className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${
-              pathFilterActive ? "bg-hermes dark:bg-average-green" : "bg-light-gray dark:bg-light-gray/30"
-            }`}
-          >
-            <span
-              className={`absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform dark:bg-dark-heather ${
-                pathFilterActive ? "translate-x-4" : "translate-x-0"
-              }`}
-            />
-          </button>
+          <div className="flex shrink-0 items-center gap-2">
+            {onClose ? (
+              <button
+                type="button"
+                title="Close tournament structure"
+                aria-label="Close tournament structure"
+                onClick={onClose}
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-light-gray text-dark-heather hover:bg-light-gray/20 md:hidden dark:border-light-gray/30 dark:text-light-gray dark:hover:bg-light-gray/10"
+              >
+                <CloseIcon />
+              </button>
+            ) : null}
+            {showPathFilter ? (
+              <div className="flex shrink-0 items-center gap-2">
+                <span className="text-[11px] font-medium text-dark-heather dark:text-light-gray">
+                  My teams only
+                </span>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={pathFilterActive}
+                  aria-label="My teams only"
+                  onClick={() => setPathFilterActive((active) => !active)}
+                  className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${
+                    pathFilterActive ? "bg-hermes dark:bg-average-green" : "bg-light-gray dark:bg-light-gray/30"
+                  }`}
+                >
+                  <span
+                    className={`absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform dark:bg-dark-heather ${
+                      pathFilterActive ? "translate-x-4" : "translate-x-0"
+                    }`}
+                  />
+                </button>
+              </div>
+            ) : null}
+          </div>
         </div>
       ) : null}
       <div
@@ -127,7 +130,7 @@ export function TournamentStructureDrawer({
       >
         <section
           ref={groupsSectionRef}
-          className="shrink-0 snap-start snap-always px-4 py-3"
+          className="shrink-0 snap-start snap-always px-4 pt-3 pb-0"
         >
           <TournamentGroupsPanel
             structure={structure}
@@ -137,15 +140,14 @@ export function TournamentStructureDrawer({
         </section>
         <section
           ref={bracketSectionRef}
-          className="min-h-full shrink-0 snap-start snap-always px-4 pb-3 pt-1"
+          className="shrink-0 snap-start snap-always px-4 pb-3 pt-0"
         >
           <TournamentBracketTree
             structure={structure}
             teamsById={teamsById}
             activeMatches={activeMatches}
             pathFilterActive={pathFilterActive}
-            starredPathMatchIds={starredPathMatchIds}
-            starredTeamIds={new Set(starredTeamIds)}
+            relevantMatchIds={relevantMatchIds}
           />
         </section>
       </div>

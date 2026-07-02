@@ -29,10 +29,11 @@ export type CanvasPalette = {
 
 export function getCanvasPalette(): CanvasPalette {
   const dark = isDarkMode();
+  const lineToken = dark ? brandColors.lightGray : brandColors.darkHeather;
   return {
-    guideRing: withAlpha(brandColors.lightGray, dark ? 0.55 : 0.35),
-    guideRingInner: withAlpha(brandColors.lightGray, dark ? 0.35 : 0.2),
-    connector: withAlpha(brandColors.lightGray, dark ? 0.45 : 0.25),
+    guideRing: withAlpha(lineToken, 0.5),
+    guideRingInner: withAlpha(lineToken, 0.35),
+    connector: withAlpha(lineToken, 0.55),
     placeholderFill: dark ? brandColors.lightGray : brandColors.darkHeather,
   };
 }

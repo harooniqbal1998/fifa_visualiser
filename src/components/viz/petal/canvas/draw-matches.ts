@@ -54,7 +54,7 @@ export function drawConnectors(
     if (!home || !away) continue;
 
     ctx.strokeStyle = palette.connector;
-    ctx.globalAlpha = 0.7;
+    ctx.globalAlpha = 1;
     ctx.beginPath();
     ctx.moveTo(home.x, home.y);
     ctx.lineTo(away.x, away.y);

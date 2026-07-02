@@ -481,6 +481,7 @@ export function animateRankBorderOpacity(
 
   return new Promise((resolve) => {
     const check = () => {
+      tickDisplayState(state, getTimestamp());
       if (isRankBorderFadeComplete(state)) {
         resolve();
         return;
@@ -500,6 +501,7 @@ export function waitUntilSettled(
 
   return new Promise((resolve) => {
     const check = () => {
+      tickDisplayState(state, getTimestamp());
       if (isDisplaySettled(state, 0.5, ids)) {
         resolve();
         return;

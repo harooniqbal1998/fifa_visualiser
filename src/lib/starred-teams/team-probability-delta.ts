@@ -36,13 +36,17 @@ export function getStarredTeamSummaries({
   snapshot: Snapshot;
 }): TeamProbSummary[] {
   const isRunning = sessionPhase === "running";
+  const useLiveProbabilities =
+    sessionPhase === "running" ||
+    sessionPhase === "paused" ||
+    sessionPhase === "completed";
 
   return starredIds.map((teamId) => {
-    const winPct = isRunning
+    const winPct = useLiveProbabilities
       ? (liveState?.probabilities[teamId] ?? snapshot.probabilities[teamId] ?? 0)
       : (snapshot.probabilities[teamId] ?? 0);
 
-    const deltaPct = isRunning
+    const deltaPct = useLiveProbabilities
       ? getLiveDelta(teamId, liveState)
       : getSnapshotDayDelta(teamId, day);
 

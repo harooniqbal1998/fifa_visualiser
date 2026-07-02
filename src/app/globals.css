@@ -54,3 +54,31 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.fifa-title-letter {
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+}
+
+.fifa-title-letter-dither {
+  pointer-events: none;
+  opacity: 1;
+  animation: fifa-title-dither-out var(--dither-out-duration, 1800ms) ease-out forwards;
+  animation-delay: calc(var(--letter-index, 0) * var(--dither-stagger, 55ms));
+}
+
+@keyframes fifa-title-dither-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fifa-title-letter-dither {
+    animation: none;
+    opacity: 0;
+  }
+}

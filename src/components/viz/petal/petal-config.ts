@@ -11,6 +11,7 @@ export type PetalLayoutConfig = {
   groupStartAngle: number;
   centerYOffsetRatio: number;
   matchHoldDurationMs: number;
+  knockoutMatchHoldDurationMs: number;
   rankTransitionDurationMs: number;
   rankBorderFadeMs: number;
   spotlightDimOpacity: number;
@@ -33,14 +34,22 @@ export const DEFAULT_PETAL_CONFIG: PetalLayoutConfig = {
   groupStartAngle: -0.792,
   centerYOffsetRatio: 0,
   matchHoldDurationMs: 4500,
+  knockoutMatchHoldDurationMs: 2500,
   rankTransitionDurationMs: 200,
   rankBorderFadeMs: 80,
   spotlightDimOpacity: 0.25,
-  connectorWidth: 2,
+  connectorWidth: 2.5,
   eliminatedOpacity: 0.45,
   bottomStripPaddingRatio: 0.04,
   dropDurationMs: 900,
 };
+
+export function getMatchHoldDurationMs(
+  config: PetalLayoutConfig,
+  isKnockout: boolean,
+): number {
+  return isKnockout ? config.knockoutMatchHoldDurationMs : config.matchHoldDurationMs;
+}
 
 export function getCumulativePullPct(
   depth: number,

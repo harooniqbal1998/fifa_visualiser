@@ -31,17 +31,13 @@ function delay(ms: number, shouldAbort: () => boolean): Promise<void> {
   return new Promise((resolve) => {
     const start = Date.now();
     const tick = () => {
-      if (shouldAbort()) {
+      if (shouldAbort() || Date.now() - start >= ms) {
         resolve();
         return;
       }
-      if (Date.now() - start >= ms) {
-        resolve();
-        return;
-      }
-      requestAnimationFrame(tick);
+      setTimeout(tick, 16);
     };
-    requestAnimationFrame(tick);
+    setTimeout(tick, 16);
   });
 }
 
@@ -110,11 +106,6 @@ export async function runSimulation(
         { advancingThirdGroups: state.advancingThirdGroups },
       ),
     );
-    if (entry.stage !== "group") {
-      await delay(params.dayPauseMs, callbacks.shouldAbort);
-      if (callbacks.shouldAbort()) break;
-    }
-
     if (entry.day === 12 && timelineStartDay <= 12 && !state.advancingThirdGroups) {
       const beforeEliminated = new Set(state.probability.eliminated);
       const standings = buildStandingsFromGroupResults(state.groupResults);

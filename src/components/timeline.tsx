@@ -20,6 +20,7 @@ import {
 } from "@/lib/match-context-label";
 import { computePopoverPosition, type PopoverPosition } from "@/lib/popover-position";
 import {
+  getMaxDropdownStage,
   getSimStartDays,
   getTimelineDays,
   getTimelineStartOptions,
@@ -185,9 +186,13 @@ export function TimelineInlineDisplay({
   );
 }
 
+export type TimelineDayPickerMode = "dropdown" | "inline-animated" | "inline-static";
+
 type TimelineDayPickerProps = {
   day: number;
   onDayChange: (day: number) => void;
+  mode?: TimelineDayPickerMode;
+  /** @deprecated Use `mode="inline-animated"` instead. */
   isSimulating?: boolean;
   triggerClassName?: string;
   circleVariant?: "default" | "onPrimary";
@@ -216,11 +221,16 @@ const TRIGGER_BASE_CLASS =
 export function TimelineDayPicker({
   day,
   onDayChange,
+  mode,
   isSimulating = false,
   triggerClassName = "rounded-full px-1.5",
   circleVariant = "default",
   delegateTargetRef,
 }: TimelineDayPickerProps) {
+  const resolvedMode: TimelineDayPickerMode =
+    mode ?? (isSimulating ? "inline-animated" : "dropdown");
+  const isDropdown = resolvedMode === "dropdown";
+  const animateDay = resolvedMode === "inline-animated";
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
@@ -228,7 +238,7 @@ export function TimelineDayPicker({
   const [mounted, setMounted] = useState(false);
   const [highlightIndex, setHighlightIndex] = useState(0);
 
-  const simStartKey = `0,${getSimStartDays().join(",")}`;
+  const simStartKey = `${getMaxDropdownStage()},0,${getSimStartDays().join(",")}`;
   const options = useMemo(
     () => getTimelineStartOptions(),
     [simStartKey],
@@ -333,13 +343,13 @@ export function TimelineDayPicker({
 
   const handleTriggerClick = (event: React.MouseEvent) => {
     event.stopPropagation();
-    if (isSimulating) return;
+    if (!isDropdown) return;
     if (shouldDelegateToSibling(event.clientX, event.clientY)) return;
     setOpen((prev) => !prev);
   };
 
   const handleTriggerKeyDown = (event: React.KeyboardEvent) => {
-    if (isSimulating) return;
+    if (!isDropdown) return;
 
     if (event.key === "Escape") {
       setOpen(false);
@@ -414,13 +424,13 @@ export function TimelineDayPicker({
         aria-label={ariaLabel}
         aria-haspopup="listbox"
         aria-expanded={open}
-        disabled={isSimulating}
+        disabled={!isDropdown}
         onPointerDown={handleTriggerPointerDown}
         onClick={handleTriggerClick}
         onKeyDown={handleTriggerKeyDown}
         className={`${TRIGGER_BASE_CLASS} ${triggerClassName}`}
       >
-        <TimelineInlineDisplay day={day} animate={isSimulating} circleVariant={circleVariant} />
+        <TimelineInlineDisplay day={day} animate={animateDay} circleVariant={circleVariant} />
       </button>
       {panel && createPortal(panel, document.body)}
     </>

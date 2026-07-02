@@ -32,7 +32,7 @@ import type { CollisionEvent, SimMatchResult, SimulationRunState } from "@/lib/s
 import { runSimulation } from "@/lib/simulation/simulation-engine";
 import { getVizSizing } from "@/components/viz/viz-math";
 
-export type SimulationSessionPhase = "idle" | "running" | "frozen" | "completed";
+export type SimulationSessionPhase = "idle" | "running" | "paused" | "completed";
 
 export type PetalSimulationVisualizationRef = {
   stopSimulation: () => Promise<void>;
@@ -130,7 +130,7 @@ export const PetalSimulationVisualization = memo(
 
   const useLiveData = sessionPhase !== "idle";
   const isSimulating = sessionPhase === "running";
-  const freezeLayout = sessionPhase === "frozen" || sessionPhase === "completed";
+  const freezeLayout = sessionPhase === "paused" || sessionPhase === "completed";
 
   probabilitiesRef.current = useLiveData
     ? (liveProbabilities ?? snapshot.probabilities)
@@ -306,7 +306,7 @@ export const PetalSimulationVisualization = memo(
     }
 
     const isResume =
-      sessionPhaseRef.current === "frozen" && checkpointRef.current !== null;
+      sessionPhaseRef.current === "paused" && checkpointRef.current !== null;
 
     let params: AnimationParams;
     let startDay: number;

@@ -2,11 +2,12 @@ import type { Match } from "@/types";
 import { matches } from "@/data/matches";
 import type { StandingRow } from "@/lib/standings";
 import { replayTournamentToDay } from "@/lib/probability/replay-tournament";
+import { applyGroupStageCut } from "@/lib/probability";
+import { DEFAULT_PROBABILITY_CONFIG } from "@/lib/probability/types";
 import { createSeededRng } from "@/lib/simulation/animation-params";
 import { buildBracketState } from "@/lib/simulation/bracket-state";
 import {
   buildStandingsFromGroupResults,
-  getAdvancingTeamIds,
   selectAdvancingThirdPlaceGroups,
 } from "@/lib/simulation/group-advancement";
 import type { SimMatchResult, SimulationRunState } from "@/lib/simulation/types";
@@ -45,13 +46,20 @@ const BOOTSTRAP_STRUCTURE_SEED = 0;
 
 export function buildSimulationBootstrap(startDay: number): SimulationBootstrap {
   const replay = replayTournamentToDay(startDay - 1);
-  const { probability, groupResults, knockoutResults } = replay;
+  let { probability, groupResults, knockoutResults } = replay;
 
   let advancingThirdGroups: string[] | undefined;
   if (startDay > 12 && groupResults.length > 0) {
     const standings = buildStandingsFromGroupResults(groupResults);
     const thirdRng = createSeededRng(BOOTSTRAP_STRUCTURE_SEED);
     advancingThirdGroups = selectAdvancingThirdPlaceGroups(standings, thirdRng);
+    probability = applyGroupStageCut(
+      probability,
+      groupResults,
+      knockoutResults,
+      DEFAULT_PROBABILITY_CONFIG,
+      advancingThirdGroups,
+    );
   }
 
   const { bracketDepths } = buildBracketState(

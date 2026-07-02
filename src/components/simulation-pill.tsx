@@ -4,15 +4,17 @@ import Link from "next/link";
 import { forwardRef, useRef } from "react";
 import { TimelineDayPicker } from "@/components/timeline";
 import type { SimulationSessionPhase } from "@/components/viz/petal/petal-simulation-visualization";
-import { isSimStartDay } from "@/lib/tournament";
+import { isDropdownStartDay } from "@/lib/tournament";
 
 type SimulationPillProps = {
-  day: number;
-  onDayChange: (day: number) => void;
+  pickerDay: number;
+  onPickerDayChange: (day: number) => void;
   sessionPhase: SimulationSessionPhase;
   onPlay: () => void;
-  onStop: () => void;
-  onRestart: () => void;
+  onPlayAgain: () => void;
+  onPause: () => void;
+  onContinue: () => void;
+  onGoBackToStart: () => void;
   onTournamentStructureClick?: () => void;
   tournamentStructureOpen?: boolean;
 };
@@ -25,15 +27,16 @@ function PlayIcon() {
   );
 }
 
-function StopIcon() {
+function PauseIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className="h-3 w-3" aria-hidden>
-      <rect x="6" y="6" width="12" height="12" rx="1" />
+      <rect x="6" y="5" width="4" height="14" rx="0.5" />
+      <rect x="14" y="5" width="4" height="14" rx="0.5" />
     </svg>
   );
 }
 
-function RestartIcon() {
+function GoBackIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-3 w-3" aria-hidden>
       <path d="M3 12a9 9 0 1 0 3-6.7" strokeLinecap="round" />
@@ -64,12 +67,14 @@ function InfoIcon() {
 export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
   function SimulationPill(
     {
-      day,
-      onDayChange,
+      pickerDay,
+      onPickerDayChange,
       sessionPhase,
       onPlay,
-      onStop,
-      onRestart,
+      onPlayAgain,
+      onPause,
+      onContinue,
+      onGoBackToStart,
       onTournamentStructureClick,
       tournamentStructureOpen,
     },
@@ -77,8 +82,10 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
   ) {
     const playButtonRef = useRef<HTMLButtonElement>(null);
     const isRunning = sessionPhase === "running";
+    const isPaused = sessionPhase === "paused";
     const isCompleted = sessionPhase === "completed";
-    const canPlay = sessionPhase !== "idle" || isSimStartDay(day);
+    const isIdle = sessionPhase === "idle";
+    const canPlay = !isIdle || isDropdownStartDay(pickerDay);
     const playTitle = canPlay
       ? "Play simulation from selected day"
       : "Complete match results required before this day";
@@ -92,36 +99,65 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
           <>
             <button
               type="button"
-              title="Stop simulation"
-              aria-label="Stop simulation"
-              onClick={onStop}
+              title="Pause simulation"
+              aria-label="Pause simulation"
+              onClick={onPause}
               className="relative z-0 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-light-gray hover:bg-light-gray/20 dark:border-light-gray/30 dark:hover:bg-light-gray/10"
             >
-              <StopIcon />
+              <PauseIcon />
             </button>
             <TimelineDayPicker
-              day={day}
-              onDayChange={onDayChange}
-              isSimulating
+              day={pickerDay}
+              onDayChange={onPickerDayChange}
+              mode="inline-animated"
             />
+          </>
+        ) : isPaused ? (
+          <>
+            <button
+              type="button"
+              title="Continue simulation"
+              aria-label="Continue simulation"
+              onClick={onContinue}
+              className="relative z-0 flex h-7 shrink-0 items-center gap-1.5 rounded-full bg-hermes px-2.5 text-xs font-medium text-white hover:bg-hermes/90"
+            >
+              <PlayIcon />
+              Continue
+            </button>
+            <TimelineDayPicker
+              day={pickerDay}
+              onDayChange={onPickerDayChange}
+              mode="inline-static"
+            />
+            <button
+              type="button"
+              title="Go back to start"
+              aria-label="Go back to start"
+              onClick={onGoBackToStart}
+              className="relative z-0 flex h-7 shrink-0 items-center gap-1.5 rounded-full border border-light-gray px-2.5 text-xs font-medium hover:bg-light-gray/20 dark:border-light-gray/30 dark:hover:bg-light-gray/10"
+            >
+              <GoBackIcon />
+              Go back to start
+            </button>
           </>
         ) : (
           <div className="relative flex h-7 min-w-0 items-center rounded-full bg-hermes text-white">
             <button
               ref={playButtonRef}
               type="button"
-              title={isCompleted ? "Restart simulation" : playTitle}
-              aria-label={isCompleted ? "Restart simulation" : playTitle}
-              onClick={isCompleted ? onRestart : onPlay}
+              title={isCompleted ? "Play again" : playTitle}
+              aria-label={isCompleted ? "Play again" : playTitle}
+              onClick={isCompleted ? onPlayAgain : onPlay}
               disabled={!isCompleted && !canPlay}
               className="relative z-0 flex h-7 shrink-0 items-center gap-1.5 rounded-l-full pl-2.5 text-xs font-medium hover:bg-hermes/90 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {isCompleted ? <RestartIcon /> : <PlayIcon />}
-              {isCompleted ? "Restart from" : "Play from"}
+              <PlayIcon />
+              {isCompleted ? "Play again" : "Play from"}
             </button>
             <TimelineDayPicker
-              day={day}
-              onDayChange={onDayChange}
+              day={pickerDay}
+              onDayChange={onPickerDayChange}
+              mode="dropdown"
               delegateTargetRef={playButtonRef}
               triggerClassName="min-w-0 rounded-r-full pl-1.5 pr-2.5"
               circleVariant="onPrimary"

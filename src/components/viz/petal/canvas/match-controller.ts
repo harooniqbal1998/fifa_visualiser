@@ -3,7 +3,7 @@ import type { CollisionEvent } from "@/lib/simulation/types";
 export type ActiveMatch = CollisionEvent;
 
 export type MatchControllerDeps = {
-  getHoldDurationMs: () => number;
+  getHoldDurationMs: (event: CollisionEvent) => number;
   setTimeoutFn?: (fn: () => void, ms: number) => ReturnType<typeof setTimeout>;
   clearTimeoutFn?: (id: ReturnType<typeof setTimeout>) => void;
 };
@@ -50,7 +50,10 @@ export function createMatchController(deps: MatchControllerDeps): MatchControlle
       return new Promise((resolve) => {
         activeMatches.push(event);
         pendingResolvers.set(event.matchId, resolve);
-        const timer = setTimeoutFn(() => resolveMatch(event.matchId), deps.getHoldDurationMs());
+        const timer = setTimeoutFn(
+          () => resolveMatch(event.matchId),
+          deps.getHoldDurationMs(event),
+        );
         timers.set(event.matchId, timer);
       });
     },

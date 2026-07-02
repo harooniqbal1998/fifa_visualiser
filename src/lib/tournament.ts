@@ -1,28 +1,27 @@
-import type { MatchStage, Team } from "@/types";
+import type { Team } from "@/types";
 import { teams } from "@/data/teams";
 import {
   timelineDays,
   getPlayedMatchesUpToDay,
   isSimStartDay,
   getSimStartDays,
-  getLatestSimStartDay,
 } from "@/data/matches";
 
-export { isSimStartDay, getSimStartDays, getLatestSimStartDay };
+export { isSimStartDay, getSimStartDays };
+import {
+  getDropdownTimelineStartOptions,
+  getLatestDropdownStartDay,
+  getMaxDropdownStage,
+  isDropdownStartDay,
+} from "@/lib/tournament-progress";
+
+export { isDropdownStartDay, getLatestDropdownStartDay, getMaxDropdownStage };
 import { snapshotsByDay } from "@/data/snapshots";
 import { computeGroupStandings } from "@/lib/standings";
-import {
-  formatTimelineStartLabel,
-  PRE_TOURNAMENT_DAY,
-  timelineLabelKey,
-  timelineLabelToString,
-} from "@/lib/match-context-label";
+import { PRE_TOURNAMENT_DAY } from "@/lib/match-context-label";
+import type { TimelineStartOption } from "@/lib/tournament-progress";
 
-export type TimelineStartOption = {
-  day: number;
-  label: string;
-  stage: MatchStage;
-};
+export type { TimelineStartOption };
 
 export function getTeams(): Team[] {
   return teams;
@@ -48,31 +47,5 @@ export function getGroupStandings(day: number) {
 }
 
 export function getTimelineStartOptions(): TimelineStartOption[] {
-  const seen = new Set<string>();
-  const options: TimelineStartOption[] = [
-    {
-      day: PRE_TOURNAMENT_DAY,
-      label: timelineLabelToString({ kind: "pre-tournament" }),
-      stage: "group",
-    },
-  ];
-  seen.add("pre-tournament");
-
-  for (const day of getSimStartDays()) {
-    const entry = timelineDays.find((e) => e.day === day);
-    if (!entry) continue;
-
-    const labelInfo = formatTimelineStartLabel(day, entry.stage);
-    const bandKey = timelineLabelKey(labelInfo);
-    if (seen.has(bandKey)) continue;
-    seen.add(bandKey);
-
-    options.push({
-      day,
-      label: timelineLabelToString(labelInfo),
-      stage: entry.stage,
-    });
-  }
-
-  return options;
+  return getDropdownTimelineStartOptions();
 }

@@ -6,6 +6,7 @@ import type { Team } from "@/types";
 import { BracketSlotPopover } from "@/components/bracket-slot-popover";
 import { TeamFlagAvatar } from "@/components/team-flag-avatar";
 import type { CollisionEvent } from "@/lib/simulation/types";
+import { subtreeHasRelevant } from "@/lib/starred-teams/team-bracket-path";
 import {
   getBracketMatchFeeders,
   getBracketMatchFifaNumber,
@@ -19,8 +20,7 @@ type TournamentBracketTreeProps = {
   teamsById: Record<string, Team>;
   activeMatches?: CollisionEvent[];
   pathFilterActive?: boolean;
-  starredPathMatchIds?: Set<string>;
-  starredTeamIds?: Set<string>;
+  relevantMatchIds?: Set<string> | null;
 };
 
 const BRACKET_FLAG_PX = 16;
@@ -130,34 +130,25 @@ function BracketMatchCard({
   match,
   teamsById,
   activeMatches,
-  pathFilterActive,
-  starredPathMatchIds,
 }: {
   match: BracketMatchView;
   teamsById: Record<string, Team>;
   activeMatches?: CollisionEvent[];
-  pathFilterActive?: boolean;
-  starredPathMatchIds?: Set<string>;
 }) {
   const active = activeMatches?.find((m) => m.matchId === match.matchId);
-  const winnerId = active?.winner ?? match.winnerId;
-  const played = winnerId !== undefined;
-  const homeId = active?.home ?? match.home.teamId;
-  const awayId = active?.away ?? match.away.teamId;
-  const homeWon = played && winnerId === homeId;
-  const awayWon = played && winnerId === awayId;
-  const dimmed =
-    pathFilterActive &&
-    starredPathMatchIds &&
-    starredPathMatchIds.size > 0 &&
-    !starredPathMatchIds.has(match.matchId);
+  const isPlaying = active !== undefined;
+  const played = match.winnerId !== undefined;
+  const homeWon = played && match.winnerId === match.home.teamId;
+  const awayWon = played && match.winnerId === match.away.teamId;
   const fifaNumber = getBracketMatchFifaNumber(match.matchId);
   const feeders = getBracketMatchFeeders(match.matchId);
 
   return (
     <div
-      className={`w-[9.5rem] shrink-0 overflow-hidden border border-light-gray transition-opacity dark:border-light-gray/25 ${
-        dimmed ? "opacity-30" : "opacity-100"
+      className={`w-[9.5rem] shrink-0 overflow-hidden border ${
+        isPlaying
+          ? "border-hermes bg-hermes/5 ring-1 ring-hermes/30 dark:border-hermes/80"
+          : "border-light-gray dark:border-light-gray/25"
       }`}
     >
       {fifaNumber !== undefined ? (
@@ -190,7 +181,18 @@ function BracketMatchCard({
   );
 }
 
-function ConnectorLines() {
+function ConnectorLines({ singleChild = false }: { singleChild?: boolean }) {
+  if (singleChild) {
+    return (
+      <div
+        className="relative mx-1 w-4 shrink-0 self-stretch"
+        aria-hidden
+      >
+        <div className="absolute top-1/2 right-0 h-px w-full -translate-y-1/2 bg-light-gray dark:bg-light-gray/30" />
+      </div>
+    );
+  }
+
   return (
     <div
       className="relative mx-1 w-4 shrink-0 self-stretch"
@@ -199,7 +201,6 @@ function ConnectorLines() {
       <div className="absolute top-1/4 right-0 h-px w-full bg-light-gray dark:bg-light-gray/30" />
       <div className="absolute bottom-1/4 right-0 h-px w-full bg-light-gray dark:bg-light-gray/30" />
       <div className="absolute top-1/4 bottom-1/4 right-0 w-px bg-light-gray dark:bg-light-gray/30" />
-      <div className="absolute top-1/2 right-0 h-px w-full bg-light-gray dark:bg-light-gray/30" />
     </div>
   );
 }
@@ -209,60 +210,86 @@ function BracketSubtree({
   matchById,
   teamsById,
   activeMatches,
-  pathFilterActive,
-  starredPathMatchIds,
+  shouldFilter,
+  relevantMatchIds,
 }: {
   node: BracketNode;
   matchById: Map<string, BracketMatchView>;
   teamsById: Record<string, Team>;
   activeMatches?: CollisionEvent[];
-  pathFilterActive?: boolean;
-  starredPathMatchIds?: Set<string>;
+  shouldFilter: boolean;
+  relevantMatchIds: Set<string>;
 }) {
+  if (shouldFilter && !subtreeHasRelevant(node, relevantMatchIds)) {
+    return null;
+  }
+
   const match = matchById.get(node.matchId);
   if (!match) return null;
 
   const hasChildren = node.homeSource && node.awaySource;
 
   if (!hasChildren) {
+    if (shouldFilter && !relevantMatchIds.has(node.matchId)) {
+      return null;
+    }
     return (
       <BracketMatchCard
         match={match}
         teamsById={teamsById}
         activeMatches={activeMatches}
-        pathFilterActive={pathFilterActive}
-        starredPathMatchIds={starredPathMatchIds}
       />
     );
   }
 
+  const showHome =
+    !shouldFilter ||
+    (node.homeSource !== undefined &&
+      subtreeHasRelevant(node.homeSource, relevantMatchIds));
+  const showAway =
+    !shouldFilter ||
+    (node.awaySource !== undefined &&
+      subtreeHasRelevant(node.awaySource, relevantMatchIds));
+
+  if (shouldFilter && !showHome && !showAway) {
+    return null;
+  }
+
+  const visibleChildCount = (showHome ? 1 : 0) + (showAway ? 1 : 0);
+
   return (
     <div className="flex items-center">
-      <div className="flex flex-col justify-around gap-6 py-2">
-        <BracketSubtree
-          node={node.homeSource!}
-          matchById={matchById}
-          teamsById={teamsById}
-          activeMatches={activeMatches}
-          pathFilterActive={pathFilterActive}
-          starredPathMatchIds={starredPathMatchIds}
-        />
-        <BracketSubtree
-          node={node.awaySource!}
-          matchById={matchById}
-          teamsById={teamsById}
-          activeMatches={activeMatches}
-          pathFilterActive={pathFilterActive}
-          starredPathMatchIds={starredPathMatchIds}
-        />
+      <div
+        className={`flex flex-col py-2 ${
+          visibleChildCount === 1 ? "justify-center" : "justify-around gap-6"
+        }`}
+      >
+        {showHome ? (
+          <BracketSubtree
+            node={node.homeSource!}
+            matchById={matchById}
+            teamsById={teamsById}
+            activeMatches={activeMatches}
+            shouldFilter={shouldFilter}
+            relevantMatchIds={relevantMatchIds}
+          />
+        ) : null}
+        {showAway ? (
+          <BracketSubtree
+            node={node.awaySource!}
+            matchById={matchById}
+            teamsById={teamsById}
+            activeMatches={activeMatches}
+            shouldFilter={shouldFilter}
+            relevantMatchIds={relevantMatchIds}
+          />
+        ) : null}
       </div>
-      <ConnectorLines />
+      <ConnectorLines singleChild={shouldFilter && visibleChildCount === 1} />
       <BracketMatchCard
         match={match}
         teamsById={teamsById}
         activeMatches={activeMatches}
-        pathFilterActive={pathFilterActive}
-        starredPathMatchIds={starredPathMatchIds}
       />
     </div>
   );
@@ -273,10 +300,13 @@ export function TournamentBracketTree({
   teamsById,
   activeMatches,
   pathFilterActive = false,
-  starredPathMatchIds,
+  relevantMatchIds = null,
 }: TournamentBracketTreeProps) {
   const matchById = new Map(
     structure.bracketMatches.map((match) => [match.matchId, match]),
+  );
+  const shouldFilter = Boolean(
+    pathFilterActive && relevantMatchIds && relevantMatchIds.size > 0,
   );
 
   return (
@@ -287,8 +317,8 @@ export function TournamentBracketTree({
           matchById={matchById}
           teamsById={teamsById}
           activeMatches={activeMatches}
-          pathFilterActive={pathFilterActive}
-          starredPathMatchIds={starredPathMatchIds}
+          shouldFilter={shouldFilter}
+          relevantMatchIds={relevantMatchIds ?? new Set()}
         />
       </div>
     </div>
