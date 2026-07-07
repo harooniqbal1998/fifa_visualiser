@@ -63,7 +63,7 @@ export function TournamentStructureDrawer({
 
   return (
     <aside
-      className={`flex min-h-0 shrink-0 flex-col overflow-hidden bg-transparent max-md:min-h-dvh ${
+      className={`flex min-h-0 shrink-0 flex-col overflow-hidden max-md:min-h-dvh max-md:bg-background md:bg-transparent ${
         open
           ? "max-md:fixed max-md:inset-0 max-md:z-40 max-md:w-full max-md:pt-[env(safe-area-inset-top)] max-md:pb-[env(safe-area-inset-bottom)] md:relative md:h-full md:w-1/2 md:min-w-0 md:border-l md:border-light-gray dark:md:border-light-gray/25"
           : "max-md:pointer-events-none max-md:invisible max-md:w-0 md:relative md:h-full md:w-0 md:border-l-0"
@@ -73,7 +73,7 @@ export function TournamentStructureDrawer({
       {...(!open ? { inert: true } : {})}
     >
       {open ? (
-        <div className="flex w-full shrink-0 flex-row items-center justify-between gap-2 border-b border-light-gray px-4 py-3 dark:border-light-gray/25">
+        <div className="flex w-full shrink-0 flex-row items-center justify-between gap-2 border-b border-light-gray bg-background px-4 py-3 md:bg-transparent dark:border-light-gray/25">
           <div className="flex min-w-0 items-center gap-2">
             <span className="shrink-0 text-sm font-medium text-dark-heather md:hidden dark:text-light-gray">
               Tournament structure
