@@ -140,19 +140,53 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
               Go back to start
             </button>
           </>
+        ) : isCompleted ? (
+          <>
+            <div className="relative flex h-7 min-w-0 items-center rounded-full bg-hermes text-white">
+              <button
+                ref={playButtonRef}
+                type="button"
+                title="Play again"
+                aria-label="Play again"
+                onClick={onPlayAgain}
+                className="relative z-0 flex h-7 shrink-0 items-center gap-1.5 rounded-l-full pl-2.5 text-xs font-medium hover:bg-hermes/90"
+              >
+                <PlayIcon />
+                Play again
+              </button>
+              <TimelineDayPicker
+                day={pickerDay}
+                onDayChange={onPickerDayChange}
+                mode="dropdown"
+                delegateTargetRef={playButtonRef}
+                triggerClassName="min-w-0 rounded-r-full pl-1.5 pr-2.5"
+                circleVariant="onPrimary"
+              />
+            </div>
+            <button
+              type="button"
+              title="Go back to start"
+              aria-label="Go back to start"
+              onClick={onGoBackToStart}
+              className="relative z-0 flex h-7 shrink-0 items-center gap-1.5 rounded-full border border-light-gray px-2.5 text-xs font-medium hover:bg-light-gray/20 dark:border-light-gray/30 dark:hover:bg-light-gray/10"
+            >
+              <GoBackIcon />
+              Go back to start
+            </button>
+          </>
         ) : (
           <div className="relative flex h-7 min-w-0 items-center rounded-full bg-hermes text-white">
             <button
               ref={playButtonRef}
               type="button"
-              title={isCompleted ? "Play again" : playTitle}
-              aria-label={isCompleted ? "Play again" : playTitle}
-              onClick={isCompleted ? onPlayAgain : onPlay}
-              disabled={!isCompleted && !canPlay}
+              title={playTitle}
+              aria-label={playTitle}
+              onClick={onPlay}
+              disabled={!canPlay}
               className="relative z-0 flex h-7 shrink-0 items-center gap-1.5 rounded-l-full pl-2.5 text-xs font-medium hover:bg-hermes/90 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <PlayIcon />
-              {isCompleted ? "Play again" : "Play from"}
+              Play from
             </button>
             <TimelineDayPicker
               day={pickerDay}
@@ -186,8 +220,10 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
 
         <Link
           href="/how-it-works"
+          target="_blank"
+          rel="noopener noreferrer"
           title="How it works"
-          aria-label="How it works"
+          aria-label="How it works (opens in new tab)"
           className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-light-gray hover:bg-light-gray/20 dark:border-light-gray/30 dark:hover:bg-light-gray/10"
         >
           <InfoIcon />

@@ -4,6 +4,7 @@ import {
   forwardRef,
   memo,
   useCallback,
+  useEffect,
   useImperativeHandle,
   useLayoutEffect,
   useMemo,
@@ -114,6 +115,7 @@ export const PetalSimulationVisualization = memo(
   const checkpointRef = useRef<SimulationCheckpoint | null>(null);
   const simulationRunRef = useRef<Promise<SimulationRunState> | null>(null);
   const stopPromiseRef = useRef<Promise<void> | null>(null);
+  const sessionCompleteCalledRef = useRef(false);
   const sessionPhaseRef = useRef(sessionPhase);
   sessionPhaseRef.current = sessionPhase;
 
@@ -294,6 +296,13 @@ export const PetalSimulationVisualization = memo(
     resetSimulation(snapshot.day);
   }, [snapshot.day, sessionPhase, resetSimulation]);
 
+  useEffect(() => {
+    return () => {
+      abortRef.current = true;
+      canvasRef.current?.stop();
+    };
+  }, []);
+
   const startSimulation = useCallback(async () => {
     if (stopPromiseRef.current) {
       await stopPromiseRef.current;
@@ -350,20 +359,33 @@ export const PetalSimulationVisualization = memo(
     }
 
     abortRef.current = false;
+    sessionCompleteCalledRef.current = false;
     onSimulatingChange(true);
+
+    const markSessionComplete = (winnerId: string) => {
+      if (sessionCompleteCalledRef.current) return;
+      sessionCompleteCalledRef.current = true;
+      onSimulatingChange(false);
+      onSessionComplete(winnerId);
+    };
 
     simulationRunRef.current = runSimulation(
       params,
       {
         onDayChange: (day) => {
+          if (abortRef.current) return;
           onDayChange?.(day);
         },
         onCollision: async (event) => {
+          if (abortRef.current) return;
           activeMatchesRef.current = [...activeMatchesRef.current, event];
           onActiveMatchesChange?.([...activeMatchesRef.current]);
+          const canvas = canvasRef.current;
+          if (!canvas) return;
           try {
-            await canvasRef.current!.playMatch(event);
+            await canvas.playMatch(event);
           } finally {
+            if (abortRef.current) return;
             commitMatchResult(event);
             notifyStructureState();
             activeMatchesRef.current = activeMatchesRef.current.filter(
@@ -373,6 +395,7 @@ export const PetalSimulationVisualization = memo(
           }
         },
         onMatchResolved: async (event: CollisionEvent, groupResults) => {
+          if (abortRef.current) return;
           groupResultsRef.current = groupResults;
           if (event.isKnockout) {
             eliminatedRef.current.add(event.loser);
@@ -387,6 +410,9 @@ export const PetalSimulationVisualization = memo(
             );
             canvasRef.current?.setLayoutTargets(layout);
             await canvasRef.current?.animateRankTransition();
+            if (event.stage === "final") {
+              markSessionComplete(event.winner);
+            }
             return;
           }
 
@@ -445,12 +471,14 @@ export const PetalSimulationVisualization = memo(
           setLiveBracketDepths(state.bracketDepths);
         },
         onComplete: (finalState) => {
+          if (abortRef.current) return;
           onSimulatingChange(false);
+          if (sessionCompleteCalledRef.current) return;
           const survivors = teams.filter(
             (team) => !finalState.probability.eliminated.has(team.id),
           );
           if (survivors.length === 1) {
-            onSessionComplete(survivors[0]!.id);
+            markSessionComplete(survivors[0]!.id);
           }
         },
         shouldAbort: () => abortRef.current,
