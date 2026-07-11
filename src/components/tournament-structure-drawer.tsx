@@ -74,17 +74,7 @@ export function TournamentStructureDrawer({
     >
       {open ? (
         <div className="flex w-full shrink-0 flex-row items-center justify-between gap-2 border-b border-light-gray bg-background px-4 py-3 md:bg-transparent dark:border-light-gray/25">
-          <div className="flex min-w-0 items-center gap-2">
-            <span className="shrink-0 text-sm font-medium text-dark-heather md:hidden dark:text-light-gray">
-              Tournament structure
-            </span>
-            <TimelineDayPicker
-              day={pickerDay}
-              onDayChange={onPickerDayChange}
-              mode={pickerMode}
-            />
-          </div>
-          <div className="flex shrink-0 items-center gap-2">
+          <div className="flex min-w-0 items-center gap-4">
             {onClose ? (
               <button
                 type="button"
@@ -96,6 +86,13 @@ export function TournamentStructureDrawer({
                 <CloseIcon />
               </button>
             ) : null}
+            <TimelineDayPicker
+              day={pickerDay}
+              onDayChange={onPickerDayChange}
+              mode={pickerMode}
+            />
+          </div>
+          <div className="flex shrink-0 items-center gap-2">
             {showPathFilter ? (
               <div className="flex shrink-0 items-center gap-2">
                 <span className="text-[11px] font-medium text-dark-heather dark:text-light-gray">
