@@ -28,6 +28,13 @@ import {
 
 const CIRCLE_PX = 14;
 const SCROLL_MS = 200;
+/** ~6 option rows (circle + py-1.5) visible before scroll. */
+const DROPDOWN_VISIBLE_ROWS = 6;
+const DROPDOWN_ROW_PX = CIRCLE_PX + 12; // circle + vertical padding
+const DROPDOWN_MAX_HEIGHT_PX = DROPDOWN_VISIBLE_ROWS * DROPDOWN_ROW_PX;
+const DROPDOWN_FADE_PX = 16; // slight clear of blur on last item
+const DROPDOWN_FADE_CLASS =
+  "pointer-events-none absolute inset-x-0 bottom-0 h-4 rounded-b-lg bg-gradient-to-t from-background via-background/70 to-transparent dark:from-dark-heather dark:via-dark-heather/70";
 
 const stageStyles: Record<MatchStage, string> = {
   group: "border-hermes bg-hermes/20",
@@ -378,13 +385,15 @@ export function TimelineDayPicker({
     }
   };
 
+  const showScrollFade = options.length > DROPDOWN_VISIBLE_ROWS;
+
   const panel =
     open && mounted ? (
       <div
         ref={panelRef}
         role="listbox"
         aria-label="Start from"
-        className={`fixed z-[100] min-w-[10rem] rounded-lg border border-light-gray bg-background py-1 shadow-lg dark:border-light-gray/25 dark:bg-dark-heather ${
+        className={`fixed z-[100] min-w-[10rem] overflow-hidden rounded-lg border border-light-gray bg-background shadow-lg dark:border-light-gray/25 dark:bg-dark-heather ${
           position ? "visible" : "invisible"
         }`}
         style={
@@ -393,26 +402,37 @@ export function TimelineDayPicker({
             : { top: 0, left: 0 }
         }
       >
-        {options.map((option, index) => (
-          <button
-            key={option.day}
-            type="button"
-            role="option"
-            aria-selected={timelineLabelKey(
-              formatTimelineStartLabel(option.day, option.stage),
-            ) === timelineLabelKey(formatTimelineStartLabel(day, stage))}
-            className={`flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs leading-none whitespace-nowrap ${
-              index === highlightIndex
-                ? "bg-light-gray/30 text-dark-heather dark:bg-light-gray/15 dark:text-light-gray"
-                : "text-dark-heather hover:bg-light-gray/20 dark:text-light-gray dark:hover:bg-light-gray/10"
-            }`}
-            onMouseEnter={() => setHighlightIndex(index)}
-            onClick={() => handleSelect(option.day)}
-          >
-            <TimelineStageCircle day={option.day} stage={option.stage} />
-            <span>{option.label}</span>
-          </button>
-        ))}
+        <div
+          className="overflow-y-auto overscroll-contain pt-1"
+          style={{
+            maxHeight: DROPDOWN_MAX_HEIGHT_PX,
+            paddingBottom: showScrollFade ? DROPDOWN_FADE_PX : 4,
+          }}
+        >
+          {options.map((option, index) => (
+            <button
+              key={option.day}
+              type="button"
+              role="option"
+              aria-selected={timelineLabelKey(
+                formatTimelineStartLabel(option.day, option.stage),
+              ) === timelineLabelKey(formatTimelineStartLabel(day, stage))}
+              className={`flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs leading-none whitespace-nowrap ${
+                index === highlightIndex
+                  ? "bg-light-gray/30 text-dark-heather dark:bg-light-gray/15 dark:text-light-gray"
+                  : "text-dark-heather hover:bg-light-gray/20 dark:text-light-gray dark:hover:bg-light-gray/10"
+              }`}
+              onMouseEnter={() => setHighlightIndex(index)}
+              onClick={() => handleSelect(option.day)}
+            >
+              <TimelineStageCircle day={option.day} stage={option.stage} />
+              <span>{option.label}</span>
+            </button>
+          ))}
+        </div>
+        {showScrollFade ? (
+          <div aria-hidden className={DROPDOWN_FADE_CLASS} />
+        ) : null}
       </div>
     ) : null;
 

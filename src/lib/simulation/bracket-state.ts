@@ -5,7 +5,7 @@ import { KNOCKOUT_TREE } from "@/data/knockout-bracket";
 import {
   getAdvancingTeamIdsFromThirdGroups,
   buildStandingsFromGroupResults,
-  selectAdvancingThirdPlaceGroups,
+  resolveAdvancingThirdPlaceGroups,
 } from "@/lib/simulation/group-advancement";
 import { createSeededRng } from "@/lib/simulation/animation-params";
 import {
@@ -259,9 +259,11 @@ export function getEliminatedFromResults(
 
   if (day >= 12) {
     const standings = buildStandingsFromGroupResults(groupResults);
-    const thirdGroups =
-      advancingThirdGroups ??
-      selectAdvancingThirdPlaceGroups(standings, createSeededRng(42 + day));
+    const thirdGroups = resolveAdvancingThirdPlaceGroups(
+      standings,
+      createSeededRng(42 + day),
+      advancingThirdGroups,
+    );
     const advancing = getAdvancingTeamIdsFromThirdGroups(standings, thirdGroups);
     for (const team of teams) {
       if (!advancing.has(team.id)) {

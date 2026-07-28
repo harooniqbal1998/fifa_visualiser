@@ -145,6 +145,19 @@ export function HowItWorksContent() {
             bracket. Play runs one random path through the rest of the tournament
             so you can watch how a single storyline changes the picture.
           </p>
+          <p className="text-xs">
+            <a
+              href="https://www.harooniqbal.in"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
+              <span className="text-dark-heather/45 dark:text-light-gray/45">
+                Build by{" "}
+              </span>
+              <span className="font-medium text-hermes">Haroon Iqbal</span>
+            </a>
+          </p>
         </SectionCard>
       </div>
 

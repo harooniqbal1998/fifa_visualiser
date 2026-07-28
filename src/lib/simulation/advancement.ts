@@ -8,7 +8,7 @@ import { createSeededRng } from "@/lib/simulation/animation-params";
 import { buildBracketState } from "@/lib/simulation/bracket-state";
 import {
   buildStandingsFromGroupResults,
-  selectAdvancingThirdPlaceGroups,
+  resolveAdvancingThirdPlaceGroups,
 } from "@/lib/simulation/group-advancement";
 import type { SimMatchResult, SimulationRunState } from "@/lib/simulation/types";
 
@@ -41,6 +41,12 @@ export function getScriptedResultsUpToDay(day: number): SimMatchResult[] {
     .filter((result): result is SimMatchResult => result !== null);
 }
 
+/** Results strictly before `day` — start-of-round idle / sim bootstrap semantics. */
+export function getScriptedResultsBeforeDay(day: number): SimMatchResult[] {
+  if (day <= 0) return [];
+  return getScriptedResultsUpToDay(day - 1);
+}
+
 /** Deterministic seed for bootstrap-only structure (not simulation outcomes). */
 const BOOTSTRAP_STRUCTURE_SEED = 0;
 
@@ -52,7 +58,7 @@ export function buildSimulationBootstrap(startDay: number): SimulationBootstrap 
   if (startDay > 12 && groupResults.length > 0) {
     const standings = buildStandingsFromGroupResults(groupResults);
     const thirdRng = createSeededRng(BOOTSTRAP_STRUCTURE_SEED);
-    advancingThirdGroups = selectAdvancingThirdPlaceGroups(standings, thirdRng);
+    advancingThirdGroups = resolveAdvancingThirdPlaceGroups(standings, thirdRng);
     probability = applyGroupStageCut(
       probability,
       groupResults,

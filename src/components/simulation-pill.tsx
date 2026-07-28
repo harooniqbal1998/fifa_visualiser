@@ -4,7 +4,7 @@ import Link from "next/link";
 import { forwardRef, useRef } from "react";
 import { TimelineDayPicker } from "@/components/timeline";
 import type { SimulationSessionPhase } from "@/components/viz/petal/petal-simulation-visualization";
-import { isDropdownStartDay } from "@/lib/tournament";
+import { isDropdownStartDay, hasSimulationWorkFromDay } from "@/lib/tournament";
 
 type SimulationPillProps = {
   pickerDay: number;
@@ -85,10 +85,18 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
     const isPaused = sessionPhase === "paused";
     const isCompleted = sessionPhase === "completed";
     const isIdle = sessionPhase === "idle";
-    const canPlay = !isIdle || isDropdownStartDay(pickerDay);
-    const playTitle = canPlay
-      ? "Play simulation from selected day"
-      : "Complete match results required before this day";
+    const canPlayFromPicker =
+      isDropdownStartDay(pickerDay) && hasSimulationWorkFromDay(pickerDay);
+    const canPlay = isIdle ? canPlayFromPicker : true;
+    const canPlayAgain = canPlayFromPicker;
+    const playTitle = !isDropdownStartDay(pickerDay)
+      ? "Complete match results required before this day"
+      : !hasSimulationWorkFromDay(pickerDay)
+        ? "Tournament complete — nothing left to simulate from this day"
+        : "Play simulation from selected day";
+    const playAgainTitle = !hasSimulationWorkFromDay(pickerDay)
+      ? "Tournament complete — nothing left to simulate from this day"
+      : "Play again from selected day";
 
     return (
       <div
@@ -146,10 +154,11 @@ export const SimulationPill = forwardRef<HTMLDivElement, SimulationPillProps>(
               <button
                 ref={playButtonRef}
                 type="button"
-                title="Play again"
-                aria-label="Play again"
+                title={playAgainTitle}
+                aria-label={playAgainTitle}
                 onClick={onPlayAgain}
-                className="relative z-0 flex h-7 shrink-0 items-center gap-1.5 rounded-l-full pl-2.5 text-xs font-medium hover:bg-hermes/90"
+                disabled={!canPlayAgain}
+                className="relative z-0 flex h-7 shrink-0 items-center gap-1.5 rounded-l-full pl-2.5 text-xs font-medium hover:bg-hermes/90 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <PlayIcon />
                 Play again

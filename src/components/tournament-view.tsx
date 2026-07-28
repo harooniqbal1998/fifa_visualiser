@@ -3,9 +3,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { PRE_TOURNAMENT_DAY } from "@/lib/match-context-label";
 import {
-  getDayRange,
+  getIdleSnapshotForStartDay,
   getLatestDropdownStartDay,
-  getSnapshotByDay,
   getTeams,
   isDropdownStartDay,
 } from "@/lib/tournament";
@@ -28,7 +27,7 @@ import { createSeededRng } from "@/lib/simulation/animation-params";
 import { DEFAULT_PROBABILITY_CONFIG } from "@/lib/probability/types";
 import type { ProbabilityState } from "@/lib/probability/types";
 import type { CollisionEvent, SimMatchResult } from "@/lib/simulation/types";
-import { getScriptedResultsUpToDay } from "@/lib/simulation/advancement";
+import { getScriptedResultsBeforeDay } from "@/lib/simulation/advancement";
 import { buildTournamentStructureView } from "@/lib/tournament-structure";
 import { TournamentStructureDrawer } from "@/components/tournament-structure-drawer";
 import { FifaBackgroundTitle } from "@/components/fifa-background-title";
@@ -36,10 +35,9 @@ import { useStarredTeamsStore } from "@/stores/starred-teams-store";
 import type { TimelineDayPickerMode } from "@/components/timeline";
 
 export function TournamentView() {
-  const { min } = getDayRange();
   const teams = getTeams();
-  const [day, setDay] = useState(min);
-  const [playFromDay, setPlayFromDay] = useState(min);
+  const [day, setDay] = useState(PRE_TOURNAMENT_DAY);
+  const [playFromDay, setPlayFromDay] = useState(PRE_TOURNAMENT_DAY);
   const [sessionPhase, setSessionPhase] = useState<SimulationSessionPhase>("idle");
   const [winnerId, setWinnerId] = useState<string | null>(null);
   const [liveProbabilityState, setLiveProbabilityState] = useState<ProbabilityState | null>(
@@ -55,7 +53,7 @@ export function TournamentView() {
   const starredTeamIds = useStarredTeamsStore((s) => s.starredTeamIds);
   const toggleStar = useStarredTeamsStore((s) => s.toggleStar);
   const unstar = useStarredTeamsStore((s) => s.unstar);
-  const snapshot = getSnapshotByDay(day) ?? getSnapshotByDay(min)!;
+  const snapshot = getIdleSnapshotForStartDay(day);
   const petalVizRef = useRef<PetalSimulationVisualizationRef>(null);
   const sessionPhaseRef = useRef<SimulationSessionPhase>("idle");
 
@@ -73,9 +71,11 @@ export function TournamentView() {
         ? "inline-static"
         : "dropdown";
 
+  const idleDataDay = day > PRE_TOURNAMENT_DAY ? day - 1 : PRE_TOURNAMENT_DAY;
+
   const structureEloRatings = useMemo(() => {
     const replayElo = replayTournamentToDay(
-      day,
+      sessionPhase === "idle" ? idleDataDay : day,
       createSeededRng(42 + day),
       DEFAULT_PROBABILITY_CONFIG,
     ).probability.eloRatings;
@@ -85,16 +85,16 @@ export function TournamentView() {
     }
 
     return liveProbabilityState?.eloRatings ?? replayElo;
-  }, [sessionPhase, day, liveProbabilityState]);
+  }, [sessionPhase, day, idleDataDay, liveProbabilityState]);
 
   const tournamentStructure = useMemo(() => {
     const groupResults =
       sessionPhase === "idle"
-        ? getScriptedResultsUpToDay(day).filter((r) => r.stage === "group")
+        ? getScriptedResultsBeforeDay(day).filter((r) => r.stage === "group")
         : liveGroupResults;
     const knockoutResults =
       sessionPhase === "idle"
-        ? getScriptedResultsUpToDay(day).filter((r) => r.stage !== "group")
+        ? getScriptedResultsBeforeDay(day).filter((r) => r.stage !== "group")
         : liveKnockoutResults;
 
     return buildTournamentStructureView(day, groupResults, knockoutResults, {

@@ -164,3 +164,11 @@ export function getDropdownTimelineStartOptions(
 export function getProductionTimelineDays(): TimelineDayEntry[] {
   return productionTimelineDays;
 }
+
+/** True when a simulation starting at `day` still has fixtures to (re)play. */
+export function hasSimulationWorkFromDay(
+  day: number,
+  matchList: Match[] = productionMatches,
+): boolean {
+  return matchList.some((match) => match.day >= day);
+}

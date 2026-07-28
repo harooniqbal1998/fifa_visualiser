@@ -18,7 +18,7 @@ import {
 } from "@/lib/probability";
 import {
   buildStandingsFromGroupResults,
-  selectAdvancingThirdPlaceGroups,
+  resolveAdvancingThirdPlaceGroups,
 } from "@/lib/simulation/group-advancement";
 import type {
   CollisionEvent,
@@ -110,7 +110,7 @@ export async function runSimulation(
       const beforeEliminated = new Set(state.probability.eliminated);
       const standings = buildStandingsFromGroupResults(state.groupResults);
       const thirdRng = createSeededRng(params.simulationSeed + 12);
-      state.advancingThirdGroups = selectAdvancingThirdPlaceGroups(standings, thirdRng);
+      state.advancingThirdGroups = resolveAdvancingThirdPlaceGroups(standings, thirdRng);
       state.probability = applyGroupStageCut(
         state.probability,
         state.groupResults,

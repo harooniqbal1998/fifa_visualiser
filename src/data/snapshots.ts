@@ -3301,7 +3301,7 @@ export const snapshots: Snapshot[] = [
       "qat": 0,
       "sui": 2.08,
       "bra": 8.21,
-      "mar": 2.83,
+      "mar": 2.84,
       "hai": 0,
       "sco": 0,
       "usa": 1.21,
@@ -3316,19 +3316,19 @@ export const snapshots: Snapshot[] = [
       "jpn": 1.17,
       "swe": 0,
       "tun": 0,
-      "bel": 4.58,
+      "bel": 4.59,
       "egy": 0.24,
-      "irn": 0.15,
+      "irn": 0,
       "nzl": 0,
-      "esp": 12.79,
+      "esp": 12.8,
       "cpv": 0.01,
       "ksa": 0,
       "uru": 0,
-      "fra": 13.81,
-      "sen": 0,
+      "fra": 13.82,
+      "sen": 0.1,
       "irq": 0,
       "nor": 0.35,
-      "arg": 18.3,
+      "arg": 18.31,
       "alg": 0.13,
       "aut": 0.15,
       "jor": 0,
@@ -3336,13 +3336,15 @@ export const snapshots: Snapshot[] = [
       "cod": 0,
       "uzb": 0,
       "col": 3.52,
-      "eng": 14.67,
+      "eng": 14.68,
       "cro": 1.75,
       "gha": 0.01,
       "pan": 0
     },
     "possibleOpponents": {
-      "mex": [],
+      "mex": [
+        "ecu"
+      ],
       "rsa": [
         "can"
       ],
@@ -3384,7 +3386,7 @@ export const snapshots: Snapshot[] = [
         "nor"
       ],
       "ecu": [
-        "bel"
+        "mex"
       ],
       "ned": [
         "mar"
@@ -3397,7 +3399,7 @@ export const snapshots: Snapshot[] = [
       ],
       "tun": [],
       "bel": [
-        "ecu"
+        "sen"
       ],
       "egy": [
         "aus"
@@ -3415,7 +3417,9 @@ export const snapshots: Snapshot[] = [
       "fra": [
         "swe"
       ],
-      "sen": [],
+      "sen": [
+        "bel"
+      ],
       "irq": [],
       "nor": [
         "civ"
@@ -3510,10 +3514,10 @@ export const snapshots: Snapshot[] = [
       "tur",
       "cuw",
       "tun",
+      "irn",
       "nzl",
       "ksa",
       "uru",
-      "sen",
       "irq",
       "jor",
       "uzb",
@@ -3524,63 +3528,63 @@ export const snapshots: Snapshot[] = [
     "day": 13,
     "probabilities": {
       "mex": 0.34,
-      "rsa": 0.02,
+      "rsa": 0,
       "kor": 0,
       "cze": 0,
-      "can": 0.05,
+      "can": 0.15,
       "bih": 0,
       "qat": 0,
-      "sui": 2.08,
-      "bra": 8.21,
-      "mar": 2.84,
+      "sui": 2.07,
+      "bra": 8.18,
+      "mar": 7.86,
       "hai": 0,
       "sco": 0,
-      "usa": 1.21,
-      "par": 0.05,
+      "usa": 1.24,
+      "par": 0.3,
       "aus": 0.27,
       "tur": 0,
-      "ger": 2.95,
+      "ger": 0,
       "cuw": 0,
       "civ": 0.08,
       "ecu": 0.4,
-      "ned": 5.62,
+      "ned": 0,
       "jpn": 1.17,
       "swe": 0,
       "tun": 0,
-      "bel": 4.59,
+      "bel": 4.64,
       "egy": 0.24,
       "irn": 0,
       "nzl": 0,
-      "esp": 12.8,
+      "esp": 12.86,
       "cpv": 0.01,
       "ksa": 0,
       "uru": 0,
-      "fra": 13.82,
+      "fra": 17.01,
       "sen": 0.1,
       "irq": 0,
       "nor": 0.35,
-      "arg": 18.31,
+      "arg": 18.23,
       "alg": 0.13,
       "aut": 0.15,
       "jor": 0,
-      "por": 4.25,
+      "por": 4.3,
       "cod": 0,
       "uzb": 0,
-      "col": 3.52,
-      "eng": 14.68,
-      "cro": 1.75,
+      "col": 3.51,
+      "eng": 14.61,
+      "cro": 1.78,
       "gha": 0.01,
       "pan": 0
     },
     "possibleOpponents": {
-      "mex": [],
-      "rsa": [
-        "can"
+      "mex": [
+        "ecu"
       ],
+      "rsa": [],
       "kor": [],
       "cze": [],
       "can": [
-        "rsa"
+        "mar"
       ],
       "bih": [
         "usa"
@@ -3593,7 +3597,7 @@ export const snapshots: Snapshot[] = [
         "jpn"
       ],
       "mar": [
-        "ned"
+        "can"
       ],
       "hai": [],
       "sco": [],
@@ -3601,25 +3605,22 @@ export const snapshots: Snapshot[] = [
         "bih"
       ],
       "par": [
-        "ger"
+        "fra",
+        "swe"
       ],
       "aus": [
         "egy"
       ],
       "tur": [],
-      "ger": [
-        "par"
-      ],
+      "ger": [],
       "cuw": [],
       "civ": [
         "nor"
       ],
       "ecu": [
-        "bel"
+        "mex"
       ],
-      "ned": [
-        "mar"
-      ],
+      "ned": [],
       "jpn": [
         "bra"
       ],
@@ -3628,7 +3629,7 @@ export const snapshots: Snapshot[] = [
       ],
       "tun": [],
       "bel": [
-        "ecu"
+        "sen"
       ],
       "egy": [
         "aus"
@@ -3646,7 +3647,9 @@ export const snapshots: Snapshot[] = [
       "fra": [
         "swe"
       ],
-      "sen": [],
+      "sen": [
+        "bel"
+      ],
       "irq": [],
       "nor": [
         "civ"
@@ -3687,16 +3690,16 @@ export const snapshots: Snapshot[] = [
       "rsa": 1,
       "kor": 1,
       "cze": 1,
-      "can": 1,
+      "can": 2,
       "bih": 1,
       "qat": 1,
       "sui": 1,
       "bra": 1,
-      "mar": 1,
+      "mar": 2,
       "hai": 1,
       "sco": 1,
       "usa": 1,
-      "par": 1,
+      "par": 2,
       "aus": 1,
       "tur": 1,
       "ger": 1,
@@ -3748,70 +3751,73 @@ export const snapshots: Snapshot[] = [
       "irq",
       "jor",
       "uzb",
-      "pan"
+      "pan",
+      "rsa",
+      "ger",
+      "ned"
     ]
   },
   {
     "day": 14,
     "probabilities": {
-      "mex": 0.34,
-      "rsa": 0.02,
+      "mex": 0.28,
+      "rsa": 0,
       "kor": 0,
       "cze": 0,
-      "can": 0.05,
+      "can": 0.12,
       "bih": 0,
       "qat": 0,
-      "sui": 2.08,
-      "bra": 8.21,
-      "mar": 2.83,
+      "sui": 1.92,
+      "bra": 12.71,
+      "mar": 7.23,
       "hai": 0,
       "sco": 0,
-      "usa": 1.21,
-      "par": 0.05,
-      "aus": 0.27,
+      "usa": 1.16,
+      "par": 0.23,
+      "aus": 0.24,
       "tur": 0,
-      "ger": 2.95,
+      "ger": 0,
       "cuw": 0,
-      "civ": 0.08,
-      "ecu": 0.4,
-      "ned": 5.62,
-      "jpn": 1.17,
+      "civ": 0,
+      "ecu": 0.34,
+      "ned": 0,
+      "jpn": 0,
       "swe": 0,
       "tun": 0,
-      "bel": 4.58,
-      "egy": 0.24,
-      "irn": 0.15,
+      "bel": 4.42,
+      "egy": 0.21,
+      "irn": 0,
       "nzl": 0,
-      "esp": 12.79,
+      "esp": 12.42,
       "cpv": 0.01,
       "ksa": 0,
       "uru": 0,
-      "fra": 13.81,
-      "sen": 0,
+      "fra": 18.23,
+      "sen": 0.1,
       "irq": 0,
-      "nor": 0.35,
-      "arg": 18.3,
-      "alg": 0.13,
-      "aut": 0.15,
+      "nor": 0.57,
+      "arg": 17.38,
+      "alg": 0.12,
+      "aut": 0.14,
       "jor": 0,
-      "por": 4.25,
+      "por": 4.11,
       "cod": 0,
       "uzb": 0,
-      "col": 3.52,
-      "eng": 14.67,
-      "cro": 1.75,
+      "col": 3.26,
+      "eng": 13.12,
+      "cro": 1.69,
       "gha": 0.01,
       "pan": 0
     },
     "possibleOpponents": {
-      "mex": [],
-      "rsa": [
-        "can"
+      "mex": [
+        "ecu"
       ],
+      "rsa": [],
       "kor": [],
       "cze": [],
       "can": [
-        "rsa"
+        "mar"
       ],
       "bih": [
         "usa"
@@ -3821,10 +3827,10 @@ export const snapshots: Snapshot[] = [
         "alg"
       ],
       "bra": [
-        "jpn"
+        "nor"
       ],
       "mar": [
-        "ned"
+        "can"
       ],
       "hai": [],
       "sco": [],
@@ -3832,34 +3838,24 @@ export const snapshots: Snapshot[] = [
         "bih"
       ],
       "par": [
-        "ger"
+        "fra"
       ],
       "aus": [
         "egy"
       ],
       "tur": [],
-      "ger": [
-        "par"
-      ],
+      "ger": [],
       "cuw": [],
-      "civ": [
-        "nor"
-      ],
+      "civ": [],
       "ecu": [
-        "bel"
+        "mex"
       ],
-      "ned": [
-        "mar"
-      ],
-      "jpn": [
-        "bra"
-      ],
-      "swe": [
-        "fra"
-      ],
+      "ned": [],
+      "jpn": [],
+      "swe": [],
       "tun": [],
       "bel": [
-        "ecu"
+        "sen"
       ],
       "egy": [
         "aus"
@@ -3875,12 +3871,14 @@ export const snapshots: Snapshot[] = [
       "ksa": [],
       "uru": [],
       "fra": [
-        "swe"
+        "par"
       ],
-      "sen": [],
+      "sen": [
+        "bel"
+      ],
       "irq": [],
       "nor": [
-        "civ"
+        "bra"
       ],
       "arg": [
         "cpv"
@@ -3918,16 +3916,16 @@ export const snapshots: Snapshot[] = [
       "rsa": 1,
       "kor": 1,
       "cze": 1,
-      "can": 1,
+      "can": 2,
       "bih": 1,
       "qat": 1,
       "sui": 1,
-      "bra": 1,
-      "mar": 1,
+      "bra": 2,
+      "mar": 2,
       "hai": 1,
       "sco": 1,
       "usa": 1,
-      "par": 1,
+      "par": 2,
       "aus": 1,
       "tur": 1,
       "ger": 1,
@@ -3946,10 +3944,10 @@ export const snapshots: Snapshot[] = [
       "cpv": 1,
       "ksa": 1,
       "uru": 1,
-      "fra": 1,
+      "fra": 2,
       "sen": 1,
       "irq": 1,
-      "nor": 1,
+      "nor": 2,
       "arg": 1,
       "alg": 1,
       "aut": 1,
@@ -3972,77 +3970,83 @@ export const snapshots: Snapshot[] = [
       "tur",
       "cuw",
       "tun",
+      "irn",
       "nzl",
       "ksa",
       "uru",
-      "sen",
       "irq",
       "jor",
       "uzb",
-      "pan"
+      "pan",
+      "rsa",
+      "ger",
+      "ned",
+      "jpn",
+      "swe",
+      "civ"
     ]
   },
   {
     "day": 15,
     "probabilities": {
-      "mex": 0.34,
-      "rsa": 0.02,
-      "kor": 0.05,
+      "mex": 0.61,
+      "rsa": 0,
+      "kor": 0,
       "cze": 0,
-      "can": 0.05,
+      "can": 0.12,
       "bih": 0,
       "qat": 0,
-      "sui": 2.08,
-      "bra": 8.22,
-      "mar": 2.84,
+      "sui": 1.89,
+      "bra": 12.33,
+      "mar": 7.2,
       "hai": 0,
       "sco": 0,
-      "usa": 1.21,
-      "par": 0.05,
-      "aus": 0.27,
+      "usa": 1.15,
+      "par": 0.23,
+      "aus": 0.24,
       "tur": 0,
-      "ger": 2.95,
+      "ger": 0,
       "cuw": 0,
-      "civ": 0.08,
-      "ecu": 0.4,
-      "ned": 5.62,
-      "jpn": 1.18,
+      "civ": 0,
+      "ecu": 0,
+      "ned": 0,
+      "jpn": 0,
       "swe": 0,
       "tun": 0,
-      "bel": 4.59,
-      "egy": 0.24,
+      "bel": 4.43,
+      "egy": 0.21,
       "irn": 0,
       "nzl": 0,
-      "esp": 12.8,
+      "esp": 12.39,
       "cpv": 0.01,
       "ksa": 0,
       "uru": 0,
-      "fra": 13.82,
-      "sen": 0,
+      "fra": 18.17,
+      "sen": 0.09,
       "irq": 0,
-      "nor": 0.35,
-      "arg": 18.32,
-      "alg": 0.13,
-      "aut": 0.15,
+      "nor": 0.53,
+      "arg": 17.25,
+      "alg": 0.11,
+      "aut": 0.14,
       "jor": 0,
-      "por": 4.26,
+      "por": 4.09,
       "cod": 0,
       "uzb": 0,
-      "col": 3.52,
-      "eng": 14.69,
-      "cro": 1.76,
+      "col": 3.22,
+      "eng": 13.88,
+      "cro": 1.68,
       "gha": 0.01,
       "pan": 0
     },
     "possibleOpponents": {
-      "mex": [],
-      "rsa": [
-        "can"
+      "mex": [
+        "eng"
       ],
+      "rsa": [],
       "kor": [],
       "cze": [],
       "can": [
-        "rsa"
+        "mar"
       ],
       "bih": [
         "usa"
@@ -4052,10 +4056,10 @@ export const snapshots: Snapshot[] = [
         "alg"
       ],
       "bra": [
-        "jpn"
+        "nor"
       ],
       "mar": [
-        "ned"
+        "can"
       ],
       "hai": [],
       "sco": [],
@@ -4063,34 +4067,22 @@ export const snapshots: Snapshot[] = [
         "bih"
       ],
       "par": [
-        "ger"
+        "fra"
       ],
       "aus": [
         "egy"
       ],
       "tur": [],
-      "ger": [
-        "par"
-      ],
+      "ger": [],
       "cuw": [],
-      "civ": [
-        "nor"
-      ],
-      "ecu": [
-        "bel"
-      ],
-      "ned": [
-        "mar"
-      ],
-      "jpn": [
-        "bra"
-      ],
-      "swe": [
-        "fra"
-      ],
+      "civ": [],
+      "ecu": [],
+      "ned": [],
+      "jpn": [],
+      "swe": [],
       "tun": [],
       "bel": [
-        "ecu"
+        "sen"
       ],
       "egy": [
         "aus"
@@ -4106,12 +4098,14 @@ export const snapshots: Snapshot[] = [
       "ksa": [],
       "uru": [],
       "fra": [
-        "swe"
+        "par"
       ],
-      "sen": [],
+      "sen": [
+        "bel"
+      ],
       "irq": [],
       "nor": [
-        "civ"
+        "bra"
       ],
       "arg": [
         "cpv"
@@ -4126,15 +4120,13 @@ export const snapshots: Snapshot[] = [
       "por": [
         "cro"
       ],
-      "cod": [
-        "eng"
-      ],
+      "cod": [],
       "uzb": [],
       "col": [
         "gha"
       ],
       "eng": [
-        "cod"
+        "mex"
       ],
       "cro": [
         "por"
@@ -4145,20 +4137,20 @@ export const snapshots: Snapshot[] = [
       "pan": []
     },
     "bracketDepths": {
-      "mex": 1,
+      "mex": 2,
       "rsa": 1,
       "kor": 1,
       "cze": 1,
-      "can": 1,
+      "can": 2,
       "bih": 1,
       "qat": 1,
       "sui": 1,
-      "bra": 1,
-      "mar": 1,
+      "bra": 2,
+      "mar": 2,
       "hai": 1,
       "sco": 1,
       "usa": 1,
-      "par": 1,
+      "par": 2,
       "aus": 1,
       "tur": 1,
       "ger": 1,
@@ -4177,10 +4169,10 @@ export const snapshots: Snapshot[] = [
       "cpv": 1,
       "ksa": 1,
       "uru": 1,
-      "fra": 1,
+      "fra": 2,
       "sen": 1,
       "irq": 1,
-      "nor": 1,
+      "nor": 2,
       "arg": 1,
       "alg": 1,
       "aut": 1,
@@ -4189,12 +4181,13 @@ export const snapshots: Snapshot[] = [
       "cod": 1,
       "uzb": 1,
       "col": 1,
-      "eng": 1,
+      "eng": 2,
       "cro": 1,
       "gha": 1,
       "pan": 1
     },
     "eliminatedTeamIds": [
+      "kor",
       "cze",
       "qat",
       "hai",
@@ -4206,194 +4199,169 @@ export const snapshots: Snapshot[] = [
       "nzl",
       "ksa",
       "uru",
-      "sen",
       "irq",
       "jor",
       "uzb",
-      "pan"
+      "pan",
+      "rsa",
+      "ger",
+      "ned",
+      "jpn",
+      "swe",
+      "civ",
+      "ecu",
+      "cod"
     ]
   },
   {
     "day": 16,
     "probabilities": {
-      "mex": 0.34,
-      "rsa": 0.02,
+      "mex": 0.54,
+      "rsa": 0,
       "kor": 0,
       "cze": 0,
-      "can": 0.05,
+      "can": 0.1,
       "bih": 0,
       "qat": 0,
-      "sui": 2.08,
-      "bra": 8.22,
-      "mar": 2.84,
+      "sui": 2.5,
+      "bra": 11.52,
+      "mar": 6.52,
       "hai": 0,
-      "sco": 0.02,
-      "usa": 1.21,
-      "par": 0.05,
-      "aus": 0.27,
+      "sco": 0,
+      "usa": 1.01,
+      "par": 0.2,
+      "aus": 0,
       "tur": 0,
-      "ger": 2.95,
+      "ger": 0,
       "cuw": 0,
-      "civ": 0.08,
-      "ecu": 0.4,
-      "ned": 5.62,
-      "jpn": 1.18,
+      "civ": 0,
+      "ecu": 0,
+      "ned": 0,
+      "jpn": 0,
       "swe": 0,
       "tun": 0,
-      "bel": 4.59,
-      "egy": 0.24,
+      "bel": 5.69,
+      "egy": 0.37,
       "irn": 0,
       "nzl": 0,
-      "esp": 12.81,
-      "cpv": 0.01,
+      "esp": 13.89,
+      "cpv": 0,
       "ksa": 0,
       "uru": 0,
-      "fra": 13.83,
+      "fra": 16.88,
       "sen": 0,
       "irq": 0,
-      "nor": 0.35,
-      "arg": 18.33,
-      "alg": 0.13,
-      "aut": 0.15,
+      "nor": 0.47,
+      "arg": 17.61,
+      "alg": 0,
+      "aut": 0,
       "jor": 0,
-      "por": 4.26,
+      "por": 6.4,
       "cod": 0,
       "uzb": 0,
-      "col": 3.52,
-      "eng": 14.69,
-      "cro": 1.76,
-      "gha": 0.01,
+      "col": 3.29,
+      "eng": 13.01,
+      "cro": 0,
+      "gha": 0,
       "pan": 0
     },
     "possibleOpponents": {
       "mex": [
-        "sco"
+        "eng"
       ],
-      "rsa": [
-        "can"
-      ],
+      "rsa": [],
       "kor": [],
       "cze": [],
       "can": [
-        "rsa"
-      ],
-      "bih": [
-        "usa"
-      ],
-      "qat": [],
-      "sui": [
-        "alg"
-      ],
-      "bra": [
-        "jpn"
-      ],
-      "mar": [
-        "ned"
-      ],
-      "hai": [],
-      "sco": [
-        "mex"
-      ],
-      "usa": [
-        "bih"
-      ],
-      "par": [
-        "ger"
-      ],
-      "aus": [
-        "egy"
-      ],
-      "tur": [],
-      "ger": [
-        "par"
-      ],
-      "cuw": [],
-      "civ": [
-        "nor"
-      ],
-      "ecu": [
-        "bel"
-      ],
-      "ned": [
         "mar"
       ],
-      "jpn": [
-        "bra"
+      "bih": [],
+      "qat": [],
+      "sui": [
+        "col"
       ],
-      "swe": [
+      "bra": [
+        "nor"
+      ],
+      "mar": [
+        "can"
+      ],
+      "hai": [],
+      "sco": [],
+      "usa": [
+        "bel"
+      ],
+      "par": [
         "fra"
       ],
+      "aus": [],
+      "tur": [],
+      "ger": [],
+      "cuw": [],
+      "civ": [],
+      "ecu": [],
+      "ned": [],
+      "jpn": [],
+      "swe": [],
       "tun": [],
       "bel": [
-        "ecu"
+        "usa"
       ],
       "egy": [
-        "aus"
+        "arg"
       ],
       "irn": [],
       "nzl": [],
       "esp": [
-        "aut"
+        "por"
       ],
-      "cpv": [
-        "arg"
-      ],
+      "cpv": [],
       "ksa": [],
       "uru": [],
       "fra": [
-        "swe"
+        "par"
       ],
       "sen": [],
       "irq": [],
       "nor": [
-        "civ"
+        "bra"
       ],
       "arg": [
-        "cpv"
+        "egy"
       ],
-      "alg": [
-        "sui"
-      ],
-      "aut": [
-        "esp"
-      ],
+      "alg": [],
+      "aut": [],
       "jor": [],
       "por": [
-        "cro"
+        "esp"
       ],
-      "cod": [
-        "eng"
-      ],
+      "cod": [],
       "uzb": [],
       "col": [
-        "gha"
+        "sui"
       ],
       "eng": [
-        "cod"
+        "mex"
       ],
-      "cro": [
-        "por"
-      ],
-      "gha": [
-        "col"
-      ],
+      "cro": [],
+      "gha": [],
       "pan": []
     },
     "bracketDepths": {
-      "mex": 1,
+      "mex": 2,
       "rsa": 1,
       "kor": 1,
       "cze": 1,
-      "can": 1,
+      "can": 2,
       "bih": 1,
       "qat": 1,
-      "sui": 1,
-      "bra": 1,
-      "mar": 1,
+      "sui": 2,
+      "bra": 2,
+      "mar": 2,
       "hai": 1,
       "sco": 1,
-      "usa": 1,
-      "par": 1,
+      "usa": 2,
+      "par": 2,
       "aus": 1,
       "tur": 1,
       "ger": 1,
@@ -4404,27 +4372,27 @@ export const snapshots: Snapshot[] = [
       "jpn": 1,
       "swe": 1,
       "tun": 1,
-      "bel": 1,
-      "egy": 1,
+      "bel": 2,
+      "egy": 2,
       "irn": 1,
       "nzl": 1,
-      "esp": 1,
+      "esp": 2,
       "cpv": 1,
       "ksa": 1,
       "uru": 1,
-      "fra": 1,
+      "fra": 2,
       "sen": 1,
       "irq": 1,
-      "nor": 1,
-      "arg": 1,
+      "nor": 2,
+      "arg": 2,
       "alg": 1,
       "aut": 1,
       "jor": 1,
-      "por": 1,
+      "por": 2,
       "cod": 1,
       "uzb": 1,
-      "col": 1,
-      "eng": 1,
+      "col": 2,
+      "eng": 2,
       "cro": 1,
       "gha": 1,
       "pan": 1
@@ -4434,6 +4402,7 @@ export const snapshots: Snapshot[] = [
       "cze",
       "qat",
       "hai",
+      "sco",
       "tur",
       "cuw",
       "tun",
@@ -4441,190 +4410,177 @@ export const snapshots: Snapshot[] = [
       "nzl",
       "ksa",
       "uru",
-      "sen",
       "irq",
       "jor",
       "uzb",
-      "pan"
+      "pan",
+      "rsa",
+      "ger",
+      "ned",
+      "jpn",
+      "swe",
+      "civ",
+      "ecu",
+      "cod",
+      "sen",
+      "cro",
+      "aut",
+      "alg",
+      "cpv",
+      "gha",
+      "aus",
+      "bih"
     ]
   },
   {
     "day": 17,
     "probabilities": {
-      "mex": 0.34,
-      "rsa": 0.02,
-      "kor": 0.05,
+      "mex": 0.54,
+      "rsa": 0,
+      "kor": 0,
       "cze": 0,
-      "can": 0.05,
+      "can": 0.1,
       "bih": 0,
       "qat": 0,
-      "sui": 2.08,
-      "bra": 8.22,
-      "mar": 2.84,
+      "sui": 2.5,
+      "bra": 11.52,
+      "mar": 6.52,
       "hai": 0,
       "sco": 0,
-      "usa": 1.21,
-      "par": 0.05,
-      "aus": 0.27,
+      "usa": 1.01,
+      "par": 0.2,
+      "aus": 0,
       "tur": 0,
-      "ger": 2.95,
+      "ger": 0,
       "cuw": 0,
-      "civ": 0.08,
-      "ecu": 0.4,
-      "ned": 5.62,
-      "jpn": 1.18,
+      "civ": 0,
+      "ecu": 0,
+      "ned": 0,
+      "jpn": 0,
       "swe": 0,
       "tun": 0,
-      "bel": 4.59,
-      "egy": 0.24,
+      "bel": 5.69,
+      "egy": 0.37,
       "irn": 0,
       "nzl": 0,
-      "esp": 12.8,
-      "cpv": 0.01,
+      "esp": 13.89,
+      "cpv": 0,
       "ksa": 0,
       "uru": 0,
-      "fra": 13.82,
+      "fra": 16.88,
       "sen": 0,
       "irq": 0,
-      "nor": 0.35,
-      "arg": 18.32,
-      "alg": 0.13,
-      "aut": 0.15,
+      "nor": 0.47,
+      "arg": 17.61,
+      "alg": 0,
+      "aut": 0,
       "jor": 0,
-      "por": 4.26,
+      "por": 6.4,
       "cod": 0,
       "uzb": 0,
-      "col": 3.52,
-      "eng": 14.69,
-      "cro": 1.76,
-      "gha": 0.01,
+      "col": 3.29,
+      "eng": 13.01,
+      "cro": 0,
+      "gha": 0,
       "pan": 0
     },
     "possibleOpponents": {
-      "mex": [],
-      "rsa": [
-        "can"
+      "mex": [
+        "eng"
       ],
+      "rsa": [],
       "kor": [],
       "cze": [],
       "can": [
-        "rsa"
+        "mar"
       ],
-      "bih": [
-        "usa"
-      ],
+      "bih": [],
       "qat": [],
       "sui": [
-        "alg"
+        "col"
       ],
       "bra": [
-        "jpn"
+        "nor"
       ],
       "mar": [
-        "ned"
+        "can"
       ],
       "hai": [],
       "sco": [],
       "usa": [
-        "bih"
-      ],
-      "par": [
-        "ger"
-      ],
-      "aus": [
-        "egy"
-      ],
-      "tur": [],
-      "ger": [
-        "par"
-      ],
-      "cuw": [],
-      "civ": [
-        "nor"
-      ],
-      "ecu": [
         "bel"
       ],
-      "ned": [
-        "mar"
-      ],
-      "jpn": [
-        "bra"
-      ],
-      "swe": [
+      "par": [
         "fra"
       ],
+      "aus": [],
+      "tur": [],
+      "ger": [],
+      "cuw": [],
+      "civ": [],
+      "ecu": [],
+      "ned": [],
+      "jpn": [],
+      "swe": [],
       "tun": [],
       "bel": [
-        "ecu"
+        "usa"
       ],
       "egy": [
-        "aus"
+        "arg"
       ],
       "irn": [],
       "nzl": [],
       "esp": [
-        "aut"
+        "por"
       ],
-      "cpv": [
-        "arg"
-      ],
+      "cpv": [],
       "ksa": [],
       "uru": [],
       "fra": [
-        "swe"
+        "par"
       ],
       "sen": [],
       "irq": [],
       "nor": [
-        "civ"
+        "bra"
       ],
       "arg": [
-        "cpv"
+        "egy"
       ],
-      "alg": [
-        "sui"
-      ],
-      "aut": [
-        "esp"
-      ],
+      "alg": [],
+      "aut": [],
       "jor": [],
       "por": [
-        "cro"
+        "esp"
       ],
-      "cod": [
-        "eng"
-      ],
+      "cod": [],
       "uzb": [],
       "col": [
-        "gha"
+        "sui"
       ],
       "eng": [
-        "cod"
+        "mex"
       ],
-      "cro": [
-        "por"
-      ],
-      "gha": [
-        "col"
-      ],
+      "cro": [],
+      "gha": [],
       "pan": []
     },
     "bracketDepths": {
-      "mex": 1,
+      "mex": 2,
       "rsa": 1,
       "kor": 1,
       "cze": 1,
-      "can": 1,
+      "can": 2,
       "bih": 1,
       "qat": 1,
-      "sui": 1,
-      "bra": 1,
-      "mar": 1,
+      "sui": 2,
+      "bra": 2,
+      "mar": 2,
       "hai": 1,
       "sco": 1,
-      "usa": 1,
-      "par": 1,
+      "usa": 2,
+      "par": 2,
       "aus": 1,
       "tur": 1,
       "ger": 1,
@@ -4635,32 +4591,33 @@ export const snapshots: Snapshot[] = [
       "jpn": 1,
       "swe": 1,
       "tun": 1,
-      "bel": 1,
-      "egy": 1,
+      "bel": 2,
+      "egy": 2,
       "irn": 1,
       "nzl": 1,
-      "esp": 1,
+      "esp": 2,
       "cpv": 1,
       "ksa": 1,
       "uru": 1,
-      "fra": 1,
+      "fra": 2,
       "sen": 1,
       "irq": 1,
-      "nor": 1,
-      "arg": 1,
+      "nor": 2,
+      "arg": 2,
       "alg": 1,
       "aut": 1,
       "jor": 1,
-      "por": 1,
+      "por": 2,
       "cod": 1,
       "uzb": 1,
-      "col": 1,
-      "eng": 1,
+      "col": 2,
+      "eng": 2,
       "cro": 1,
       "gha": 1,
       "pan": 1
     },
     "eliminatedTeamIds": [
+      "kor",
       "cze",
       "qat",
       "hai",
@@ -4672,190 +4629,177 @@ export const snapshots: Snapshot[] = [
       "nzl",
       "ksa",
       "uru",
-      "sen",
       "irq",
       "jor",
       "uzb",
-      "pan"
+      "pan",
+      "rsa",
+      "ger",
+      "ned",
+      "jpn",
+      "swe",
+      "civ",
+      "ecu",
+      "cod",
+      "sen",
+      "cro",
+      "aut",
+      "alg",
+      "cpv",
+      "gha",
+      "aus",
+      "bih"
     ]
   },
   {
     "day": 18,
     "probabilities": {
-      "mex": 0.34,
-      "rsa": 0.02,
-      "kor": 0.05,
+      "mex": 0.54,
+      "rsa": 0,
+      "kor": 0,
       "cze": 0,
-      "can": 0.05,
+      "can": 0.1,
       "bih": 0,
       "qat": 0,
-      "sui": 2.08,
-      "bra": 8.22,
-      "mar": 2.84,
+      "sui": 2.5,
+      "bra": 11.52,
+      "mar": 6.52,
       "hai": 0,
       "sco": 0,
-      "usa": 1.21,
-      "par": 0.05,
-      "aus": 0.27,
+      "usa": 1.01,
+      "par": 0.2,
+      "aus": 0,
       "tur": 0,
-      "ger": 2.95,
+      "ger": 0,
       "cuw": 0,
-      "civ": 0.08,
-      "ecu": 0.4,
-      "ned": 5.62,
-      "jpn": 1.18,
+      "civ": 0,
+      "ecu": 0,
+      "ned": 0,
+      "jpn": 0,
       "swe": 0,
       "tun": 0,
-      "bel": 4.59,
-      "egy": 0.24,
+      "bel": 5.69,
+      "egy": 0.37,
       "irn": 0,
       "nzl": 0,
-      "esp": 12.8,
-      "cpv": 0.01,
+      "esp": 13.89,
+      "cpv": 0,
       "ksa": 0,
       "uru": 0,
-      "fra": 13.82,
+      "fra": 16.88,
       "sen": 0,
       "irq": 0,
-      "nor": 0.35,
-      "arg": 18.32,
-      "alg": 0.13,
-      "aut": 0.15,
+      "nor": 0.47,
+      "arg": 17.61,
+      "alg": 0,
+      "aut": 0,
       "jor": 0,
-      "por": 4.26,
+      "por": 6.4,
       "cod": 0,
       "uzb": 0,
-      "col": 3.52,
-      "eng": 14.69,
-      "cro": 1.76,
-      "gha": 0.01,
+      "col": 3.29,
+      "eng": 13.01,
+      "cro": 0,
+      "gha": 0,
       "pan": 0
     },
     "possibleOpponents": {
-      "mex": [],
-      "rsa": [
-        "can"
+      "mex": [
+        "eng"
       ],
+      "rsa": [],
       "kor": [],
       "cze": [],
       "can": [
-        "rsa"
+        "mar"
       ],
-      "bih": [
-        "usa"
-      ],
+      "bih": [],
       "qat": [],
       "sui": [
-        "alg"
+        "col"
       ],
       "bra": [
-        "jpn"
+        "nor"
       ],
       "mar": [
-        "ned"
+        "can"
       ],
       "hai": [],
       "sco": [],
       "usa": [
-        "bih"
-      ],
-      "par": [
-        "ger"
-      ],
-      "aus": [
-        "egy"
-      ],
-      "tur": [],
-      "ger": [
-        "par"
-      ],
-      "cuw": [],
-      "civ": [
-        "nor"
-      ],
-      "ecu": [
         "bel"
       ],
-      "ned": [
-        "mar"
-      ],
-      "jpn": [
-        "bra"
-      ],
-      "swe": [
+      "par": [
         "fra"
       ],
+      "aus": [],
+      "tur": [],
+      "ger": [],
+      "cuw": [],
+      "civ": [],
+      "ecu": [],
+      "ned": [],
+      "jpn": [],
+      "swe": [],
       "tun": [],
       "bel": [
-        "ecu"
+        "usa"
       ],
       "egy": [
-        "aus"
+        "arg"
       ],
       "irn": [],
       "nzl": [],
       "esp": [
-        "aut"
+        "por"
       ],
-      "cpv": [
-        "arg"
-      ],
+      "cpv": [],
       "ksa": [],
       "uru": [],
       "fra": [
-        "swe"
+        "par"
       ],
       "sen": [],
       "irq": [],
       "nor": [
-        "civ"
+        "bra"
       ],
       "arg": [
-        "cpv"
+        "egy"
       ],
-      "alg": [
-        "sui"
-      ],
-      "aut": [
-        "esp"
-      ],
+      "alg": [],
+      "aut": [],
       "jor": [],
       "por": [
-        "cro"
+        "esp"
       ],
-      "cod": [
-        "eng"
-      ],
+      "cod": [],
       "uzb": [],
       "col": [
-        "gha"
+        "sui"
       ],
       "eng": [
-        "cod"
+        "mex"
       ],
-      "cro": [
-        "por"
-      ],
-      "gha": [
-        "col"
-      ],
+      "cro": [],
+      "gha": [],
       "pan": []
     },
     "bracketDepths": {
-      "mex": 1,
+      "mex": 2,
       "rsa": 1,
       "kor": 1,
       "cze": 1,
-      "can": 1,
+      "can": 2,
       "bih": 1,
       "qat": 1,
-      "sui": 1,
-      "bra": 1,
-      "mar": 1,
+      "sui": 2,
+      "bra": 2,
+      "mar": 2,
       "hai": 1,
       "sco": 1,
-      "usa": 1,
-      "par": 1,
+      "usa": 2,
+      "par": 2,
       "aus": 1,
       "tur": 1,
       "ger": 1,
@@ -4866,32 +4810,33 @@ export const snapshots: Snapshot[] = [
       "jpn": 1,
       "swe": 1,
       "tun": 1,
-      "bel": 1,
-      "egy": 1,
+      "bel": 2,
+      "egy": 2,
       "irn": 1,
       "nzl": 1,
-      "esp": 1,
+      "esp": 2,
       "cpv": 1,
       "ksa": 1,
       "uru": 1,
-      "fra": 1,
+      "fra": 2,
       "sen": 1,
       "irq": 1,
-      "nor": 1,
-      "arg": 1,
+      "nor": 2,
+      "arg": 2,
       "alg": 1,
       "aut": 1,
       "jor": 1,
-      "por": 1,
+      "por": 2,
       "cod": 1,
       "uzb": 1,
-      "col": 1,
-      "eng": 1,
+      "col": 2,
+      "eng": 2,
       "cro": 1,
       "gha": 1,
       "pan": 1
     },
     "eliminatedTeamIds": [
+      "kor",
       "cze",
       "qat",
       "hai",
@@ -4903,190 +4848,177 @@ export const snapshots: Snapshot[] = [
       "nzl",
       "ksa",
       "uru",
-      "sen",
       "irq",
       "jor",
       "uzb",
-      "pan"
+      "pan",
+      "rsa",
+      "ger",
+      "ned",
+      "jpn",
+      "swe",
+      "civ",
+      "ecu",
+      "cod",
+      "sen",
+      "cro",
+      "aut",
+      "alg",
+      "cpv",
+      "gha",
+      "aus",
+      "bih"
     ]
   },
   {
     "day": 19,
     "probabilities": {
-      "mex": 0.34,
-      "rsa": 0.02,
+      "mex": 0.54,
+      "rsa": 0,
       "kor": 0,
       "cze": 0,
-      "can": 0.05,
+      "can": 0.1,
       "bih": 0,
       "qat": 0,
-      "sui": 2.08,
-      "bra": 8.21,
-      "mar": 2.84,
+      "sui": 2.5,
+      "bra": 11.52,
+      "mar": 6.52,
       "hai": 0,
       "sco": 0,
-      "usa": 1.21,
-      "par": 0.05,
-      "aus": 0.27,
+      "usa": 1.01,
+      "par": 0.2,
+      "aus": 0,
       "tur": 0,
-      "ger": 2.95,
+      "ger": 0,
       "cuw": 0,
-      "civ": 0.08,
-      "ecu": 0.4,
-      "ned": 5.62,
-      "jpn": 1.17,
+      "civ": 0,
+      "ecu": 0,
+      "ned": 0,
+      "jpn": 0,
       "swe": 0,
       "tun": 0,
-      "bel": 4.59,
-      "egy": 0.24,
+      "bel": 5.69,
+      "egy": 0.37,
       "irn": 0,
       "nzl": 0,
-      "esp": 12.8,
-      "cpv": 0.01,
+      "esp": 13.89,
+      "cpv": 0,
       "ksa": 0,
       "uru": 0,
-      "fra": 13.82,
-      "sen": 0.1,
+      "fra": 16.88,
+      "sen": 0,
       "irq": 0,
-      "nor": 0.35,
-      "arg": 18.31,
-      "alg": 0.13,
-      "aut": 0.15,
+      "nor": 0.47,
+      "arg": 17.61,
+      "alg": 0,
+      "aut": 0,
       "jor": 0,
-      "por": 4.25,
+      "por": 6.4,
       "cod": 0,
       "uzb": 0,
-      "col": 3.52,
-      "eng": 14.68,
-      "cro": 1.75,
-      "gha": 0.01,
+      "col": 3.29,
+      "eng": 13.01,
+      "cro": 0,
+      "gha": 0,
       "pan": 0
     },
     "possibleOpponents": {
-      "mex": [],
-      "rsa": [
-        "can"
+      "mex": [
+        "eng"
       ],
+      "rsa": [],
       "kor": [],
       "cze": [],
       "can": [
-        "rsa"
+        "mar"
       ],
-      "bih": [
-        "usa"
-      ],
+      "bih": [],
       "qat": [],
       "sui": [
-        "alg"
+        "col"
       ],
       "bra": [
-        "jpn"
+        "nor"
       ],
       "mar": [
-        "ned"
+        "can"
       ],
       "hai": [],
       "sco": [],
       "usa": [
-        "bih"
-      ],
-      "par": [
-        "ger"
-      ],
-      "aus": [
-        "egy"
-      ],
-      "tur": [],
-      "ger": [
-        "par"
-      ],
-      "cuw": [],
-      "civ": [
-        "nor"
-      ],
-      "ecu": [
         "bel"
       ],
-      "ned": [
-        "mar"
-      ],
-      "jpn": [
-        "bra"
-      ],
-      "swe": [
+      "par": [
         "fra"
       ],
+      "aus": [],
+      "tur": [],
+      "ger": [],
+      "cuw": [],
+      "civ": [],
+      "ecu": [],
+      "ned": [],
+      "jpn": [],
+      "swe": [],
       "tun": [],
       "bel": [
-        "ecu"
+        "usa"
       ],
       "egy": [
-        "aus"
+        "arg"
       ],
       "irn": [],
       "nzl": [],
       "esp": [
-        "aut"
+        "por"
       ],
-      "cpv": [
-        "arg"
-      ],
+      "cpv": [],
       "ksa": [],
       "uru": [],
       "fra": [
-        "swe"
+        "par"
       ],
       "sen": [],
       "irq": [],
       "nor": [
-        "civ"
+        "bra"
       ],
       "arg": [
-        "cpv"
+        "egy"
       ],
-      "alg": [
-        "sui"
-      ],
-      "aut": [
-        "esp"
-      ],
+      "alg": [],
+      "aut": [],
       "jor": [],
       "por": [
-        "cro"
+        "esp"
       ],
-      "cod": [
-        "eng"
-      ],
+      "cod": [],
       "uzb": [],
       "col": [
-        "gha"
+        "sui"
       ],
       "eng": [
-        "cod"
+        "mex"
       ],
-      "cro": [
-        "por"
-      ],
-      "gha": [
-        "col"
-      ],
+      "cro": [],
+      "gha": [],
       "pan": []
     },
     "bracketDepths": {
-      "mex": 1,
+      "mex": 2,
       "rsa": 1,
       "kor": 1,
       "cze": 1,
-      "can": 1,
+      "can": 2,
       "bih": 1,
       "qat": 1,
-      "sui": 1,
-      "bra": 1,
-      "mar": 1,
+      "sui": 2,
+      "bra": 2,
+      "mar": 2,
       "hai": 1,
       "sco": 1,
-      "usa": 1,
-      "par": 1,
+      "usa": 2,
+      "par": 2,
       "aus": 1,
       "tur": 1,
       "ger": 1,
@@ -5097,27 +5029,27 @@ export const snapshots: Snapshot[] = [
       "jpn": 1,
       "swe": 1,
       "tun": 1,
-      "bel": 1,
-      "egy": 1,
+      "bel": 2,
+      "egy": 2,
       "irn": 1,
       "nzl": 1,
-      "esp": 1,
+      "esp": 2,
       "cpv": 1,
       "ksa": 1,
       "uru": 1,
-      "fra": 1,
+      "fra": 2,
       "sen": 1,
       "irq": 1,
-      "nor": 1,
-      "arg": 1,
+      "nor": 2,
+      "arg": 2,
       "alg": 1,
       "aut": 1,
       "jor": 1,
-      "por": 1,
+      "por": 2,
       "cod": 1,
       "uzb": 1,
-      "col": 1,
-      "eng": 1,
+      "col": 2,
+      "eng": 2,
       "cro": 1,
       "gha": 1,
       "pan": 1
@@ -5138,190 +5070,174 @@ export const snapshots: Snapshot[] = [
       "irq",
       "jor",
       "uzb",
-      "pan"
+      "pan",
+      "rsa",
+      "ger",
+      "ned",
+      "jpn",
+      "swe",
+      "civ",
+      "ecu",
+      "cod",
+      "sen",
+      "cro",
+      "aut",
+      "alg",
+      "cpv",
+      "gha",
+      "aus",
+      "bih"
     ]
   },
   {
     "day": 20,
     "probabilities": {
-      "mex": 0.34,
-      "rsa": 0.02,
+      "mex": 0.54,
+      "rsa": 0,
       "kor": 0,
       "cze": 0,
-      "can": 0.05,
+      "can": 0.1,
       "bih": 0,
       "qat": 0,
-      "sui": 2.08,
-      "bra": 8.22,
-      "mar": 2.84,
+      "sui": 2.5,
+      "bra": 11.52,
+      "mar": 6.52,
       "hai": 0,
-      "sco": 0.02,
-      "usa": 1.21,
-      "par": 0.05,
-      "aus": 0.27,
+      "sco": 0,
+      "usa": 1.01,
+      "par": 0.2,
+      "aus": 0,
       "tur": 0,
-      "ger": 2.95,
+      "ger": 0,
       "cuw": 0,
-      "civ": 0.08,
-      "ecu": 0.4,
-      "ned": 5.62,
-      "jpn": 1.18,
+      "civ": 0,
+      "ecu": 0,
+      "ned": 0,
+      "jpn": 0,
       "swe": 0,
       "tun": 0,
-      "bel": 4.59,
-      "egy": 0.24,
+      "bel": 5.69,
+      "egy": 0.37,
       "irn": 0,
       "nzl": 0,
-      "esp": 12.81,
-      "cpv": 0.01,
+      "esp": 13.89,
+      "cpv": 0,
       "ksa": 0,
       "uru": 0,
-      "fra": 13.83,
+      "fra": 16.88,
       "sen": 0,
       "irq": 0,
-      "nor": 0.35,
-      "arg": 18.33,
-      "alg": 0.13,
-      "aut": 0.15,
+      "nor": 0.47,
+      "arg": 17.61,
+      "alg": 0,
+      "aut": 0,
       "jor": 0,
-      "por": 4.26,
+      "por": 6.4,
       "cod": 0,
       "uzb": 0,
-      "col": 3.52,
-      "eng": 14.69,
-      "cro": 1.76,
-      "gha": 0.01,
+      "col": 3.29,
+      "eng": 13.01,
+      "cro": 0,
+      "gha": 0,
       "pan": 0
     },
     "possibleOpponents": {
       "mex": [
-        "sco"
+        "eng"
       ],
-      "rsa": [
-        "can"
-      ],
+      "rsa": [],
       "kor": [],
       "cze": [],
       "can": [
-        "rsa"
-      ],
-      "bih": [
-        "usa"
-      ],
-      "qat": [],
-      "sui": [
-        "alg"
-      ],
-      "bra": [
-        "jpn"
-      ],
-      "mar": [
-        "ned"
-      ],
-      "hai": [],
-      "sco": [
-        "mex"
-      ],
-      "usa": [
-        "bih"
-      ],
-      "par": [
-        "ger"
-      ],
-      "aus": [
-        "egy"
-      ],
-      "tur": [],
-      "ger": [
-        "par"
-      ],
-      "cuw": [],
-      "civ": [
-        "nor"
-      ],
-      "ecu": [
-        "bel"
-      ],
-      "ned": [
         "mar"
       ],
-      "jpn": [
-        "bra"
+      "bih": [],
+      "qat": [],
+      "sui": [
+        "col"
       ],
-      "swe": [
+      "bra": [
+        "nor"
+      ],
+      "mar": [
+        "can"
+      ],
+      "hai": [],
+      "sco": [],
+      "usa": [
+        "bel"
+      ],
+      "par": [
         "fra"
       ],
+      "aus": [],
+      "tur": [],
+      "ger": [],
+      "cuw": [],
+      "civ": [],
+      "ecu": [],
+      "ned": [],
+      "jpn": [],
+      "swe": [],
       "tun": [],
       "bel": [
-        "ecu"
+        "usa"
       ],
       "egy": [
-        "aus"
+        "arg"
       ],
       "irn": [],
       "nzl": [],
       "esp": [
-        "aut"
+        "por"
       ],
-      "cpv": [
-        "arg"
-      ],
+      "cpv": [],
       "ksa": [],
       "uru": [],
       "fra": [
-        "swe"
+        "par"
       ],
       "sen": [],
       "irq": [],
       "nor": [
-        "civ"
+        "bra"
       ],
       "arg": [
-        "cpv"
+        "egy"
       ],
-      "alg": [
-        "sui"
-      ],
-      "aut": [
-        "esp"
-      ],
+      "alg": [],
+      "aut": [],
       "jor": [],
       "por": [
-        "cro"
+        "esp"
       ],
-      "cod": [
-        "eng"
-      ],
+      "cod": [],
       "uzb": [],
       "col": [
-        "gha"
+        "sui"
       ],
       "eng": [
-        "cod"
+        "mex"
       ],
-      "cro": [
-        "por"
-      ],
-      "gha": [
-        "col"
-      ],
+      "cro": [],
+      "gha": [],
       "pan": []
     },
     "bracketDepths": {
-      "mex": 1,
+      "mex": 2,
       "rsa": 1,
       "kor": 1,
       "cze": 1,
-      "can": 1,
+      "can": 2,
       "bih": 1,
       "qat": 1,
-      "sui": 1,
-      "bra": 1,
-      "mar": 1,
+      "sui": 2,
+      "bra": 2,
+      "mar": 2,
       "hai": 1,
       "sco": 1,
-      "usa": 1,
-      "par": 1,
+      "usa": 2,
+      "par": 2,
       "aus": 1,
       "tur": 1,
       "ger": 1,
@@ -5332,27 +5248,27 @@ export const snapshots: Snapshot[] = [
       "jpn": 1,
       "swe": 1,
       "tun": 1,
-      "bel": 1,
-      "egy": 1,
+      "bel": 2,
+      "egy": 2,
       "irn": 1,
       "nzl": 1,
-      "esp": 1,
+      "esp": 2,
       "cpv": 1,
       "ksa": 1,
       "uru": 1,
-      "fra": 1,
+      "fra": 2,
       "sen": 1,
       "irq": 1,
-      "nor": 1,
-      "arg": 1,
+      "nor": 2,
+      "arg": 2,
       "alg": 1,
       "aut": 1,
       "jor": 1,
-      "por": 1,
+      "por": 2,
       "cod": 1,
       "uzb": 1,
-      "col": 1,
-      "eng": 1,
+      "col": 2,
+      "eng": 2,
       "cro": 1,
       "gha": 1,
       "pan": 1
@@ -5362,6 +5278,7 @@ export const snapshots: Snapshot[] = [
       "cze",
       "qat",
       "hai",
+      "sco",
       "tur",
       "cuw",
       "tun",
@@ -5369,190 +5286,173 @@ export const snapshots: Snapshot[] = [
       "nzl",
       "ksa",
       "uru",
-      "sen",
       "irq",
       "jor",
       "uzb",
-      "pan"
+      "pan",
+      "rsa",
+      "ger",
+      "ned",
+      "jpn",
+      "swe",
+      "civ",
+      "ecu",
+      "cod",
+      "sen",
+      "cro",
+      "aut",
+      "alg",
+      "cpv",
+      "gha",
+      "aus",
+      "bih"
     ]
   },
   {
     "day": 21,
     "probabilities": {
-      "mex": 0.34,
-      "rsa": 0.02,
+      "mex": 0.52,
+      "rsa": 0,
       "kor": 0,
       "cze": 0,
-      "can": 0.05,
+      "can": 0,
       "bih": 0,
       "qat": 0,
-      "sui": 2.08,
-      "bra": 8.21,
-      "mar": 2.83,
+      "sui": 2.43,
+      "bra": 11.3,
+      "mar": 7.36,
       "hai": 0,
       "sco": 0,
-      "usa": 1.21,
-      "par": 0.05,
-      "aus": 0.27,
+      "usa": 0.89,
+      "par": 0,
+      "aus": 0,
       "tur": 0,
-      "ger": 2.95,
+      "ger": 0,
       "cuw": 0,
-      "civ": 0.08,
-      "ecu": 0.4,
-      "ned": 5.62,
-      "jpn": 1.17,
+      "civ": 0,
+      "ecu": 0,
+      "ned": 0,
+      "jpn": 0,
       "swe": 0,
       "tun": 0,
-      "bel": 4.58,
-      "egy": 0.24,
-      "irn": 0.15,
+      "bel": 5.23,
+      "egy": 0.35,
+      "irn": 0,
       "nzl": 0,
-      "esp": 12.79,
-      "cpv": 0.01,
+      "esp": 13.12,
+      "cpv": 0,
       "ksa": 0,
       "uru": 0,
-      "fra": 13.81,
+      "fra": 19.12,
       "sen": 0,
       "irq": 0,
-      "nor": 0.35,
-      "arg": 18.3,
-      "alg": 0.13,
-      "aut": 0.15,
+      "nor": 0.45,
+      "arg": 17.31,
+      "alg": 0,
+      "aut": 0,
       "jor": 0,
-      "por": 4.25,
+      "por": 5.94,
       "cod": 0,
       "uzb": 0,
-      "col": 3.52,
-      "eng": 14.67,
-      "cro": 1.75,
-      "gha": 0.01,
+      "col": 3.2,
+      "eng": 12.77,
+      "cro": 0,
+      "gha": 0,
       "pan": 0
     },
     "possibleOpponents": {
-      "mex": [],
-      "rsa": [
-        "can"
+      "mex": [
+        "eng"
       ],
+      "rsa": [],
       "kor": [],
       "cze": [],
-      "can": [
-        "rsa"
-      ],
-      "bih": [
-        "usa"
-      ],
+      "can": [],
+      "bih": [],
       "qat": [],
       "sui": [
-        "alg"
+        "col"
       ],
       "bra": [
-        "jpn"
+        "nor"
       ],
       "mar": [
-        "ned"
+        "fra"
       ],
       "hai": [],
       "sco": [],
       "usa": [
-        "bih"
-      ],
-      "par": [
-        "ger"
-      ],
-      "aus": [
-        "egy"
-      ],
-      "tur": [],
-      "ger": [
-        "par"
-      ],
-      "cuw": [],
-      "civ": [
-        "nor"
-      ],
-      "ecu": [
         "bel"
       ],
-      "ned": [
-        "mar"
-      ],
-      "jpn": [
-        "bra"
-      ],
-      "swe": [
-        "fra"
-      ],
+      "par": [],
+      "aus": [],
+      "tur": [],
+      "ger": [],
+      "cuw": [],
+      "civ": [],
+      "ecu": [],
+      "ned": [],
+      "jpn": [],
+      "swe": [],
       "tun": [],
       "bel": [
-        "ecu"
+        "usa"
       ],
       "egy": [
-        "aus"
+        "arg"
       ],
       "irn": [],
       "nzl": [],
       "esp": [
-        "aut"
+        "por"
       ],
-      "cpv": [
-        "arg"
-      ],
+      "cpv": [],
       "ksa": [],
       "uru": [],
       "fra": [
-        "swe"
+        "mar"
       ],
       "sen": [],
       "irq": [],
       "nor": [
-        "civ"
+        "bra"
       ],
       "arg": [
-        "cpv"
+        "egy"
       ],
-      "alg": [
-        "sui"
-      ],
-      "aut": [
-        "esp"
-      ],
+      "alg": [],
+      "aut": [],
       "jor": [],
       "por": [
-        "cro"
+        "esp"
       ],
-      "cod": [
-        "eng"
-      ],
+      "cod": [],
       "uzb": [],
       "col": [
-        "gha"
+        "sui"
       ],
       "eng": [
-        "cod"
+        "mex"
       ],
-      "cro": [
-        "por"
-      ],
-      "gha": [
-        "col"
-      ],
+      "cro": [],
+      "gha": [],
       "pan": []
     },
     "bracketDepths": {
-      "mex": 1,
+      "mex": 2,
       "rsa": 1,
       "kor": 1,
       "cze": 1,
-      "can": 1,
+      "can": 2,
       "bih": 1,
       "qat": 1,
-      "sui": 1,
-      "bra": 1,
-      "mar": 1,
+      "sui": 2,
+      "bra": 2,
+      "mar": 3,
       "hai": 1,
       "sco": 1,
-      "usa": 1,
-      "par": 1,
+      "usa": 2,
+      "par": 2,
       "aus": 1,
       "tur": 1,
       "ger": 1,
@@ -5563,27 +5463,27 @@ export const snapshots: Snapshot[] = [
       "jpn": 1,
       "swe": 1,
       "tun": 1,
-      "bel": 1,
-      "egy": 1,
+      "bel": 2,
+      "egy": 2,
       "irn": 1,
       "nzl": 1,
-      "esp": 1,
+      "esp": 2,
       "cpv": 1,
       "ksa": 1,
       "uru": 1,
-      "fra": 1,
+      "fra": 3,
       "sen": 1,
       "irq": 1,
-      "nor": 1,
-      "arg": 1,
+      "nor": 2,
+      "arg": 2,
       "alg": 1,
       "aut": 1,
       "jor": 1,
-      "por": 1,
+      "por": 2,
       "cod": 1,
       "uzb": 1,
-      "col": 1,
-      "eng": 1,
+      "col": 2,
+      "eng": 2,
       "cro": 1,
       "gha": 1,
       "pan": 1
@@ -5597,193 +5497,175 @@ export const snapshots: Snapshot[] = [
       "tur",
       "cuw",
       "tun",
+      "irn",
       "nzl",
       "ksa",
       "uru",
-      "sen",
       "irq",
       "jor",
       "uzb",
-      "pan"
+      "pan",
+      "rsa",
+      "ger",
+      "ned",
+      "jpn",
+      "swe",
+      "civ",
+      "ecu",
+      "cod",
+      "sen",
+      "cro",
+      "aut",
+      "alg",
+      "cpv",
+      "gha",
+      "aus",
+      "bih",
+      "can",
+      "par"
     ]
   },
   {
     "day": 22,
     "probabilities": {
-      "mex": 0.34,
-      "rsa": 0.02,
-      "kor": 0.05,
+      "mex": 0,
+      "rsa": 0,
+      "kor": 0,
       "cze": 0,
-      "can": 0.05,
+      "can": 0,
       "bih": 0,
       "qat": 0,
-      "sui": 2.08,
-      "bra": 8.22,
-      "mar": 2.84,
+      "sui": 2.49,
+      "bra": 0,
+      "mar": 7.37,
       "hai": 0,
       "sco": 0,
-      "usa": 1.21,
-      "par": 0.05,
-      "aus": 0.27,
+      "usa": 0.9,
+      "par": 0,
+      "aus": 0,
       "tur": 0,
-      "ger": 2.95,
+      "ger": 0,
       "cuw": 0,
-      "civ": 0.08,
-      "ecu": 0.4,
-      "ned": 5.62,
-      "jpn": 1.18,
+      "civ": 0,
+      "ecu": 0,
+      "ned": 0,
+      "jpn": 0,
       "swe": 0,
       "tun": 0,
-      "bel": 4.59,
-      "egy": 0.24,
+      "bel": 5.24,
+      "egy": 0.37,
       "irn": 0,
       "nzl": 0,
-      "esp": 12.8,
-      "cpv": 0.01,
+      "esp": 13.11,
+      "cpv": 0,
       "ksa": 0,
       "uru": 0,
-      "fra": 13.82,
+      "fra": 19.11,
       "sen": 0,
       "irq": 0,
-      "nor": 0.35,
-      "arg": 18.32,
-      "alg": 0.13,
-      "aut": 0.15,
+      "nor": 1.97,
+      "arg": 17.51,
+      "alg": 0,
+      "aut": 0,
       "jor": 0,
-      "por": 4.26,
+      "por": 5.95,
       "cod": 0,
       "uzb": 0,
-      "col": 3.52,
-      "eng": 14.69,
-      "cro": 1.76,
-      "gha": 0.01,
+      "col": 3.28,
+      "eng": 22.71,
+      "cro": 0,
+      "gha": 0,
       "pan": 0
     },
     "possibleOpponents": {
       "mex": [],
-      "rsa": [
-        "can"
-      ],
+      "rsa": [],
       "kor": [],
       "cze": [],
-      "can": [
-        "rsa"
-      ],
-      "bih": [
-        "usa"
-      ],
+      "can": [],
+      "bih": [],
       "qat": [],
       "sui": [
-        "alg"
+        "col"
       ],
-      "bra": [
-        "jpn"
-      ],
+      "bra": [],
       "mar": [
-        "ned"
+        "fra"
       ],
       "hai": [],
       "sco": [],
       "usa": [
-        "bih"
-      ],
-      "par": [
-        "ger"
-      ],
-      "aus": [
-        "egy"
-      ],
-      "tur": [],
-      "ger": [
-        "par"
-      ],
-      "cuw": [],
-      "civ": [
-        "nor"
-      ],
-      "ecu": [
         "bel"
       ],
-      "ned": [
-        "mar"
-      ],
-      "jpn": [
-        "bra"
-      ],
-      "swe": [
-        "fra"
-      ],
+      "par": [],
+      "aus": [],
+      "tur": [],
+      "ger": [],
+      "cuw": [],
+      "civ": [],
+      "ecu": [],
+      "ned": [],
+      "jpn": [],
+      "swe": [],
       "tun": [],
       "bel": [
-        "ecu"
+        "usa"
       ],
       "egy": [
-        "aus"
+        "arg"
       ],
       "irn": [],
       "nzl": [],
       "esp": [
-        "aut"
+        "por"
       ],
-      "cpv": [
-        "arg"
-      ],
+      "cpv": [],
       "ksa": [],
       "uru": [],
       "fra": [
-        "swe"
+        "mar"
       ],
       "sen": [],
       "irq": [],
       "nor": [
-        "civ"
-      ],
-      "arg": [
-        "cpv"
-      ],
-      "alg": [
-        "sui"
-      ],
-      "aut": [
-        "esp"
-      ],
-      "jor": [],
-      "por": [
-        "cro"
-      ],
-      "cod": [
         "eng"
       ],
+      "arg": [
+        "egy"
+      ],
+      "alg": [],
+      "aut": [],
+      "jor": [],
+      "por": [
+        "esp"
+      ],
+      "cod": [],
       "uzb": [],
       "col": [
-        "gha"
+        "sui"
       ],
       "eng": [
-        "cod"
+        "nor"
       ],
-      "cro": [
-        "por"
-      ],
-      "gha": [
-        "col"
-      ],
+      "cro": [],
+      "gha": [],
       "pan": []
     },
     "bracketDepths": {
-      "mex": 1,
+      "mex": 2,
       "rsa": 1,
       "kor": 1,
       "cze": 1,
-      "can": 1,
+      "can": 2,
       "bih": 1,
       "qat": 1,
-      "sui": 1,
-      "bra": 1,
-      "mar": 1,
+      "sui": 2,
+      "bra": 2,
+      "mar": 3,
       "hai": 1,
       "sco": 1,
-      "usa": 1,
-      "par": 1,
+      "usa": 2,
+      "par": 2,
       "aus": 1,
       "tur": 1,
       "ger": 1,
@@ -5794,32 +5676,33 @@ export const snapshots: Snapshot[] = [
       "jpn": 1,
       "swe": 1,
       "tun": 1,
-      "bel": 1,
-      "egy": 1,
+      "bel": 2,
+      "egy": 2,
       "irn": 1,
       "nzl": 1,
-      "esp": 1,
+      "esp": 2,
       "cpv": 1,
       "ksa": 1,
       "uru": 1,
-      "fra": 1,
+      "fra": 3,
       "sen": 1,
       "irq": 1,
-      "nor": 1,
-      "arg": 1,
+      "nor": 3,
+      "arg": 2,
       "alg": 1,
       "aut": 1,
       "jor": 1,
-      "por": 1,
+      "por": 2,
       "cod": 1,
       "uzb": 1,
-      "col": 1,
-      "eng": 1,
+      "col": 2,
+      "eng": 3,
       "cro": 1,
       "gha": 1,
       "pan": 1
     },
     "eliminatedTeamIds": [
+      "kor",
       "cze",
       "qat",
       "hai",
@@ -5831,190 +5714,169 @@ export const snapshots: Snapshot[] = [
       "nzl",
       "ksa",
       "uru",
-      "sen",
       "irq",
       "jor",
       "uzb",
-      "pan"
+      "pan",
+      "rsa",
+      "ger",
+      "ned",
+      "jpn",
+      "swe",
+      "civ",
+      "ecu",
+      "cod",
+      "sen",
+      "cro",
+      "aut",
+      "alg",
+      "cpv",
+      "gha",
+      "aus",
+      "bih",
+      "can",
+      "par",
+      "bra",
+      "mex"
     ]
   },
   {
     "day": 23,
     "probabilities": {
-      "mex": 0.34,
-      "rsa": 0.02,
+      "mex": 0,
+      "rsa": 0,
       "kor": 0,
       "cze": 0,
-      "can": 0.05,
+      "can": 0,
       "bih": 0,
       "qat": 0,
-      "sui": 2.08,
-      "bra": 8.21,
-      "mar": 2.84,
+      "sui": 2.33,
+      "bra": 0,
+      "mar": 6.53,
       "hai": 0,
       "sco": 0,
-      "usa": 1.21,
-      "par": 0.05,
-      "aus": 0.27,
+      "usa": 0,
+      "par": 0,
+      "aus": 0,
       "tur": 0,
-      "ger": 2.95,
+      "ger": 0,
       "cuw": 0,
-      "civ": 0.08,
-      "ecu": 0.4,
-      "ned": 5.62,
-      "jpn": 1.17,
+      "civ": 0,
+      "ecu": 0,
+      "ned": 0,
+      "jpn": 0,
       "swe": 0,
       "tun": 0,
-      "bel": 4.59,
-      "egy": 0.24,
+      "bel": 7.85,
+      "egy": 0.34,
       "irn": 0,
       "nzl": 0,
-      "esp": 12.8,
-      "cpv": 0.01,
+      "esp": 22.29,
+      "cpv": 0,
       "ksa": 0,
       "uru": 0,
-      "fra": 13.82,
-      "sen": 0.1,
+      "fra": 17.37,
+      "sen": 0,
       "irq": 0,
-      "nor": 0.35,
-      "arg": 18.31,
-      "alg": 0.13,
-      "aut": 0.15,
+      "nor": 1.82,
+      "arg": 16.73,
+      "alg": 0,
+      "aut": 0,
       "jor": 0,
-      "por": 4.25,
+      "por": 0,
       "cod": 0,
       "uzb": 0,
-      "col": 3.52,
-      "eng": 14.68,
-      "cro": 1.75,
-      "gha": 0.01,
+      "col": 3.08,
+      "eng": 21.65,
+      "cro": 0,
+      "gha": 0,
       "pan": 0
     },
     "possibleOpponents": {
       "mex": [],
-      "rsa": [
-        "can"
-      ],
+      "rsa": [],
       "kor": [],
       "cze": [],
-      "can": [
-        "rsa"
-      ],
-      "bih": [
-        "usa"
-      ],
+      "can": [],
+      "bih": [],
       "qat": [],
       "sui": [
-        "alg"
+        "col"
       ],
-      "bra": [
-        "jpn"
-      ],
+      "bra": [],
       "mar": [
-        "ned"
+        "fra"
       ],
       "hai": [],
       "sco": [],
-      "usa": [
-        "bih"
-      ],
-      "par": [
-        "ger"
-      ],
-      "aus": [
-        "egy"
-      ],
+      "usa": [],
+      "par": [],
+      "aus": [],
       "tur": [],
-      "ger": [
-        "par"
-      ],
+      "ger": [],
       "cuw": [],
-      "civ": [
-        "nor"
-      ],
-      "ecu": [
-        "bel"
-      ],
-      "ned": [
-        "mar"
-      ],
-      "jpn": [
-        "bra"
-      ],
-      "swe": [
-        "fra"
-      ],
+      "civ": [],
+      "ecu": [],
+      "ned": [],
+      "jpn": [],
+      "swe": [],
       "tun": [],
       "bel": [
-        "ecu"
+        "esp"
       ],
       "egy": [
-        "aus"
+        "arg"
       ],
       "irn": [],
       "nzl": [],
       "esp": [
-        "aut"
+        "bel"
       ],
-      "cpv": [
-        "arg"
-      ],
+      "cpv": [],
       "ksa": [],
       "uru": [],
       "fra": [
-        "swe"
+        "mar"
       ],
       "sen": [],
       "irq": [],
       "nor": [
-        "civ"
-      ],
-      "arg": [
-        "cpv"
-      ],
-      "alg": [
-        "sui"
-      ],
-      "aut": [
-        "esp"
-      ],
-      "jor": [],
-      "por": [
-        "cro"
-      ],
-      "cod": [
         "eng"
       ],
+      "arg": [
+        "egy"
+      ],
+      "alg": [],
+      "aut": [],
+      "jor": [],
+      "por": [],
+      "cod": [],
       "uzb": [],
       "col": [
-        "gha"
+        "sui"
       ],
       "eng": [
-        "cod"
+        "nor"
       ],
-      "cro": [
-        "por"
-      ],
-      "gha": [
-        "col"
-      ],
+      "cro": [],
+      "gha": [],
       "pan": []
     },
     "bracketDepths": {
-      "mex": 1,
+      "mex": 2,
       "rsa": 1,
       "kor": 1,
       "cze": 1,
-      "can": 1,
+      "can": 2,
       "bih": 1,
       "qat": 1,
-      "sui": 1,
-      "bra": 1,
-      "mar": 1,
+      "sui": 2,
+      "bra": 2,
+      "mar": 3,
       "hai": 1,
       "sco": 1,
-      "usa": 1,
-      "par": 1,
+      "usa": 2,
+      "par": 2,
       "aus": 1,
       "tur": 1,
       "ger": 1,
@@ -6025,27 +5887,27 @@ export const snapshots: Snapshot[] = [
       "jpn": 1,
       "swe": 1,
       "tun": 1,
-      "bel": 1,
-      "egy": 1,
+      "bel": 3,
+      "egy": 2,
       "irn": 1,
       "nzl": 1,
-      "esp": 1,
+      "esp": 3,
       "cpv": 1,
       "ksa": 1,
       "uru": 1,
-      "fra": 1,
+      "fra": 3,
       "sen": 1,
       "irq": 1,
-      "nor": 1,
-      "arg": 1,
+      "nor": 3,
+      "arg": 2,
       "alg": 1,
       "aut": 1,
       "jor": 1,
-      "por": 1,
+      "por": 2,
       "cod": 1,
       "uzb": 1,
-      "col": 1,
-      "eng": 1,
+      "col": 2,
+      "eng": 3,
       "cro": 1,
       "gha": 1,
       "pan": 1
@@ -6066,190 +5928,164 @@ export const snapshots: Snapshot[] = [
       "irq",
       "jor",
       "uzb",
-      "pan"
+      "pan",
+      "rsa",
+      "ger",
+      "ned",
+      "jpn",
+      "swe",
+      "civ",
+      "ecu",
+      "cod",
+      "sen",
+      "cro",
+      "aut",
+      "alg",
+      "cpv",
+      "gha",
+      "aus",
+      "bih",
+      "can",
+      "par",
+      "bra",
+      "mex",
+      "por",
+      "usa"
     ]
   },
   {
     "day": 24,
     "probabilities": {
-      "mex": 0.34,
-      "rsa": 0.02,
+      "mex": 0,
+      "rsa": 0,
       "kor": 0,
       "cze": 0,
-      "can": 0.05,
+      "can": 0,
       "bih": 0,
       "qat": 0,
-      "sui": 2.08,
-      "bra": 8.22,
-      "mar": 2.84,
+      "sui": 4.75,
+      "bra": 0,
+      "mar": 6.26,
       "hai": 0,
-      "sco": 0.02,
-      "usa": 1.21,
-      "par": 0.05,
-      "aus": 0.27,
+      "sco": 0,
+      "usa": 0,
+      "par": 0,
+      "aus": 0,
       "tur": 0,
-      "ger": 2.95,
+      "ger": 0,
       "cuw": 0,
-      "civ": 0.08,
-      "ecu": 0.4,
-      "ned": 5.62,
-      "jpn": 1.18,
+      "civ": 0,
+      "ecu": 0,
+      "ned": 0,
+      "jpn": 0,
       "swe": 0,
       "tun": 0,
-      "bel": 4.59,
-      "egy": 0.24,
+      "bel": 7.55,
+      "egy": 0,
       "irn": 0,
       "nzl": 0,
-      "esp": 12.81,
-      "cpv": 0.01,
+      "esp": 21.68,
+      "cpv": 0,
       "ksa": 0,
       "uru": 0,
-      "fra": 13.83,
+      "fra": 16.84,
       "sen": 0,
       "irq": 0,
-      "nor": 0.35,
-      "arg": 18.33,
-      "alg": 0.13,
-      "aut": 0.15,
+      "nor": 1.6,
+      "arg": 21.21,
+      "alg": 0,
+      "aut": 0,
       "jor": 0,
-      "por": 4.26,
+      "por": 0,
       "cod": 0,
       "uzb": 0,
-      "col": 3.52,
-      "eng": 14.69,
-      "cro": 1.76,
-      "gha": 0.01,
+      "col": 0,
+      "eng": 20.11,
+      "cro": 0,
+      "gha": 0,
       "pan": 0
     },
     "possibleOpponents": {
-      "mex": [
-        "sco"
-      ],
-      "rsa": [
-        "can"
-      ],
+      "mex": [],
+      "rsa": [],
       "kor": [],
       "cze": [],
-      "can": [
-        "rsa"
-      ],
-      "bih": [
-        "usa"
-      ],
+      "can": [],
+      "bih": [],
       "qat": [],
       "sui": [
-        "alg"
+        "arg"
       ],
-      "bra": [
-        "jpn"
-      ],
+      "bra": [],
       "mar": [
-        "ned"
-      ],
-      "hai": [],
-      "sco": [
-        "mex"
-      ],
-      "usa": [
-        "bih"
-      ],
-      "par": [
-        "ger"
-      ],
-      "aus": [
-        "egy"
-      ],
-      "tur": [],
-      "ger": [
-        "par"
-      ],
-      "cuw": [],
-      "civ": [
-        "nor"
-      ],
-      "ecu": [
-        "bel"
-      ],
-      "ned": [
-        "mar"
-      ],
-      "jpn": [
-        "bra"
-      ],
-      "swe": [
         "fra"
       ],
+      "hai": [],
+      "sco": [],
+      "usa": [],
+      "par": [],
+      "aus": [],
+      "tur": [],
+      "ger": [],
+      "cuw": [],
+      "civ": [],
+      "ecu": [],
+      "ned": [],
+      "jpn": [],
+      "swe": [],
       "tun": [],
       "bel": [
-        "ecu"
+        "esp"
       ],
-      "egy": [
-        "aus"
-      ],
+      "egy": [],
       "irn": [],
       "nzl": [],
       "esp": [
-        "aut"
+        "bel"
       ],
-      "cpv": [
-        "arg"
-      ],
+      "cpv": [],
       "ksa": [],
       "uru": [],
       "fra": [
-        "swe"
+        "mar"
       ],
       "sen": [],
       "irq": [],
       "nor": [
-        "civ"
-      ],
-      "arg": [
-        "cpv"
-      ],
-      "alg": [
-        "sui"
-      ],
-      "aut": [
-        "esp"
-      ],
-      "jor": [],
-      "por": [
-        "cro"
-      ],
-      "cod": [
         "eng"
       ],
+      "arg": [
+        "sui"
+      ],
+      "alg": [],
+      "aut": [],
+      "jor": [],
+      "por": [],
+      "cod": [],
       "uzb": [],
-      "col": [
-        "gha"
-      ],
+      "col": [],
       "eng": [
-        "cod"
+        "nor"
       ],
-      "cro": [
-        "por"
-      ],
-      "gha": [
-        "col"
-      ],
+      "cro": [],
+      "gha": [],
       "pan": []
     },
     "bracketDepths": {
-      "mex": 1,
+      "mex": 2,
       "rsa": 1,
       "kor": 1,
       "cze": 1,
-      "can": 1,
+      "can": 2,
       "bih": 1,
       "qat": 1,
-      "sui": 1,
-      "bra": 1,
-      "mar": 1,
+      "sui": 3,
+      "bra": 2,
+      "mar": 3,
       "hai": 1,
       "sco": 1,
-      "usa": 1,
-      "par": 1,
+      "usa": 2,
+      "par": 2,
       "aus": 1,
       "tur": 1,
       "ger": 1,
@@ -6260,27 +6096,27 @@ export const snapshots: Snapshot[] = [
       "jpn": 1,
       "swe": 1,
       "tun": 1,
-      "bel": 1,
-      "egy": 1,
+      "bel": 3,
+      "egy": 2,
       "irn": 1,
       "nzl": 1,
-      "esp": 1,
+      "esp": 3,
       "cpv": 1,
       "ksa": 1,
       "uru": 1,
-      "fra": 1,
+      "fra": 3,
       "sen": 1,
       "irq": 1,
-      "nor": 1,
-      "arg": 1,
+      "nor": 3,
+      "arg": 3,
       "alg": 1,
       "aut": 1,
       "jor": 1,
-      "por": 1,
+      "por": 2,
       "cod": 1,
       "uzb": 1,
-      "col": 1,
-      "eng": 1,
+      "col": 2,
+      "eng": 3,
       "cro": 1,
       "gha": 1,
       "pan": 1
@@ -6290,6 +6126,7 @@ export const snapshots: Snapshot[] = [
       "cze",
       "qat",
       "hai",
+      "sco",
       "tur",
       "cuw",
       "tun",
@@ -6297,190 +6134,169 @@ export const snapshots: Snapshot[] = [
       "nzl",
       "ksa",
       "uru",
-      "sen",
       "irq",
       "jor",
       "uzb",
-      "pan"
+      "pan",
+      "rsa",
+      "ger",
+      "ned",
+      "jpn",
+      "swe",
+      "civ",
+      "ecu",
+      "cod",
+      "sen",
+      "cro",
+      "aut",
+      "alg",
+      "cpv",
+      "gha",
+      "aus",
+      "bih",
+      "can",
+      "par",
+      "bra",
+      "mex",
+      "por",
+      "usa",
+      "egy",
+      "col"
     ]
   },
   {
     "day": 25,
     "probabilities": {
-      "mex": 0.34,
-      "rsa": 0.02,
-      "kor": 0.05,
+      "mex": 0,
+      "rsa": 0,
+      "kor": 0,
       "cze": 0,
-      "can": 0.05,
+      "can": 0,
       "bih": 0,
       "qat": 0,
-      "sui": 2.08,
-      "bra": 8.22,
-      "mar": 2.84,
+      "sui": 4.75,
+      "bra": 0,
+      "mar": 6.26,
       "hai": 0,
       "sco": 0,
-      "usa": 1.21,
-      "par": 0.05,
-      "aus": 0.27,
+      "usa": 0,
+      "par": 0,
+      "aus": 0,
       "tur": 0,
-      "ger": 2.95,
+      "ger": 0,
       "cuw": 0,
-      "civ": 0.08,
-      "ecu": 0.4,
-      "ned": 5.62,
-      "jpn": 1.18,
+      "civ": 0,
+      "ecu": 0,
+      "ned": 0,
+      "jpn": 0,
       "swe": 0,
       "tun": 0,
-      "bel": 4.59,
-      "egy": 0.24,
+      "bel": 7.55,
+      "egy": 0,
       "irn": 0,
       "nzl": 0,
-      "esp": 12.8,
-      "cpv": 0.01,
+      "esp": 21.68,
+      "cpv": 0,
       "ksa": 0,
       "uru": 0,
-      "fra": 13.82,
+      "fra": 16.84,
       "sen": 0,
       "irq": 0,
-      "nor": 0.35,
-      "arg": 18.32,
-      "alg": 0.13,
-      "aut": 0.15,
+      "nor": 1.6,
+      "arg": 21.21,
+      "alg": 0,
+      "aut": 0,
       "jor": 0,
-      "por": 4.26,
+      "por": 0,
       "cod": 0,
       "uzb": 0,
-      "col": 3.52,
-      "eng": 14.69,
-      "cro": 1.76,
-      "gha": 0.01,
+      "col": 0,
+      "eng": 20.11,
+      "cro": 0,
+      "gha": 0,
       "pan": 0
     },
     "possibleOpponents": {
       "mex": [],
-      "rsa": [
-        "can"
-      ],
+      "rsa": [],
       "kor": [],
       "cze": [],
-      "can": [
-        "rsa"
-      ],
-      "bih": [
-        "usa"
-      ],
+      "can": [],
+      "bih": [],
       "qat": [],
       "sui": [
-        "alg"
+        "arg"
       ],
-      "bra": [
-        "jpn"
-      ],
+      "bra": [],
       "mar": [
-        "ned"
+        "fra"
       ],
       "hai": [],
       "sco": [],
-      "usa": [
-        "bih"
-      ],
-      "par": [
-        "ger"
-      ],
-      "aus": [
-        "egy"
-      ],
+      "usa": [],
+      "par": [],
+      "aus": [],
       "tur": [],
-      "ger": [
-        "par"
-      ],
+      "ger": [],
       "cuw": [],
-      "civ": [
-        "nor"
-      ],
-      "ecu": [
-        "bel"
-      ],
-      "ned": [
-        "mar"
-      ],
-      "jpn": [
-        "bra"
-      ],
-      "swe": [
-        "fra"
-      ],
+      "civ": [],
+      "ecu": [],
+      "ned": [],
+      "jpn": [],
+      "swe": [],
       "tun": [],
       "bel": [
-        "ecu"
+        "esp"
       ],
-      "egy": [
-        "aus"
-      ],
+      "egy": [],
       "irn": [],
       "nzl": [],
       "esp": [
-        "aut"
+        "bel"
       ],
-      "cpv": [
-        "arg"
-      ],
+      "cpv": [],
       "ksa": [],
       "uru": [],
       "fra": [
-        "swe"
+        "mar"
       ],
       "sen": [],
       "irq": [],
       "nor": [
-        "civ"
-      ],
-      "arg": [
-        "cpv"
-      ],
-      "alg": [
-        "sui"
-      ],
-      "aut": [
-        "esp"
-      ],
-      "jor": [],
-      "por": [
-        "cro"
-      ],
-      "cod": [
         "eng"
       ],
+      "arg": [
+        "sui"
+      ],
+      "alg": [],
+      "aut": [],
+      "jor": [],
+      "por": [],
+      "cod": [],
       "uzb": [],
-      "col": [
-        "gha"
-      ],
+      "col": [],
       "eng": [
-        "cod"
+        "nor"
       ],
-      "cro": [
-        "por"
-      ],
-      "gha": [
-        "col"
-      ],
+      "cro": [],
+      "gha": [],
       "pan": []
     },
     "bracketDepths": {
-      "mex": 1,
+      "mex": 2,
       "rsa": 1,
       "kor": 1,
       "cze": 1,
-      "can": 1,
+      "can": 2,
       "bih": 1,
       "qat": 1,
-      "sui": 1,
-      "bra": 1,
-      "mar": 1,
+      "sui": 3,
+      "bra": 2,
+      "mar": 3,
       "hai": 1,
       "sco": 1,
-      "usa": 1,
-      "par": 1,
+      "usa": 2,
+      "par": 2,
       "aus": 1,
       "tur": 1,
       "ger": 1,
@@ -6491,32 +6307,33 @@ export const snapshots: Snapshot[] = [
       "jpn": 1,
       "swe": 1,
       "tun": 1,
-      "bel": 1,
-      "egy": 1,
+      "bel": 3,
+      "egy": 2,
       "irn": 1,
       "nzl": 1,
-      "esp": 1,
+      "esp": 3,
       "cpv": 1,
       "ksa": 1,
       "uru": 1,
-      "fra": 1,
+      "fra": 3,
       "sen": 1,
       "irq": 1,
-      "nor": 1,
-      "arg": 1,
+      "nor": 3,
+      "arg": 3,
       "alg": 1,
       "aut": 1,
       "jor": 1,
-      "por": 1,
+      "por": 2,
       "cod": 1,
       "uzb": 1,
-      "col": 1,
-      "eng": 1,
+      "col": 2,
+      "eng": 3,
       "cro": 1,
       "gha": 1,
       "pan": 1
     },
     "eliminatedTeamIds": [
+      "kor",
       "cze",
       "qat",
       "hai",
@@ -6528,190 +6345,169 @@ export const snapshots: Snapshot[] = [
       "nzl",
       "ksa",
       "uru",
-      "sen",
       "irq",
       "jor",
       "uzb",
-      "pan"
+      "pan",
+      "rsa",
+      "ger",
+      "ned",
+      "jpn",
+      "swe",
+      "civ",
+      "ecu",
+      "cod",
+      "sen",
+      "cro",
+      "aut",
+      "alg",
+      "cpv",
+      "gha",
+      "aus",
+      "bih",
+      "can",
+      "par",
+      "bra",
+      "mex",
+      "por",
+      "usa",
+      "egy",
+      "col"
     ]
   },
   {
     "day": 26,
     "probabilities": {
-      "mex": 0.34,
-      "rsa": 0.02,
+      "mex": 0,
+      "rsa": 0,
       "kor": 0,
       "cze": 0,
-      "can": 0.05,
+      "can": 0,
       "bih": 0,
       "qat": 0,
-      "sui": 2.08,
-      "bra": 8.21,
-      "mar": 2.83,
+      "sui": 4.75,
+      "bra": 0,
+      "mar": 6.26,
       "hai": 0,
       "sco": 0,
-      "usa": 1.21,
-      "par": 0.05,
-      "aus": 0.27,
+      "usa": 0,
+      "par": 0,
+      "aus": 0,
       "tur": 0,
-      "ger": 2.95,
+      "ger": 0,
       "cuw": 0,
-      "civ": 0.08,
-      "ecu": 0.4,
-      "ned": 5.62,
-      "jpn": 1.17,
+      "civ": 0,
+      "ecu": 0,
+      "ned": 0,
+      "jpn": 0,
       "swe": 0,
       "tun": 0,
-      "bel": 4.58,
-      "egy": 0.24,
-      "irn": 0.15,
+      "bel": 7.55,
+      "egy": 0,
+      "irn": 0,
       "nzl": 0,
-      "esp": 12.79,
-      "cpv": 0.01,
+      "esp": 21.68,
+      "cpv": 0,
       "ksa": 0,
       "uru": 0,
-      "fra": 13.81,
+      "fra": 16.84,
       "sen": 0,
       "irq": 0,
-      "nor": 0.35,
-      "arg": 18.3,
-      "alg": 0.13,
-      "aut": 0.15,
+      "nor": 1.6,
+      "arg": 21.21,
+      "alg": 0,
+      "aut": 0,
       "jor": 0,
-      "por": 4.25,
+      "por": 0,
       "cod": 0,
       "uzb": 0,
-      "col": 3.52,
-      "eng": 14.67,
-      "cro": 1.75,
-      "gha": 0.01,
+      "col": 0,
+      "eng": 20.11,
+      "cro": 0,
+      "gha": 0,
       "pan": 0
     },
     "possibleOpponents": {
       "mex": [],
-      "rsa": [
-        "can"
-      ],
+      "rsa": [],
       "kor": [],
       "cze": [],
-      "can": [
-        "rsa"
-      ],
-      "bih": [
-        "usa"
-      ],
+      "can": [],
+      "bih": [],
       "qat": [],
       "sui": [
-        "alg"
+        "arg"
       ],
-      "bra": [
-        "jpn"
-      ],
+      "bra": [],
       "mar": [
-        "ned"
+        "fra"
       ],
       "hai": [],
       "sco": [],
-      "usa": [
-        "bih"
-      ],
-      "par": [
-        "ger"
-      ],
-      "aus": [
-        "egy"
-      ],
+      "usa": [],
+      "par": [],
+      "aus": [],
       "tur": [],
-      "ger": [
-        "par"
-      ],
+      "ger": [],
       "cuw": [],
-      "civ": [
-        "nor"
-      ],
-      "ecu": [
-        "bel"
-      ],
-      "ned": [
-        "mar"
-      ],
-      "jpn": [
-        "bra"
-      ],
-      "swe": [
-        "fra"
-      ],
+      "civ": [],
+      "ecu": [],
+      "ned": [],
+      "jpn": [],
+      "swe": [],
       "tun": [],
       "bel": [
-        "ecu"
+        "esp"
       ],
-      "egy": [
-        "aus"
-      ],
+      "egy": [],
       "irn": [],
       "nzl": [],
       "esp": [
-        "aut"
+        "bel"
       ],
-      "cpv": [
-        "arg"
-      ],
+      "cpv": [],
       "ksa": [],
       "uru": [],
       "fra": [
-        "swe"
+        "mar"
       ],
       "sen": [],
       "irq": [],
       "nor": [
-        "civ"
-      ],
-      "arg": [
-        "cpv"
-      ],
-      "alg": [
-        "sui"
-      ],
-      "aut": [
-        "esp"
-      ],
-      "jor": [],
-      "por": [
-        "cro"
-      ],
-      "cod": [
         "eng"
       ],
+      "arg": [
+        "sui"
+      ],
+      "alg": [],
+      "aut": [],
+      "jor": [],
+      "por": [],
+      "cod": [],
       "uzb": [],
-      "col": [
-        "gha"
-      ],
+      "col": [],
       "eng": [
-        "cod"
+        "nor"
       ],
-      "cro": [
-        "por"
-      ],
-      "gha": [
-        "col"
-      ],
+      "cro": [],
+      "gha": [],
       "pan": []
     },
     "bracketDepths": {
-      "mex": 1,
+      "mex": 2,
       "rsa": 1,
       "kor": 1,
       "cze": 1,
-      "can": 1,
+      "can": 2,
       "bih": 1,
       "qat": 1,
-      "sui": 1,
-      "bra": 1,
-      "mar": 1,
+      "sui": 3,
+      "bra": 2,
+      "mar": 3,
       "hai": 1,
       "sco": 1,
-      "usa": 1,
-      "par": 1,
+      "usa": 2,
+      "par": 2,
       "aus": 1,
       "tur": 1,
       "ger": 1,
@@ -6722,27 +6518,27 @@ export const snapshots: Snapshot[] = [
       "jpn": 1,
       "swe": 1,
       "tun": 1,
-      "bel": 1,
-      "egy": 1,
+      "bel": 3,
+      "egy": 2,
       "irn": 1,
       "nzl": 1,
-      "esp": 1,
+      "esp": 3,
       "cpv": 1,
       "ksa": 1,
       "uru": 1,
-      "fra": 1,
+      "fra": 3,
       "sen": 1,
       "irq": 1,
-      "nor": 1,
-      "arg": 1,
+      "nor": 3,
+      "arg": 3,
       "alg": 1,
       "aut": 1,
       "jor": 1,
-      "por": 1,
+      "por": 2,
       "cod": 1,
       "uzb": 1,
-      "col": 1,
-      "eng": 1,
+      "col": 2,
+      "eng": 3,
       "cro": 1,
       "gha": 1,
       "pan": 1
@@ -6756,193 +6552,169 @@ export const snapshots: Snapshot[] = [
       "tur",
       "cuw",
       "tun",
+      "irn",
       "nzl",
       "ksa",
       "uru",
-      "sen",
       "irq",
       "jor",
       "uzb",
-      "pan"
+      "pan",
+      "rsa",
+      "ger",
+      "ned",
+      "jpn",
+      "swe",
+      "civ",
+      "ecu",
+      "cod",
+      "sen",
+      "cro",
+      "aut",
+      "alg",
+      "cpv",
+      "gha",
+      "aus",
+      "bih",
+      "can",
+      "par",
+      "bra",
+      "mex",
+      "por",
+      "usa",
+      "egy",
+      "col"
     ]
   },
   {
     "day": 27,
     "probabilities": {
-      "mex": 0.34,
-      "rsa": 0.02,
+      "mex": 0,
+      "rsa": 0,
       "kor": 0,
       "cze": 0,
-      "can": 0.05,
+      "can": 0,
       "bih": 0,
       "qat": 0,
-      "sui": 2.08,
-      "bra": 8.21,
-      "mar": 2.84,
+      "sui": 4.04,
+      "bra": 0,
+      "mar": 0,
       "hai": 0,
       "sco": 0,
-      "usa": 1.21,
-      "par": 0.05,
-      "aus": 0.27,
+      "usa": 0,
+      "par": 0,
+      "aus": 0,
       "tur": 0,
-      "ger": 2.95,
+      "ger": 0,
       "cuw": 0,
-      "civ": 0.08,
-      "ecu": 0.4,
-      "ned": 5.62,
-      "jpn": 1.17,
+      "civ": 0,
+      "ecu": 0,
+      "ned": 0,
+      "jpn": 0,
       "swe": 0,
       "tun": 0,
-      "bel": 4.59,
-      "egy": 0.24,
+      "bel": 0,
+      "egy": 0,
       "irn": 0,
       "nzl": 0,
-      "esp": 12.8,
-      "cpv": 0.01,
+      "esp": 32.54,
+      "cpv": 0,
       "ksa": 0,
       "uru": 0,
-      "fra": 13.82,
-      "sen": 0.1,
+      "fra": 25.36,
+      "sen": 0,
       "irq": 0,
-      "nor": 0.35,
-      "arg": 18.31,
-      "alg": 0.13,
-      "aut": 0.15,
+      "nor": 1.32,
+      "arg": 18.92,
+      "alg": 0,
+      "aut": 0,
       "jor": 0,
-      "por": 4.25,
+      "por": 0,
       "cod": 0,
       "uzb": 0,
-      "col": 3.52,
-      "eng": 14.68,
-      "cro": 1.75,
-      "gha": 0.01,
+      "col": 0,
+      "eng": 17.81,
+      "cro": 0,
+      "gha": 0,
       "pan": 0
     },
     "possibleOpponents": {
       "mex": [],
-      "rsa": [
-        "can"
-      ],
+      "rsa": [],
       "kor": [],
       "cze": [],
-      "can": [
-        "rsa"
-      ],
-      "bih": [
-        "usa"
-      ],
+      "can": [],
+      "bih": [],
       "qat": [],
       "sui": [
-        "alg"
+        "arg"
       ],
-      "bra": [
-        "jpn"
-      ],
-      "mar": [
-        "ned"
-      ],
+      "bra": [],
+      "mar": [],
       "hai": [],
       "sco": [],
-      "usa": [
-        "bih"
-      ],
-      "par": [
-        "ger"
-      ],
-      "aus": [
-        "egy"
-      ],
+      "usa": [],
+      "par": [],
+      "aus": [],
       "tur": [],
-      "ger": [
-        "par"
-      ],
+      "ger": [],
       "cuw": [],
-      "civ": [
-        "nor"
-      ],
-      "ecu": [
-        "bel"
-      ],
-      "ned": [
-        "mar"
-      ],
-      "jpn": [
-        "bra"
-      ],
-      "swe": [
-        "fra"
-      ],
+      "civ": [],
+      "ecu": [],
+      "ned": [],
+      "jpn": [],
+      "swe": [],
       "tun": [],
-      "bel": [
-        "ecu"
-      ],
-      "egy": [
-        "aus"
-      ],
+      "bel": [],
+      "egy": [],
       "irn": [],
       "nzl": [],
       "esp": [
-        "aut"
+        "fra"
       ],
-      "cpv": [
-        "arg"
-      ],
+      "cpv": [],
       "ksa": [],
       "uru": [],
       "fra": [
-        "swe"
+        "esp"
       ],
       "sen": [],
       "irq": [],
       "nor": [
-        "civ"
-      ],
-      "arg": [
-        "cpv"
-      ],
-      "alg": [
-        "sui"
-      ],
-      "aut": [
-        "esp"
-      ],
-      "jor": [],
-      "por": [
-        "cro"
-      ],
-      "cod": [
         "eng"
       ],
+      "arg": [
+        "sui"
+      ],
+      "alg": [],
+      "aut": [],
+      "jor": [],
+      "por": [],
+      "cod": [],
       "uzb": [],
-      "col": [
-        "gha"
-      ],
+      "col": [],
       "eng": [
-        "cod"
+        "nor"
       ],
-      "cro": [
-        "por"
-      ],
-      "gha": [
-        "col"
-      ],
+      "cro": [],
+      "gha": [],
       "pan": []
     },
     "bracketDepths": {
-      "mex": 1,
+      "mex": 2,
       "rsa": 1,
       "kor": 1,
       "cze": 1,
-      "can": 1,
+      "can": 2,
       "bih": 1,
       "qat": 1,
-      "sui": 1,
-      "bra": 1,
-      "mar": 1,
+      "sui": 3,
+      "bra": 2,
+      "mar": 3,
       "hai": 1,
       "sco": 1,
-      "usa": 1,
-      "par": 1,
+      "usa": 2,
+      "par": 2,
       "aus": 1,
       "tur": 1,
       "ger": 1,
@@ -6953,27 +6725,27 @@ export const snapshots: Snapshot[] = [
       "jpn": 1,
       "swe": 1,
       "tun": 1,
-      "bel": 1,
-      "egy": 1,
+      "bel": 3,
+      "egy": 2,
       "irn": 1,
       "nzl": 1,
-      "esp": 1,
+      "esp": 4,
       "cpv": 1,
       "ksa": 1,
       "uru": 1,
-      "fra": 1,
+      "fra": 4,
       "sen": 1,
       "irq": 1,
-      "nor": 1,
-      "arg": 1,
+      "nor": 3,
+      "arg": 3,
       "alg": 1,
       "aut": 1,
       "jor": 1,
-      "por": 1,
+      "por": 2,
       "cod": 1,
       "uzb": 1,
-      "col": 1,
-      "eng": 1,
+      "col": 2,
+      "eng": 3,
       "cro": 1,
       "gha": 1,
       "pan": 1
@@ -6994,190 +6766,160 @@ export const snapshots: Snapshot[] = [
       "irq",
       "jor",
       "uzb",
-      "pan"
+      "pan",
+      "rsa",
+      "ger",
+      "ned",
+      "jpn",
+      "swe",
+      "civ",
+      "ecu",
+      "cod",
+      "sen",
+      "cro",
+      "aut",
+      "alg",
+      "cpv",
+      "gha",
+      "aus",
+      "bih",
+      "can",
+      "par",
+      "bra",
+      "mex",
+      "por",
+      "usa",
+      "egy",
+      "col",
+      "mar",
+      "bel"
     ]
   },
   {
     "day": 28,
     "probabilities": {
-      "mex": 0.34,
-      "rsa": 0.02,
+      "mex": 0,
+      "rsa": 0,
       "kor": 0,
       "cze": 0,
-      "can": 0.05,
+      "can": 0,
       "bih": 0,
       "qat": 0,
-      "sui": 2.08,
-      "bra": 8.22,
-      "mar": 2.84,
+      "sui": 0,
+      "bra": 0,
+      "mar": 0,
       "hai": 0,
-      "sco": 0.02,
-      "usa": 1.21,
-      "par": 0.05,
-      "aus": 0.27,
+      "sco": 0,
+      "usa": 0,
+      "par": 0,
+      "aus": 0,
       "tur": 0,
-      "ger": 2.95,
+      "ger": 0,
       "cuw": 0,
-      "civ": 0.08,
-      "ecu": 0.4,
-      "ned": 5.62,
-      "jpn": 1.18,
+      "civ": 0,
+      "ecu": 0,
+      "ned": 0,
+      "jpn": 0,
       "swe": 0,
       "tun": 0,
-      "bel": 4.59,
-      "egy": 0.24,
+      "bel": 0,
+      "egy": 0,
       "irn": 0,
       "nzl": 0,
-      "esp": 12.81,
-      "cpv": 0.01,
+      "esp": 29.77,
+      "cpv": 0,
       "ksa": 0,
       "uru": 0,
-      "fra": 13.83,
+      "fra": 22.94,
       "sen": 0,
       "irq": 0,
-      "nor": 0.35,
-      "arg": 18.33,
-      "alg": 0.13,
-      "aut": 0.15,
+      "nor": 0,
+      "arg": 26.05,
+      "alg": 0,
+      "aut": 0,
       "jor": 0,
-      "por": 4.26,
+      "por": 0,
       "cod": 0,
       "uzb": 0,
-      "col": 3.52,
-      "eng": 14.69,
-      "cro": 1.76,
-      "gha": 0.01,
+      "col": 0,
+      "eng": 21.24,
+      "cro": 0,
+      "gha": 0,
       "pan": 0
     },
     "possibleOpponents": {
-      "mex": [
-        "sco"
-      ],
-      "rsa": [
-        "can"
-      ],
+      "mex": [],
+      "rsa": [],
       "kor": [],
       "cze": [],
-      "can": [
-        "rsa"
-      ],
-      "bih": [
-        "usa"
-      ],
+      "can": [],
+      "bih": [],
       "qat": [],
-      "sui": [
-        "alg"
-      ],
-      "bra": [
-        "jpn"
-      ],
-      "mar": [
-        "ned"
-      ],
+      "sui": [],
+      "bra": [],
+      "mar": [],
       "hai": [],
-      "sco": [
-        "mex"
-      ],
-      "usa": [
-        "bih"
-      ],
-      "par": [
-        "ger"
-      ],
-      "aus": [
-        "egy"
-      ],
+      "sco": [],
+      "usa": [],
+      "par": [],
+      "aus": [],
       "tur": [],
-      "ger": [
-        "par"
-      ],
+      "ger": [],
       "cuw": [],
-      "civ": [
-        "nor"
-      ],
-      "ecu": [
-        "bel"
-      ],
-      "ned": [
-        "mar"
-      ],
-      "jpn": [
-        "bra"
-      ],
-      "swe": [
-        "fra"
-      ],
+      "civ": [],
+      "ecu": [],
+      "ned": [],
+      "jpn": [],
+      "swe": [],
       "tun": [],
-      "bel": [
-        "ecu"
-      ],
-      "egy": [
-        "aus"
-      ],
+      "bel": [],
+      "egy": [],
       "irn": [],
       "nzl": [],
       "esp": [
-        "aut"
+        "fra"
       ],
-      "cpv": [
-        "arg"
-      ],
+      "cpv": [],
       "ksa": [],
       "uru": [],
       "fra": [
-        "swe"
+        "esp"
       ],
       "sen": [],
       "irq": [],
-      "nor": [
-        "civ"
-      ],
+      "nor": [],
       "arg": [
-        "cpv"
-      ],
-      "alg": [
-        "sui"
-      ],
-      "aut": [
-        "esp"
-      ],
-      "jor": [],
-      "por": [
-        "cro"
-      ],
-      "cod": [
         "eng"
       ],
+      "alg": [],
+      "aut": [],
+      "jor": [],
+      "por": [],
+      "cod": [],
       "uzb": [],
-      "col": [
-        "gha"
-      ],
+      "col": [],
       "eng": [
-        "cod"
+        "arg"
       ],
-      "cro": [
-        "por"
-      ],
-      "gha": [
-        "col"
-      ],
+      "cro": [],
+      "gha": [],
       "pan": []
     },
     "bracketDepths": {
-      "mex": 1,
+      "mex": 2,
       "rsa": 1,
       "kor": 1,
       "cze": 1,
-      "can": 1,
+      "can": 2,
       "bih": 1,
       "qat": 1,
-      "sui": 1,
-      "bra": 1,
-      "mar": 1,
+      "sui": 3,
+      "bra": 2,
+      "mar": 3,
       "hai": 1,
       "sco": 1,
-      "usa": 1,
-      "par": 1,
+      "usa": 2,
+      "par": 2,
       "aus": 1,
       "tur": 1,
       "ger": 1,
@@ -7188,27 +6930,27 @@ export const snapshots: Snapshot[] = [
       "jpn": 1,
       "swe": 1,
       "tun": 1,
-      "bel": 1,
-      "egy": 1,
+      "bel": 3,
+      "egy": 2,
       "irn": 1,
       "nzl": 1,
-      "esp": 1,
+      "esp": 4,
       "cpv": 1,
       "ksa": 1,
       "uru": 1,
-      "fra": 1,
+      "fra": 4,
       "sen": 1,
       "irq": 1,
-      "nor": 1,
-      "arg": 1,
+      "nor": 3,
+      "arg": 4,
       "alg": 1,
       "aut": 1,
       "jor": 1,
-      "por": 1,
+      "por": 2,
       "cod": 1,
       "uzb": 1,
-      "col": 1,
-      "eng": 1,
+      "col": 2,
+      "eng": 4,
       "cro": 1,
       "gha": 1,
       "pan": 1
@@ -7218,6 +6960,7 @@ export const snapshots: Snapshot[] = [
       "cze",
       "qat",
       "hai",
+      "sco",
       "tur",
       "cuw",
       "tun",
@@ -7225,190 +6968,165 @@ export const snapshots: Snapshot[] = [
       "nzl",
       "ksa",
       "uru",
-      "sen",
       "irq",
       "jor",
       "uzb",
-      "pan"
+      "pan",
+      "rsa",
+      "ger",
+      "ned",
+      "jpn",
+      "swe",
+      "civ",
+      "ecu",
+      "cod",
+      "sen",
+      "cro",
+      "aut",
+      "alg",
+      "cpv",
+      "gha",
+      "aus",
+      "bih",
+      "can",
+      "par",
+      "bra",
+      "mex",
+      "por",
+      "usa",
+      "egy",
+      "col",
+      "mar",
+      "bel",
+      "nor",
+      "sui"
     ]
   },
   {
     "day": 29,
     "probabilities": {
-      "mex": 0.34,
-      "rsa": 0.02,
+      "mex": 0,
+      "rsa": 0,
       "kor": 0,
       "cze": 0,
-      "can": 0.05,
+      "can": 0,
       "bih": 0,
       "qat": 0,
-      "sui": 2.08,
-      "bra": 8.21,
-      "mar": 2.84,
+      "sui": 0,
+      "bra": 0,
+      "mar": 0,
       "hai": 0,
       "sco": 0,
-      "usa": 1.21,
-      "par": 0.05,
-      "aus": 0.27,
+      "usa": 0,
+      "par": 0,
+      "aus": 0,
       "tur": 0,
-      "ger": 2.95,
+      "ger": 0,
       "cuw": 0,
-      "civ": 0.08,
-      "ecu": 0.4,
-      "ned": 5.62,
-      "jpn": 1.17,
+      "civ": 0,
+      "ecu": 0,
+      "ned": 0,
+      "jpn": 0,
       "swe": 0,
       "tun": 0,
-      "bel": 4.59,
-      "egy": 0.24,
+      "bel": 0,
+      "egy": 0,
       "irn": 0,
       "nzl": 0,
-      "esp": 12.8,
-      "cpv": 0.01,
+      "esp": 29.77,
+      "cpv": 0,
       "ksa": 0,
       "uru": 0,
-      "fra": 13.82,
-      "sen": 0.1,
+      "fra": 22.94,
+      "sen": 0,
       "irq": 0,
-      "nor": 0.35,
-      "arg": 18.31,
-      "alg": 0.13,
-      "aut": 0.15,
+      "nor": 0,
+      "arg": 26.05,
+      "alg": 0,
+      "aut": 0,
       "jor": 0,
-      "por": 4.25,
+      "por": 0,
       "cod": 0,
       "uzb": 0,
-      "col": 3.52,
-      "eng": 14.68,
-      "cro": 1.75,
-      "gha": 0.01,
+      "col": 0,
+      "eng": 21.24,
+      "cro": 0,
+      "gha": 0,
       "pan": 0
     },
     "possibleOpponents": {
       "mex": [],
-      "rsa": [
-        "can"
-      ],
+      "rsa": [],
       "kor": [],
       "cze": [],
-      "can": [
-        "rsa"
-      ],
-      "bih": [
-        "usa"
-      ],
+      "can": [],
+      "bih": [],
       "qat": [],
-      "sui": [
-        "alg"
-      ],
-      "bra": [
-        "jpn"
-      ],
-      "mar": [
-        "ned"
-      ],
+      "sui": [],
+      "bra": [],
+      "mar": [],
       "hai": [],
       "sco": [],
-      "usa": [
-        "bih"
-      ],
-      "par": [
-        "ger"
-      ],
-      "aus": [
-        "egy"
-      ],
+      "usa": [],
+      "par": [],
+      "aus": [],
       "tur": [],
-      "ger": [
-        "par"
-      ],
+      "ger": [],
       "cuw": [],
-      "civ": [
-        "nor"
-      ],
-      "ecu": [
-        "bel"
-      ],
-      "ned": [
-        "mar"
-      ],
-      "jpn": [
-        "bra"
-      ],
-      "swe": [
-        "fra"
-      ],
+      "civ": [],
+      "ecu": [],
+      "ned": [],
+      "jpn": [],
+      "swe": [],
       "tun": [],
-      "bel": [
-        "ecu"
-      ],
-      "egy": [
-        "aus"
-      ],
+      "bel": [],
+      "egy": [],
       "irn": [],
       "nzl": [],
       "esp": [
-        "aut"
+        "fra"
       ],
-      "cpv": [
-        "arg"
-      ],
+      "cpv": [],
       "ksa": [],
       "uru": [],
       "fra": [
-        "swe"
+        "esp"
       ],
       "sen": [],
       "irq": [],
-      "nor": [
-        "civ"
-      ],
+      "nor": [],
       "arg": [
-        "cpv"
-      ],
-      "alg": [
-        "sui"
-      ],
-      "aut": [
-        "esp"
-      ],
-      "jor": [],
-      "por": [
-        "cro"
-      ],
-      "cod": [
         "eng"
       ],
+      "alg": [],
+      "aut": [],
+      "jor": [],
+      "por": [],
+      "cod": [],
       "uzb": [],
-      "col": [
-        "gha"
-      ],
+      "col": [],
       "eng": [
-        "cod"
+        "arg"
       ],
-      "cro": [
-        "por"
-      ],
-      "gha": [
-        "col"
-      ],
+      "cro": [],
+      "gha": [],
       "pan": []
     },
     "bracketDepths": {
-      "mex": 1,
+      "mex": 2,
       "rsa": 1,
       "kor": 1,
       "cze": 1,
-      "can": 1,
+      "can": 2,
       "bih": 1,
       "qat": 1,
-      "sui": 1,
-      "bra": 1,
-      "mar": 1,
+      "sui": 3,
+      "bra": 2,
+      "mar": 3,
       "hai": 1,
       "sco": 1,
-      "usa": 1,
-      "par": 1,
+      "usa": 2,
+      "par": 2,
       "aus": 1,
       "tur": 1,
       "ger": 1,
@@ -7419,27 +7137,27 @@ export const snapshots: Snapshot[] = [
       "jpn": 1,
       "swe": 1,
       "tun": 1,
-      "bel": 1,
-      "egy": 1,
+      "bel": 3,
+      "egy": 2,
       "irn": 1,
       "nzl": 1,
-      "esp": 1,
+      "esp": 4,
       "cpv": 1,
       "ksa": 1,
       "uru": 1,
-      "fra": 1,
+      "fra": 4,
       "sen": 1,
       "irq": 1,
-      "nor": 1,
-      "arg": 1,
+      "nor": 3,
+      "arg": 4,
       "alg": 1,
       "aut": 1,
       "jor": 1,
-      "por": 1,
+      "por": 2,
       "cod": 1,
       "uzb": 1,
-      "col": 1,
-      "eng": 1,
+      "col": 2,
+      "eng": 4,
       "cro": 1,
       "gha": 1,
       "pan": 1
@@ -7460,186 +7178,162 @@ export const snapshots: Snapshot[] = [
       "irq",
       "jor",
       "uzb",
-      "pan"
+      "pan",
+      "rsa",
+      "ger",
+      "ned",
+      "jpn",
+      "swe",
+      "civ",
+      "ecu",
+      "cod",
+      "sen",
+      "cro",
+      "aut",
+      "alg",
+      "cpv",
+      "gha",
+      "aus",
+      "bih",
+      "can",
+      "par",
+      "bra",
+      "mex",
+      "por",
+      "usa",
+      "egy",
+      "col",
+      "mar",
+      "bel",
+      "nor",
+      "sui"
     ]
   },
   {
     "day": 30,
     "probabilities": {
-      "mex": 0.34,
-      "rsa": 0.02,
+      "mex": 0,
+      "rsa": 0,
       "kor": 0,
       "cze": 0,
-      "can": 0.05,
+      "can": 0,
       "bih": 0,
       "qat": 0,
-      "sui": 2.08,
-      "bra": 8.21,
-      "mar": 2.84,
+      "sui": 0,
+      "bra": 0,
+      "mar": 0,
       "hai": 0,
       "sco": 0,
-      "usa": 1.21,
-      "par": 0.05,
-      "aus": 0.27,
+      "usa": 0,
+      "par": 0,
+      "aus": 0,
       "tur": 0,
-      "ger": 2.95,
+      "ger": 0,
       "cuw": 0,
-      "civ": 0.08,
-      "ecu": 0.4,
-      "ned": 5.62,
-      "jpn": 1.17,
+      "civ": 0,
+      "ecu": 0,
+      "ned": 0,
+      "jpn": 0,
       "swe": 0,
       "tun": 0,
-      "bel": 4.59,
-      "egy": 0.24,
+      "bel": 0,
+      "egy": 0,
       "irn": 0,
       "nzl": 0,
-      "esp": 12.8,
-      "cpv": 0.01,
+      "esp": 29.77,
+      "cpv": 0,
       "ksa": 0,
       "uru": 0,
-      "fra": 13.82,
-      "sen": 0.1,
+      "fra": 22.94,
+      "sen": 0,
       "irq": 0,
-      "nor": 0.35,
-      "arg": 18.31,
-      "alg": 0.13,
-      "aut": 0.15,
+      "nor": 0,
+      "arg": 26.05,
+      "alg": 0,
+      "aut": 0,
       "jor": 0,
-      "por": 4.25,
+      "por": 0,
       "cod": 0,
       "uzb": 0,
-      "col": 3.52,
-      "eng": 14.68,
-      "cro": 1.75,
-      "gha": 0.01,
+      "col": 0,
+      "eng": 21.24,
+      "cro": 0,
+      "gha": 0,
       "pan": 0
     },
     "possibleOpponents": {
       "mex": [],
-      "rsa": [
-        "can"
-      ],
+      "rsa": [],
       "kor": [],
       "cze": [],
-      "can": [
-        "rsa"
-      ],
-      "bih": [
-        "usa"
-      ],
+      "can": [],
+      "bih": [],
       "qat": [],
-      "sui": [
-        "alg"
-      ],
-      "bra": [
-        "jpn"
-      ],
-      "mar": [
-        "ned"
-      ],
+      "sui": [],
+      "bra": [],
+      "mar": [],
       "hai": [],
       "sco": [],
-      "usa": [
-        "bih"
-      ],
-      "par": [
-        "ger"
-      ],
-      "aus": [
-        "egy"
-      ],
+      "usa": [],
+      "par": [],
+      "aus": [],
       "tur": [],
-      "ger": [
-        "par"
-      ],
+      "ger": [],
       "cuw": [],
-      "civ": [
-        "nor"
-      ],
-      "ecu": [
-        "bel"
-      ],
-      "ned": [
-        "mar"
-      ],
-      "jpn": [
-        "bra"
-      ],
-      "swe": [
-        "fra"
-      ],
+      "civ": [],
+      "ecu": [],
+      "ned": [],
+      "jpn": [],
+      "swe": [],
       "tun": [],
-      "bel": [
-        "ecu"
-      ],
-      "egy": [
-        "aus"
-      ],
+      "bel": [],
+      "egy": [],
       "irn": [],
       "nzl": [],
       "esp": [
-        "aut"
+        "fra"
       ],
-      "cpv": [
-        "arg"
-      ],
+      "cpv": [],
       "ksa": [],
       "uru": [],
       "fra": [
-        "swe"
+        "esp"
       ],
       "sen": [],
       "irq": [],
-      "nor": [
-        "civ"
-      ],
+      "nor": [],
       "arg": [
-        "cpv"
-      ],
-      "alg": [
-        "sui"
-      ],
-      "aut": [
-        "esp"
-      ],
-      "jor": [],
-      "por": [
-        "cro"
-      ],
-      "cod": [
         "eng"
       ],
+      "alg": [],
+      "aut": [],
+      "jor": [],
+      "por": [],
+      "cod": [],
       "uzb": [],
-      "col": [
-        "gha"
-      ],
+      "col": [],
       "eng": [
-        "cod"
+        "arg"
       ],
-      "cro": [
-        "por"
-      ],
-      "gha": [
-        "col"
-      ],
+      "cro": [],
+      "gha": [],
       "pan": []
     },
     "bracketDepths": {
-      "mex": 1,
+      "mex": 2,
       "rsa": 1,
       "kor": 1,
       "cze": 1,
-      "can": 1,
+      "can": 2,
       "bih": 1,
       "qat": 1,
-      "sui": 1,
-      "bra": 1,
-      "mar": 1,
+      "sui": 3,
+      "bra": 2,
+      "mar": 3,
       "hai": 1,
       "sco": 1,
-      "usa": 1,
-      "par": 1,
+      "usa": 2,
+      "par": 2,
       "aus": 1,
       "tur": 1,
       "ger": 1,
@@ -7650,27 +7344,27 @@ export const snapshots: Snapshot[] = [
       "jpn": 1,
       "swe": 1,
       "tun": 1,
-      "bel": 1,
-      "egy": 1,
+      "bel": 3,
+      "egy": 2,
       "irn": 1,
       "nzl": 1,
-      "esp": 1,
+      "esp": 4,
       "cpv": 1,
       "ksa": 1,
       "uru": 1,
-      "fra": 1,
+      "fra": 4,
       "sen": 1,
       "irq": 1,
-      "nor": 1,
-      "arg": 1,
+      "nor": 3,
+      "arg": 4,
       "alg": 1,
       "aut": 1,
       "jor": 1,
-      "por": 1,
+      "por": 2,
       "cod": 1,
       "uzb": 1,
-      "col": 1,
-      "eng": 1,
+      "col": 2,
+      "eng": 4,
       "cro": 1,
       "gha": 1,
       "pan": 1
@@ -7691,190 +7385,161 @@ export const snapshots: Snapshot[] = [
       "irq",
       "jor",
       "uzb",
-      "pan"
+      "pan",
+      "rsa",
+      "ger",
+      "ned",
+      "jpn",
+      "swe",
+      "civ",
+      "ecu",
+      "cod",
+      "sen",
+      "cro",
+      "aut",
+      "alg",
+      "cpv",
+      "gha",
+      "aus",
+      "bih",
+      "can",
+      "par",
+      "bra",
+      "mex",
+      "por",
+      "usa",
+      "egy",
+      "col",
+      "mar",
+      "bel",
+      "nor",
+      "sui"
     ]
   },
   {
     "day": 31,
     "probabilities": {
-      "mex": 0.34,
-      "rsa": 0.02,
+      "mex": 0,
+      "rsa": 0,
       "kor": 0,
       "cze": 0,
-      "can": 0.05,
+      "can": 0,
       "bih": 0,
       "qat": 0,
-      "sui": 2.08,
-      "bra": 8.22,
-      "mar": 2.84,
+      "sui": 0,
+      "bra": 0,
+      "mar": 0,
       "hai": 0,
-      "sco": 0.02,
-      "usa": 1.21,
-      "par": 0.05,
-      "aus": 0.27,
+      "sco": 0,
+      "usa": 0,
+      "par": 0,
+      "aus": 0,
       "tur": 0,
-      "ger": 2.95,
+      "ger": 0,
       "cuw": 0,
-      "civ": 0.08,
-      "ecu": 0.4,
-      "ned": 5.62,
-      "jpn": 1.18,
+      "civ": 0,
+      "ecu": 0,
+      "ned": 0,
+      "jpn": 0,
       "swe": 0,
       "tun": 0,
-      "bel": 4.59,
-      "egy": 0.24,
+      "bel": 0,
+      "egy": 0,
       "irn": 0,
       "nzl": 0,
-      "esp": 12.81,
-      "cpv": 0.01,
+      "esp": 56.78,
+      "cpv": 0,
       "ksa": 0,
       "uru": 0,
-      "fra": 13.83,
+      "fra": 0,
       "sen": 0,
       "irq": 0,
-      "nor": 0.35,
-      "arg": 18.33,
-      "alg": 0.13,
-      "aut": 0.15,
+      "nor": 0,
+      "arg": 23.87,
+      "alg": 0,
+      "aut": 0,
       "jor": 0,
-      "por": 4.26,
+      "por": 0,
       "cod": 0,
       "uzb": 0,
-      "col": 3.52,
-      "eng": 14.69,
-      "cro": 1.76,
-      "gha": 0.01,
+      "col": 0,
+      "eng": 19.35,
+      "cro": 0,
+      "gha": 0,
       "pan": 0
     },
     "possibleOpponents": {
-      "mex": [
-        "sco"
-      ],
-      "rsa": [
-        "can"
-      ],
+      "mex": [],
+      "rsa": [],
       "kor": [],
       "cze": [],
-      "can": [
-        "rsa"
-      ],
-      "bih": [
-        "usa"
-      ],
+      "can": [],
+      "bih": [],
       "qat": [],
-      "sui": [
-        "alg"
-      ],
-      "bra": [
-        "jpn"
-      ],
-      "mar": [
-        "ned"
-      ],
+      "sui": [],
+      "bra": [],
+      "mar": [],
       "hai": [],
-      "sco": [
-        "mex"
-      ],
-      "usa": [
-        "bih"
-      ],
-      "par": [
-        "ger"
-      ],
-      "aus": [
-        "egy"
-      ],
+      "sco": [],
+      "usa": [],
+      "par": [],
+      "aus": [],
       "tur": [],
-      "ger": [
-        "par"
-      ],
+      "ger": [],
       "cuw": [],
-      "civ": [
-        "nor"
-      ],
-      "ecu": [
-        "bel"
-      ],
-      "ned": [
-        "mar"
-      ],
-      "jpn": [
-        "bra"
-      ],
-      "swe": [
-        "fra"
-      ],
+      "civ": [],
+      "ecu": [],
+      "ned": [],
+      "jpn": [],
+      "swe": [],
       "tun": [],
-      "bel": [
-        "ecu"
-      ],
-      "egy": [
-        "aus"
-      ],
+      "bel": [],
+      "egy": [],
       "irn": [],
       "nzl": [],
       "esp": [
-        "aut"
-      ],
-      "cpv": [
-        "arg"
-      ],
-      "ksa": [],
-      "uru": [],
-      "fra": [
-        "swe"
-      ],
-      "sen": [],
-      "irq": [],
-      "nor": [
-        "civ"
-      ],
-      "arg": [
-        "cpv"
-      ],
-      "alg": [
-        "sui"
-      ],
-      "aut": [
-        "esp"
-      ],
-      "jor": [],
-      "por": [
-        "cro"
-      ],
-      "cod": [
+        "arg",
         "eng"
       ],
+      "cpv": [],
+      "ksa": [],
+      "uru": [],
+      "fra": [],
+      "sen": [],
+      "irq": [],
+      "nor": [],
+      "arg": [
+        "eng"
+      ],
+      "alg": [],
+      "aut": [],
+      "jor": [],
+      "por": [],
+      "cod": [],
       "uzb": [],
-      "col": [
-        "gha"
-      ],
+      "col": [],
       "eng": [
-        "cod"
+        "arg"
       ],
-      "cro": [
-        "por"
-      ],
-      "gha": [
-        "col"
-      ],
+      "cro": [],
+      "gha": [],
       "pan": []
     },
     "bracketDepths": {
-      "mex": 1,
+      "mex": 2,
       "rsa": 1,
       "kor": 1,
       "cze": 1,
-      "can": 1,
+      "can": 2,
       "bih": 1,
       "qat": 1,
-      "sui": 1,
-      "bra": 1,
-      "mar": 1,
+      "sui": 3,
+      "bra": 2,
+      "mar": 3,
       "hai": 1,
       "sco": 1,
-      "usa": 1,
-      "par": 1,
+      "usa": 2,
+      "par": 2,
       "aus": 1,
       "tur": 1,
       "ger": 1,
@@ -7885,27 +7550,27 @@ export const snapshots: Snapshot[] = [
       "jpn": 1,
       "swe": 1,
       "tun": 1,
-      "bel": 1,
-      "egy": 1,
+      "bel": 3,
+      "egy": 2,
       "irn": 1,
       "nzl": 1,
-      "esp": 1,
+      "esp": 5,
       "cpv": 1,
       "ksa": 1,
       "uru": 1,
-      "fra": 1,
+      "fra": 4,
       "sen": 1,
       "irq": 1,
-      "nor": 1,
-      "arg": 1,
+      "nor": 3,
+      "arg": 4,
       "alg": 1,
       "aut": 1,
       "jor": 1,
-      "por": 1,
+      "por": 2,
       "cod": 1,
       "uzb": 1,
-      "col": 1,
-      "eng": 1,
+      "col": 2,
+      "eng": 4,
       "cro": 1,
       "gha": 1,
       "pan": 1
@@ -7915,6 +7580,7 @@ export const snapshots: Snapshot[] = [
       "cze",
       "qat",
       "hai",
+      "sco",
       "tur",
       "cuw",
       "tun",
@@ -7922,190 +7588,162 @@ export const snapshots: Snapshot[] = [
       "nzl",
       "ksa",
       "uru",
-      "sen",
       "irq",
       "jor",
       "uzb",
-      "pan"
+      "pan",
+      "rsa",
+      "ger",
+      "ned",
+      "jpn",
+      "swe",
+      "civ",
+      "ecu",
+      "cod",
+      "sen",
+      "cro",
+      "aut",
+      "alg",
+      "cpv",
+      "gha",
+      "aus",
+      "bih",
+      "can",
+      "par",
+      "bra",
+      "mex",
+      "por",
+      "usa",
+      "egy",
+      "col",
+      "mar",
+      "bel",
+      "nor",
+      "sui",
+      "fra"
     ]
   },
   {
     "day": 32,
     "probabilities": {
-      "mex": 0.34,
-      "rsa": 0.02,
+      "mex": 0,
+      "rsa": 0,
       "kor": 0,
       "cze": 0,
-      "can": 0.05,
+      "can": 0,
       "bih": 0,
       "qat": 0,
-      "sui": 2.08,
-      "bra": 8.21,
-      "mar": 2.83,
+      "sui": 0,
+      "bra": 0,
+      "mar": 0,
       "hai": 0,
       "sco": 0,
-      "usa": 1.21,
-      "par": 0.05,
-      "aus": 0.27,
+      "usa": 0,
+      "par": 0,
+      "aus": 0,
       "tur": 0,
-      "ger": 2.95,
+      "ger": 0,
       "cuw": 0,
-      "civ": 0.08,
-      "ecu": 0.4,
-      "ned": 5.62,
-      "jpn": 1.17,
+      "civ": 0,
+      "ecu": 0,
+      "ned": 0,
+      "jpn": 0,
       "swe": 0,
       "tun": 0,
-      "bel": 4.58,
-      "egy": 0.24,
-      "irn": 0.15,
+      "bel": 0,
+      "egy": 0,
+      "irn": 0,
       "nzl": 0,
-      "esp": 12.79,
-      "cpv": 0.01,
+      "esp": 53.12,
+      "cpv": 0,
       "ksa": 0,
       "uru": 0,
-      "fra": 13.81,
+      "fra": 0,
       "sen": 0,
       "irq": 0,
-      "nor": 0.35,
-      "arg": 18.3,
-      "alg": 0.13,
-      "aut": 0.15,
+      "nor": 0,
+      "arg": 46.88,
+      "alg": 0,
+      "aut": 0,
       "jor": 0,
-      "por": 4.25,
+      "por": 0,
       "cod": 0,
       "uzb": 0,
-      "col": 3.52,
-      "eng": 14.67,
-      "cro": 1.75,
-      "gha": 0.01,
+      "col": 0,
+      "eng": 0,
+      "cro": 0,
+      "gha": 0,
       "pan": 0
     },
     "possibleOpponents": {
       "mex": [],
-      "rsa": [
-        "can"
-      ],
+      "rsa": [],
       "kor": [],
       "cze": [],
-      "can": [
-        "rsa"
-      ],
-      "bih": [
-        "usa"
-      ],
+      "can": [],
+      "bih": [],
       "qat": [],
-      "sui": [
-        "alg"
-      ],
-      "bra": [
-        "jpn"
-      ],
-      "mar": [
-        "ned"
-      ],
+      "sui": [],
+      "bra": [],
+      "mar": [],
       "hai": [],
       "sco": [],
-      "usa": [
-        "bih"
-      ],
-      "par": [
-        "ger"
-      ],
-      "aus": [
-        "egy"
-      ],
+      "usa": [],
+      "par": [],
+      "aus": [],
       "tur": [],
-      "ger": [
-        "par"
-      ],
+      "ger": [],
       "cuw": [],
-      "civ": [
-        "nor"
-      ],
-      "ecu": [
-        "bel"
-      ],
-      "ned": [
-        "mar"
-      ],
-      "jpn": [
-        "bra"
-      ],
-      "swe": [
-        "fra"
-      ],
+      "civ": [],
+      "ecu": [],
+      "ned": [],
+      "jpn": [],
+      "swe": [],
       "tun": [],
-      "bel": [
-        "ecu"
-      ],
-      "egy": [
-        "aus"
-      ],
+      "bel": [],
+      "egy": [],
       "irn": [],
       "nzl": [],
       "esp": [
-        "aut"
-      ],
-      "cpv": [
         "arg"
       ],
+      "cpv": [],
       "ksa": [],
       "uru": [],
-      "fra": [
-        "swe"
-      ],
+      "fra": [],
       "sen": [],
       "irq": [],
-      "nor": [
-        "civ"
-      ],
+      "nor": [],
       "arg": [
-        "cpv"
-      ],
-      "alg": [
-        "sui"
-      ],
-      "aut": [
         "esp"
       ],
+      "alg": [],
+      "aut": [],
       "jor": [],
-      "por": [
-        "cro"
-      ],
-      "cod": [
-        "eng"
-      ],
+      "por": [],
+      "cod": [],
       "uzb": [],
-      "col": [
-        "gha"
-      ],
-      "eng": [
-        "cod"
-      ],
-      "cro": [
-        "por"
-      ],
-      "gha": [
-        "col"
-      ],
+      "col": [],
+      "eng": [],
+      "cro": [],
+      "gha": [],
       "pan": []
     },
     "bracketDepths": {
-      "mex": 1,
+      "mex": 2,
       "rsa": 1,
       "kor": 1,
       "cze": 1,
-      "can": 1,
+      "can": 2,
       "bih": 1,
       "qat": 1,
-      "sui": 1,
-      "bra": 1,
-      "mar": 1,
+      "sui": 3,
+      "bra": 2,
+      "mar": 3,
       "hai": 1,
       "sco": 1,
-      "usa": 1,
-      "par": 1,
+      "usa": 2,
+      "par": 2,
       "aus": 1,
       "tur": 1,
       "ger": 1,
@@ -8116,27 +7754,27 @@ export const snapshots: Snapshot[] = [
       "jpn": 1,
       "swe": 1,
       "tun": 1,
-      "bel": 1,
-      "egy": 1,
+      "bel": 3,
+      "egy": 2,
       "irn": 1,
       "nzl": 1,
-      "esp": 1,
+      "esp": 5,
       "cpv": 1,
       "ksa": 1,
       "uru": 1,
-      "fra": 1,
+      "fra": 4,
       "sen": 1,
       "irq": 1,
-      "nor": 1,
-      "arg": 1,
+      "nor": 3,
+      "arg": 5,
       "alg": 1,
       "aut": 1,
       "jor": 1,
-      "por": 1,
+      "por": 2,
       "cod": 1,
       "uzb": 1,
-      "col": 1,
-      "eng": 1,
+      "col": 2,
+      "eng": 4,
       "cro": 1,
       "gha": 1,
       "pan": 1
@@ -8150,193 +7788,167 @@ export const snapshots: Snapshot[] = [
       "tur",
       "cuw",
       "tun",
+      "irn",
       "nzl",
       "ksa",
       "uru",
-      "sen",
       "irq",
       "jor",
       "uzb",
-      "pan"
+      "pan",
+      "rsa",
+      "ger",
+      "ned",
+      "jpn",
+      "swe",
+      "civ",
+      "ecu",
+      "cod",
+      "sen",
+      "cro",
+      "aut",
+      "alg",
+      "cpv",
+      "gha",
+      "aus",
+      "bih",
+      "can",
+      "par",
+      "bra",
+      "mex",
+      "por",
+      "usa",
+      "egy",
+      "col",
+      "mar",
+      "bel",
+      "nor",
+      "sui",
+      "fra",
+      "eng"
     ]
   },
   {
     "day": 33,
     "probabilities": {
-      "mex": 0.34,
-      "rsa": 0.02,
-      "kor": 0.05,
+      "mex": 0,
+      "rsa": 0,
+      "kor": 0,
       "cze": 0,
-      "can": 0.05,
+      "can": 0,
       "bih": 0,
       "qat": 0,
-      "sui": 2.08,
-      "bra": 8.22,
-      "mar": 2.84,
+      "sui": 0,
+      "bra": 0,
+      "mar": 0,
       "hai": 0,
       "sco": 0,
-      "usa": 1.21,
-      "par": 0.05,
-      "aus": 0.27,
+      "usa": 0,
+      "par": 0,
+      "aus": 0,
       "tur": 0,
-      "ger": 2.95,
+      "ger": 0,
       "cuw": 0,
-      "civ": 0.08,
-      "ecu": 0.4,
-      "ned": 5.62,
-      "jpn": 1.18,
+      "civ": 0,
+      "ecu": 0,
+      "ned": 0,
+      "jpn": 0,
       "swe": 0,
       "tun": 0,
-      "bel": 4.59,
-      "egy": 0.24,
+      "bel": 0,
+      "egy": 0,
       "irn": 0,
       "nzl": 0,
-      "esp": 12.8,
-      "cpv": 0.01,
+      "esp": 53.12,
+      "cpv": 0,
       "ksa": 0,
       "uru": 0,
-      "fra": 13.82,
+      "fra": 0,
       "sen": 0,
       "irq": 0,
-      "nor": 0.35,
-      "arg": 18.32,
-      "alg": 0.13,
-      "aut": 0.15,
+      "nor": 0,
+      "arg": 46.88,
+      "alg": 0,
+      "aut": 0,
       "jor": 0,
-      "por": 4.26,
+      "por": 0,
       "cod": 0,
       "uzb": 0,
-      "col": 3.52,
-      "eng": 14.69,
-      "cro": 1.76,
-      "gha": 0.01,
+      "col": 0,
+      "eng": 0,
+      "cro": 0,
+      "gha": 0,
       "pan": 0
     },
     "possibleOpponents": {
       "mex": [],
-      "rsa": [
-        "can"
-      ],
+      "rsa": [],
       "kor": [],
       "cze": [],
-      "can": [
-        "rsa"
-      ],
-      "bih": [
-        "usa"
-      ],
+      "can": [],
+      "bih": [],
       "qat": [],
-      "sui": [
-        "alg"
-      ],
-      "bra": [
-        "jpn"
-      ],
-      "mar": [
-        "ned"
-      ],
+      "sui": [],
+      "bra": [],
+      "mar": [],
       "hai": [],
       "sco": [],
-      "usa": [
-        "bih"
-      ],
-      "par": [
-        "ger"
-      ],
-      "aus": [
-        "egy"
-      ],
+      "usa": [],
+      "par": [],
+      "aus": [],
       "tur": [],
-      "ger": [
-        "par"
-      ],
+      "ger": [],
       "cuw": [],
-      "civ": [
-        "nor"
-      ],
-      "ecu": [
-        "bel"
-      ],
-      "ned": [
-        "mar"
-      ],
-      "jpn": [
-        "bra"
-      ],
-      "swe": [
-        "fra"
-      ],
+      "civ": [],
+      "ecu": [],
+      "ned": [],
+      "jpn": [],
+      "swe": [],
       "tun": [],
-      "bel": [
-        "ecu"
-      ],
-      "egy": [
-        "aus"
-      ],
+      "bel": [],
+      "egy": [],
       "irn": [],
       "nzl": [],
       "esp": [
-        "aut"
-      ],
-      "cpv": [
         "arg"
       ],
+      "cpv": [],
       "ksa": [],
       "uru": [],
-      "fra": [
-        "swe"
-      ],
+      "fra": [],
       "sen": [],
       "irq": [],
-      "nor": [
-        "civ"
-      ],
+      "nor": [],
       "arg": [
-        "cpv"
-      ],
-      "alg": [
-        "sui"
-      ],
-      "aut": [
         "esp"
       ],
+      "alg": [],
+      "aut": [],
       "jor": [],
-      "por": [
-        "cro"
-      ],
-      "cod": [
-        "eng"
-      ],
+      "por": [],
+      "cod": [],
       "uzb": [],
-      "col": [
-        "gha"
-      ],
-      "eng": [
-        "cod"
-      ],
-      "cro": [
-        "por"
-      ],
-      "gha": [
-        "col"
-      ],
+      "col": [],
+      "eng": [],
+      "cro": [],
+      "gha": [],
       "pan": []
     },
     "bracketDepths": {
-      "mex": 1,
+      "mex": 2,
       "rsa": 1,
       "kor": 1,
       "cze": 1,
-      "can": 1,
+      "can": 2,
       "bih": 1,
       "qat": 1,
-      "sui": 1,
-      "bra": 1,
-      "mar": 1,
+      "sui": 3,
+      "bra": 2,
+      "mar": 3,
       "hai": 1,
       "sco": 1,
-      "usa": 1,
-      "par": 1,
+      "usa": 2,
+      "par": 2,
       "aus": 1,
       "tur": 1,
       "ger": 1,
@@ -8347,32 +7959,33 @@ export const snapshots: Snapshot[] = [
       "jpn": 1,
       "swe": 1,
       "tun": 1,
-      "bel": 1,
-      "egy": 1,
+      "bel": 3,
+      "egy": 2,
       "irn": 1,
       "nzl": 1,
-      "esp": 1,
+      "esp": 5,
       "cpv": 1,
       "ksa": 1,
       "uru": 1,
-      "fra": 1,
+      "fra": 4,
       "sen": 1,
       "irq": 1,
-      "nor": 1,
-      "arg": 1,
+      "nor": 3,
+      "arg": 5,
       "alg": 1,
       "aut": 1,
       "jor": 1,
-      "por": 1,
+      "por": 2,
       "cod": 1,
       "uzb": 1,
-      "col": 1,
-      "eng": 1,
+      "col": 2,
+      "eng": 4,
       "cro": 1,
       "gha": 1,
       "pan": 1
     },
     "eliminatedTeamIds": [
+      "kor",
       "cze",
       "qat",
       "hai",
@@ -8384,421 +7997,163 @@ export const snapshots: Snapshot[] = [
       "nzl",
       "ksa",
       "uru",
-      "sen",
       "irq",
       "jor",
       "uzb",
-      "pan"
+      "pan",
+      "rsa",
+      "ger",
+      "ned",
+      "jpn",
+      "swe",
+      "civ",
+      "ecu",
+      "cod",
+      "sen",
+      "cro",
+      "aut",
+      "alg",
+      "cpv",
+      "gha",
+      "aus",
+      "bih",
+      "can",
+      "par",
+      "bra",
+      "mex",
+      "por",
+      "usa",
+      "egy",
+      "col",
+      "mar",
+      "bel",
+      "nor",
+      "sui",
+      "fra",
+      "eng"
     ]
   },
   {
     "day": 34,
     "probabilities": {
-      "mex": 0.34,
-      "rsa": 0.02,
+      "mex": 0,
+      "rsa": 0,
       "kor": 0,
       "cze": 0,
-      "can": 0.05,
+      "can": 0,
       "bih": 0,
       "qat": 0,
-      "sui": 2.08,
-      "bra": 8.21,
-      "mar": 2.83,
+      "sui": 0,
+      "bra": 0,
+      "mar": 0,
       "hai": 0,
       "sco": 0,
-      "usa": 1.21,
-      "par": 0.05,
-      "aus": 0.27,
+      "usa": 0,
+      "par": 0,
+      "aus": 0,
       "tur": 0,
-      "ger": 2.95,
+      "ger": 0,
       "cuw": 0,
-      "civ": 0.08,
-      "ecu": 0.4,
-      "ned": 5.62,
-      "jpn": 1.17,
+      "civ": 0,
+      "ecu": 0,
+      "ned": 0,
+      "jpn": 0,
       "swe": 0,
       "tun": 0,
-      "bel": 4.58,
-      "egy": 0.24,
-      "irn": 0.15,
-      "nzl": 0,
-      "esp": 12.79,
-      "cpv": 0.01,
-      "ksa": 0,
-      "uru": 0,
-      "fra": 13.81,
-      "sen": 0,
-      "irq": 0,
-      "nor": 0.35,
-      "arg": 18.3,
-      "alg": 0.13,
-      "aut": 0.15,
-      "jor": 0,
-      "por": 4.25,
-      "cod": 0,
-      "uzb": 0,
-      "col": 3.52,
-      "eng": 14.67,
-      "cro": 1.75,
-      "gha": 0.01,
-      "pan": 0
-    },
-    "possibleOpponents": {
-      "mex": [],
-      "rsa": [
-        "can"
-      ],
-      "kor": [],
-      "cze": [],
-      "can": [
-        "rsa"
-      ],
-      "bih": [
-        "usa"
-      ],
-      "qat": [],
-      "sui": [
-        "alg"
-      ],
-      "bra": [
-        "jpn"
-      ],
-      "mar": [
-        "ned"
-      ],
-      "hai": [],
-      "sco": [],
-      "usa": [
-        "bih"
-      ],
-      "par": [
-        "ger"
-      ],
-      "aus": [
-        "egy"
-      ],
-      "tur": [],
-      "ger": [
-        "par"
-      ],
-      "cuw": [],
-      "civ": [
-        "nor"
-      ],
-      "ecu": [
-        "bel"
-      ],
-      "ned": [
-        "mar"
-      ],
-      "jpn": [
-        "bra"
-      ],
-      "swe": [
-        "fra"
-      ],
-      "tun": [],
-      "bel": [
-        "ecu"
-      ],
-      "egy": [
-        "aus"
-      ],
-      "irn": [],
-      "nzl": [],
-      "esp": [
-        "aut"
-      ],
-      "cpv": [
-        "arg"
-      ],
-      "ksa": [],
-      "uru": [],
-      "fra": [
-        "swe"
-      ],
-      "sen": [],
-      "irq": [],
-      "nor": [
-        "civ"
-      ],
-      "arg": [
-        "cpv"
-      ],
-      "alg": [
-        "sui"
-      ],
-      "aut": [
-        "esp"
-      ],
-      "jor": [],
-      "por": [
-        "cro"
-      ],
-      "cod": [
-        "eng"
-      ],
-      "uzb": [],
-      "col": [
-        "gha"
-      ],
-      "eng": [
-        "cod"
-      ],
-      "cro": [
-        "por"
-      ],
-      "gha": [
-        "col"
-      ],
-      "pan": []
-    },
-    "bracketDepths": {
-      "mex": 1,
-      "rsa": 1,
-      "kor": 1,
-      "cze": 1,
-      "can": 1,
-      "bih": 1,
-      "qat": 1,
-      "sui": 1,
-      "bra": 1,
-      "mar": 1,
-      "hai": 1,
-      "sco": 1,
-      "usa": 1,
-      "par": 1,
-      "aus": 1,
-      "tur": 1,
-      "ger": 1,
-      "cuw": 1,
-      "civ": 1,
-      "ecu": 1,
-      "ned": 1,
-      "jpn": 1,
-      "swe": 1,
-      "tun": 1,
-      "bel": 1,
-      "egy": 1,
-      "irn": 1,
-      "nzl": 1,
-      "esp": 1,
-      "cpv": 1,
-      "ksa": 1,
-      "uru": 1,
-      "fra": 1,
-      "sen": 1,
-      "irq": 1,
-      "nor": 1,
-      "arg": 1,
-      "alg": 1,
-      "aut": 1,
-      "jor": 1,
-      "por": 1,
-      "cod": 1,
-      "uzb": 1,
-      "col": 1,
-      "eng": 1,
-      "cro": 1,
-      "gha": 1,
-      "pan": 1
-    },
-    "eliminatedTeamIds": [
-      "kor",
-      "cze",
-      "qat",
-      "hai",
-      "sco",
-      "tur",
-      "cuw",
-      "tun",
-      "nzl",
-      "ksa",
-      "uru",
-      "sen",
-      "irq",
-      "jor",
-      "uzb",
-      "pan"
-    ]
-  },
-  {
-    "day": 35,
-    "probabilities": {
-      "mex": 0.34,
-      "rsa": 0.02,
-      "kor": 0,
-      "cze": 0,
-      "can": 0.05,
-      "bih": 0,
-      "qat": 0,
-      "sui": 2.08,
-      "bra": 8.21,
-      "mar": 2.84,
-      "hai": 0,
-      "sco": 0,
-      "usa": 1.21,
-      "par": 0.05,
-      "aus": 0.27,
-      "tur": 0,
-      "ger": 2.95,
-      "cuw": 0,
-      "civ": 0.08,
-      "ecu": 0.4,
-      "ned": 5.62,
-      "jpn": 1.17,
-      "swe": 0,
-      "tun": 0,
-      "bel": 4.59,
-      "egy": 0.24,
+      "bel": 0,
+      "egy": 0,
       "irn": 0,
       "nzl": 0,
-      "esp": 12.8,
-      "cpv": 0.01,
+      "esp": 53.12,
+      "cpv": 0,
       "ksa": 0,
       "uru": 0,
-      "fra": 13.82,
-      "sen": 0.1,
+      "fra": 0,
+      "sen": 0,
       "irq": 0,
-      "nor": 0.35,
-      "arg": 18.31,
-      "alg": 0.13,
-      "aut": 0.15,
+      "nor": 0,
+      "arg": 46.88,
+      "alg": 0,
+      "aut": 0,
       "jor": 0,
-      "por": 4.25,
+      "por": 0,
       "cod": 0,
       "uzb": 0,
-      "col": 3.52,
-      "eng": 14.68,
-      "cro": 1.75,
-      "gha": 0.01,
+      "col": 0,
+      "eng": 0,
+      "cro": 0,
+      "gha": 0,
       "pan": 0
     },
     "possibleOpponents": {
       "mex": [],
-      "rsa": [
-        "can"
-      ],
+      "rsa": [],
       "kor": [],
       "cze": [],
-      "can": [
-        "rsa"
-      ],
-      "bih": [
-        "usa"
-      ],
+      "can": [],
+      "bih": [],
       "qat": [],
-      "sui": [
-        "alg"
-      ],
-      "bra": [
-        "jpn"
-      ],
-      "mar": [
-        "ned"
-      ],
+      "sui": [],
+      "bra": [],
+      "mar": [],
       "hai": [],
       "sco": [],
-      "usa": [
-        "bih"
-      ],
-      "par": [
-        "ger"
-      ],
-      "aus": [
-        "egy"
-      ],
+      "usa": [],
+      "par": [],
+      "aus": [],
       "tur": [],
-      "ger": [
-        "par"
-      ],
+      "ger": [],
       "cuw": [],
-      "civ": [
-        "nor"
-      ],
-      "ecu": [
-        "bel"
-      ],
-      "ned": [
-        "mar"
-      ],
-      "jpn": [
-        "bra"
-      ],
-      "swe": [
-        "fra"
-      ],
+      "civ": [],
+      "ecu": [],
+      "ned": [],
+      "jpn": [],
+      "swe": [],
       "tun": [],
-      "bel": [
-        "ecu"
-      ],
-      "egy": [
-        "aus"
-      ],
+      "bel": [],
+      "egy": [],
       "irn": [],
       "nzl": [],
       "esp": [
-        "aut"
-      ],
-      "cpv": [
         "arg"
       ],
+      "cpv": [],
       "ksa": [],
       "uru": [],
-      "fra": [
-        "swe"
-      ],
+      "fra": [],
       "sen": [],
       "irq": [],
-      "nor": [
-        "civ"
-      ],
+      "nor": [],
       "arg": [
-        "cpv"
-      ],
-      "alg": [
-        "sui"
-      ],
-      "aut": [
         "esp"
       ],
+      "alg": [],
+      "aut": [],
       "jor": [],
-      "por": [
-        "cro"
-      ],
-      "cod": [
-        "eng"
-      ],
+      "por": [],
+      "cod": [],
       "uzb": [],
-      "col": [
-        "gha"
-      ],
-      "eng": [
-        "cod"
-      ],
-      "cro": [
-        "por"
-      ],
-      "gha": [
-        "col"
-      ],
+      "col": [],
+      "eng": [],
+      "cro": [],
+      "gha": [],
       "pan": []
     },
     "bracketDepths": {
-      "mex": 1,
+      "mex": 2,
       "rsa": 1,
       "kor": 1,
       "cze": 1,
-      "can": 1,
+      "can": 2,
       "bih": 1,
       "qat": 1,
-      "sui": 1,
-      "bra": 1,
-      "mar": 1,
+      "sui": 3,
+      "bra": 2,
+      "mar": 3,
       "hai": 1,
       "sco": 1,
-      "usa": 1,
-      "par": 1,
+      "usa": 2,
+      "par": 2,
       "aus": 1,
       "tur": 1,
       "ger": 1,
@@ -8809,27 +8164,27 @@ export const snapshots: Snapshot[] = [
       "jpn": 1,
       "swe": 1,
       "tun": 1,
-      "bel": 1,
-      "egy": 1,
+      "bel": 3,
+      "egy": 2,
       "irn": 1,
       "nzl": 1,
-      "esp": 1,
+      "esp": 5,
       "cpv": 1,
       "ksa": 1,
       "uru": 1,
-      "fra": 1,
+      "fra": 4,
       "sen": 1,
       "irq": 1,
-      "nor": 1,
-      "arg": 1,
+      "nor": 3,
+      "arg": 5,
       "alg": 1,
       "aut": 1,
       "jor": 1,
-      "por": 1,
+      "por": 2,
       "cod": 1,
       "uzb": 1,
-      "col": 1,
-      "eng": 1,
+      "col": 2,
+      "eng": 4,
       "cro": 1,
       "gha": 1,
       "pan": 1
@@ -8850,7 +8205,239 @@ export const snapshots: Snapshot[] = [
       "irq",
       "jor",
       "uzb",
-      "pan"
+      "pan",
+      "rsa",
+      "ger",
+      "ned",
+      "jpn",
+      "swe",
+      "civ",
+      "ecu",
+      "cod",
+      "sen",
+      "cro",
+      "aut",
+      "alg",
+      "cpv",
+      "gha",
+      "aus",
+      "bih",
+      "can",
+      "par",
+      "bra",
+      "mex",
+      "por",
+      "usa",
+      "egy",
+      "col",
+      "mar",
+      "bel",
+      "nor",
+      "sui",
+      "fra",
+      "eng"
+    ]
+  },
+  {
+    "day": 35,
+    "probabilities": {
+      "mex": 0,
+      "rsa": 0,
+      "kor": 0,
+      "cze": 0,
+      "can": 0,
+      "bih": 0,
+      "qat": 0,
+      "sui": 0,
+      "bra": 0,
+      "mar": 0,
+      "hai": 0,
+      "sco": 0,
+      "usa": 0,
+      "par": 0,
+      "aus": 0,
+      "tur": 0,
+      "ger": 0,
+      "cuw": 0,
+      "civ": 0,
+      "ecu": 0,
+      "ned": 0,
+      "jpn": 0,
+      "swe": 0,
+      "tun": 0,
+      "bel": 0,
+      "egy": 0,
+      "irn": 0,
+      "nzl": 0,
+      "esp": 100,
+      "cpv": 0,
+      "ksa": 0,
+      "uru": 0,
+      "fra": 0,
+      "sen": 0,
+      "irq": 0,
+      "nor": 0,
+      "arg": 0,
+      "alg": 0,
+      "aut": 0,
+      "jor": 0,
+      "por": 0,
+      "cod": 0,
+      "uzb": 0,
+      "col": 0,
+      "eng": 0,
+      "cro": 0,
+      "gha": 0,
+      "pan": 0
+    },
+    "possibleOpponents": {
+      "mex": [],
+      "rsa": [],
+      "kor": [],
+      "cze": [],
+      "can": [],
+      "bih": [],
+      "qat": [],
+      "sui": [],
+      "bra": [],
+      "mar": [],
+      "hai": [],
+      "sco": [],
+      "usa": [],
+      "par": [],
+      "aus": [],
+      "tur": [],
+      "ger": [],
+      "cuw": [],
+      "civ": [],
+      "ecu": [],
+      "ned": [],
+      "jpn": [],
+      "swe": [],
+      "tun": [],
+      "bel": [],
+      "egy": [],
+      "irn": [],
+      "nzl": [],
+      "esp": [],
+      "cpv": [],
+      "ksa": [],
+      "uru": [],
+      "fra": [],
+      "sen": [],
+      "irq": [],
+      "nor": [],
+      "arg": [],
+      "alg": [],
+      "aut": [],
+      "jor": [],
+      "por": [],
+      "cod": [],
+      "uzb": [],
+      "col": [],
+      "eng": [],
+      "cro": [],
+      "gha": [],
+      "pan": []
+    },
+    "bracketDepths": {
+      "mex": 2,
+      "rsa": 1,
+      "kor": 1,
+      "cze": 1,
+      "can": 2,
+      "bih": 1,
+      "qat": 1,
+      "sui": 3,
+      "bra": 2,
+      "mar": 3,
+      "hai": 1,
+      "sco": 1,
+      "usa": 2,
+      "par": 2,
+      "aus": 1,
+      "tur": 1,
+      "ger": 1,
+      "cuw": 1,
+      "civ": 1,
+      "ecu": 1,
+      "ned": 1,
+      "jpn": 1,
+      "swe": 1,
+      "tun": 1,
+      "bel": 3,
+      "egy": 2,
+      "irn": 1,
+      "nzl": 1,
+      "esp": 6,
+      "cpv": 1,
+      "ksa": 1,
+      "uru": 1,
+      "fra": 4,
+      "sen": 1,
+      "irq": 1,
+      "nor": 3,
+      "arg": 5,
+      "alg": 1,
+      "aut": 1,
+      "jor": 1,
+      "por": 2,
+      "cod": 1,
+      "uzb": 1,
+      "col": 2,
+      "eng": 4,
+      "cro": 1,
+      "gha": 1,
+      "pan": 1
+    },
+    "eliminatedTeamIds": [
+      "kor",
+      "cze",
+      "qat",
+      "hai",
+      "sco",
+      "tur",
+      "cuw",
+      "tun",
+      "irn",
+      "nzl",
+      "ksa",
+      "uru",
+      "irq",
+      "jor",
+      "uzb",
+      "pan",
+      "rsa",
+      "ger",
+      "ned",
+      "jpn",
+      "swe",
+      "civ",
+      "ecu",
+      "cod",
+      "sen",
+      "cro",
+      "aut",
+      "alg",
+      "cpv",
+      "gha",
+      "aus",
+      "bih",
+      "can",
+      "par",
+      "bra",
+      "mex",
+      "por",
+      "usa",
+      "egy",
+      "col",
+      "mar",
+      "bel",
+      "nor",
+      "sui",
+      "fra",
+      "eng",
+      "arg"
     ]
   }
 ] as Snapshot[];

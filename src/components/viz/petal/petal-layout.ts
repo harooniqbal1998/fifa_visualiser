@@ -13,7 +13,7 @@ import {
   GROUP_IDS,
   type VizSizing,
 } from "@/components/viz/viz-math";
-import { selectAdvancingThirdPlaceGroups } from "@/lib/simulation/group-advancement";
+import { resolveAdvancingThirdPlaceGroups } from "@/lib/simulation/group-advancement";
 import { createSeededRng } from "@/lib/simulation/animation-params";
 
 export type PetalPoint = { x: number; y: number };
@@ -232,7 +232,7 @@ export function computePetalPositions(
 
   const resolvedThirdGroups =
     advancingThirdGroups ??
-    selectAdvancingThirdPlaceGroups(standings, createSeededRng(42));
+    resolveAdvancingThirdPlaceGroups(standings, createSeededRng(42));
 
   const maxProbability = Math.max(
     ...teams.map((t) => probabilities[t.id] ?? 0),

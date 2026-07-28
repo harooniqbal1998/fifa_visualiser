@@ -17,7 +17,7 @@ import {
 } from "@/lib/simulation/bracket-resolver";
 import {
   buildStandingsFromGroupResults,
-  selectAdvancingThirdPlaceGroups,
+  resolveAdvancingThirdPlaceGroups,
   type StandingsTable,
 } from "@/lib/simulation/group-advancement";
 import { buildBracketSlotProbabilities } from "@/lib/probability/bracket-analytical";
@@ -179,7 +179,7 @@ export function buildTournamentStructureView(
   const resolvedThirdGroups =
     advancingThirdGroupsArg ??
     (day >= 12 && Object.keys(standings).length > 0
-      ? selectAdvancingThirdPlaceGroups(
+      ? resolveAdvancingThirdPlaceGroups(
           standings,
           createSeededRng(BOOTSTRAP_STRUCTURE_SEED),
         )

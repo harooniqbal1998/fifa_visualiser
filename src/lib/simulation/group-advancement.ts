@@ -1,3 +1,4 @@
+import { ACTUAL_ADVANCING_THIRD_GROUPS, ACTUAL_KNOCKOUT_RESULTS } from "@/data/actual-results";
 import type { StandingRow } from "@/lib/standings";
 import { computeGroupStandings } from "@/lib/standings";
 import { simResultToMatch } from "@/lib/simulation/sim-result";
@@ -44,12 +45,45 @@ export function selectAdvancingThirdPlaceGroups(
   return ordered.slice(0, 8);
 }
 
+function historicalThirdsMatchStandings(standings: StandingsTable): boolean {
+  if (ACTUAL_ADVANCING_THIRD_GROUPS.length !== 8) return false;
+
+  const r32Teams = new Set<string>();
+  for (const [id, result] of Object.entries(ACTUAL_KNOCKOUT_RESULTS)) {
+    if (!id.startsWith("r32-")) continue;
+    r32Teams.add(result.home);
+    r32Teams.add(result.away);
+  }
+  if (r32Teams.size !== 32) return false;
+
+  for (const group of ACTUAL_ADVANCING_THIRD_GROUPS) {
+    const third = standings[group]?.[2]?.teamId;
+    if (!third || !r32Teams.has(third)) return false;
+  }
+  return true;
+}
+
+/** Prefer pinned historical thirds when standings match the real tournament. */
+export function resolveAdvancingThirdPlaceGroups(
+  standings: StandingsTable,
+  rng: () => number,
+  explicit?: string[],
+): string[] {
+  if (explicit && explicit.length === 8) return explicit;
+
+  if (historicalThirdsMatchStandings(standings)) {
+    return [...ACTUAL_ADVANCING_THIRD_GROUPS];
+  }
+
+  return selectAdvancingThirdPlaceGroups(standings, rng);
+}
+
 export function getAdvancingTeamIds(
   groupResults: SimMatchResult[],
   rng: () => number,
 ): Set<string> {
   const standings = buildStandingsFromGroupResults(groupResults);
-  const advancingThirdGroups = selectAdvancingThirdPlaceGroups(standings, rng);
+  const advancingThirdGroups = resolveAdvancingThirdPlaceGroups(standings, rng);
   return getAdvancingTeamIdsFromThirdGroups(standings, advancingThirdGroups);
 }
 

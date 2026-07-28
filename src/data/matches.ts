@@ -1,6 +1,6 @@
 import type { Match, MatchStage } from "@/types";
 import { teams } from "./teams";
-import { ACTUAL_RESULTS } from "./actual-results";
+import { ACTUAL_KNOCKOUT_RESULTS, ACTUAL_RESULTS } from "./actual-results";
 
 function matchKey(home: string, away: string): string {
   return `${home}-${away}`;
@@ -114,13 +114,28 @@ const KNOCKOUT_SCHEDULE: KnockoutScheduleEntry[] = [
 ];
 
 function buildKnockoutMatches(): Match[] {
-  return KNOCKOUT_SCHEDULE.map(({ id, stage, day }) => ({
-    id,
-    stage,
-    day,
-    home: "",
-    away: "",
-  }));
+  return KNOCKOUT_SCHEDULE.map(({ id, stage, day }) => {
+    const actual = ACTUAL_KNOCKOUT_RESULTS[id];
+    if (!actual) {
+      return {
+        id,
+        stage,
+        day,
+        home: "",
+        away: "",
+      };
+    }
+    return {
+      id,
+      stage,
+      day,
+      home: actual.home,
+      away: actual.away,
+      homeScore: actual.homeScore,
+      awayScore: actual.awayScore,
+      winner: actual.winner,
+    };
+  });
 }
 
 export const matches: Match[] = [...buildGroupMatches(), ...buildKnockoutMatches()].sort(

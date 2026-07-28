@@ -13,7 +13,7 @@ import {
 } from "react";
 import type { Snapshot, Team } from "@/types";
 import type { StandingRow } from "@/lib/standings";
-import { getGroupStandings, getSnapshotByDay } from "@/lib/tournament";
+import { getGroupStandings, getIdleSnapshotForStartDay } from "@/lib/tournament";
 import { PetalCanvas, type PetalCanvasRef } from "@/components/viz/petal/petal-canvas";
 import { DEFAULT_PETAL_CONFIG } from "@/components/viz/petal/petal-config";
 import { computePetalPositions } from "@/components/viz/petal/petal-layout";
@@ -257,11 +257,15 @@ export const PetalSimulationVisualization = memo(
       setLiveEliminated(null);
 
       const restoreSnapshot =
-        getSnapshotByDay(restoreDay ?? snapshot.day) ?? snapshot;
+        restoreDay !== undefined
+          ? getIdleSnapshotForStartDay(restoreDay)
+          : snapshot;
       const staticEliminated = getSnapshotEliminated(restoreSnapshot);
       eliminatedRef.current = new Set(staticEliminated);
       probabilitiesRef.current = restoreSnapshot.probabilities;
-      standingsRef.current = getGroupStandings(restoreSnapshot.day);
+      const standingsDay =
+        restoreSnapshot.day > 0 ? restoreSnapshot.day - 1 : restoreSnapshot.day;
+      standingsRef.current = getGroupStandings(standingsDay);
       bracketDepthsRef.current = restoreSnapshot.bracketDepths ?? {};
       groupResultsRef.current = [];
       knockoutResultsRef.current = [];

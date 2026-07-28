@@ -1,7 +1,7 @@
 import { resolveR32Participants } from "@/data/tournament-paths";
 import {
   buildStandingsFromGroupResults,
-  selectAdvancingThirdPlaceGroups,
+  resolveAdvancingThirdPlaceGroups,
 } from "@/lib/simulation/group-advancement";
 import { createSeededRng } from "@/lib/simulation/animation-params";
 import type { SimMatchResult } from "@/lib/simulation/types";
@@ -15,8 +15,10 @@ export function resolveR32Match(
     return {};
   }
   const standings = buildStandingsFromGroupResults(groupResults);
-  const thirdGroups =
-    advancingThirdGroups ??
-    selectAdvancingThirdPlaceGroups(standings, createSeededRng(42));
+  const thirdGroups = resolveAdvancingThirdPlaceGroups(
+    standings,
+    createSeededRng(42),
+    advancingThirdGroups,
+  );
   return resolveR32Participants(matchId, standings, thirdGroups);
 }

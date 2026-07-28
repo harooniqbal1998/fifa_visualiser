@@ -6,12 +6,15 @@ import {
   getDropdownTimelineStartOptions,
   getLatestDropdownStartDay,
   getMaxDropdownStage,
+  hasSimulationWorkFromDay,
   isDropdownStartDay,
   isGroupStageComplete,
   isKnockoutStageComplete,
   isSimStartDayForMatches,
 } from "@/lib/tournament-progress";
 import { PRE_TOURNAMENT_DAY } from "@/lib/match-context-label";
+import { getScriptedResultsBeforeDay } from "@/lib/simulation/advancement";
+import { getIdleSnapshotForStartDay } from "@/lib/tournament";
 
 function cloneMatches(): Match[] {
   return productionMatches.map((match) => ({ ...match }));
@@ -22,6 +25,10 @@ function clearScores(matchList: Match[]): void {
     delete match.homeScore;
     delete match.awayScore;
     delete match.winner;
+    if (match.stage !== "group") {
+      match.home = "";
+      match.away = "";
+    }
   }
 }
 
@@ -76,12 +83,14 @@ describe("getMaxDropdownStage", () => {
 
   it("returns round-of-32 when group is complete and no knockout results exist", () => {
     const matchList = cloneMatches();
+    clearScores(matchList);
     scoreAllGroupMatches(matchList);
     assert.equal(getMaxDropdownStage(matchList), "round-of-32");
   });
 
   it("returns round-of-16 when R32 is fully complete", () => {
     const matchList = cloneMatches();
+    clearScores(matchList);
     scoreAllGroupMatches(matchList);
     scoreKnockoutStage(matchList, "round-of-32", { complete: true });
     assert.equal(getMaxDropdownStage(matchList), "round-of-16");
@@ -89,6 +98,7 @@ describe("getMaxDropdownStage", () => {
 
   it("returns quarter-final when R16 is fully complete", () => {
     const matchList = cloneMatches();
+    clearScores(matchList);
     scoreAllGroupMatches(matchList);
     scoreKnockoutStage(matchList, "round-of-32", { complete: true });
     scoreKnockoutStage(matchList, "round-of-16", { complete: true });
@@ -97,6 +107,7 @@ describe("getMaxDropdownStage", () => {
 
   it("returns semi-final when QF is fully complete", () => {
     const matchList = cloneMatches();
+    clearScores(matchList);
     scoreAllGroupMatches(matchList);
     scoreKnockoutStage(matchList, "round-of-32", { complete: true });
     scoreKnockoutStage(matchList, "round-of-16", { complete: true });
@@ -106,6 +117,7 @@ describe("getMaxDropdownStage", () => {
 
   it("returns final when SF is fully complete", () => {
     const matchList = cloneMatches();
+    clearScores(matchList);
     scoreAllGroupMatches(matchList);
     scoreKnockoutStage(matchList, "round-of-32", { complete: true });
     scoreKnockoutStage(matchList, "round-of-16", { complete: true });
@@ -118,12 +130,20 @@ describe("getMaxDropdownStage", () => {
 describe("isKnockoutStageComplete", () => {
   it("ignores knockout matches without teams", () => {
     const matchList = cloneMatches();
+    clearScores(matchList);
+    for (const match of matchList) {
+      if (match.stage !== "group") {
+        match.home = "";
+        match.away = "";
+      }
+    }
     scoreAllGroupMatches(matchList);
     assert.equal(isKnockoutStageComplete("round-of-32", matchList), false);
   });
 
   it("is false when stage has partial results", () => {
     const matchList = cloneMatches();
+    clearScores(matchList);
     scoreAllGroupMatches(matchList);
     scoreKnockoutStage(matchList, "round-of-32", { complete: false, partialCount: 8 });
     assert.equal(isKnockoutStageComplete("round-of-32", matchList), false);
@@ -131,16 +151,16 @@ describe("isKnockoutStageComplete", () => {
 });
 
 describe("getDropdownTimelineStartOptions", () => {
-  it("includes only pre-tournament and matchday 1 when MD1 is incomplete", () => {
+  it("includes pre-tournament and Matchday 1 when only MD1 is scored", () => {
     const matchList = cloneMatches();
     clearScores(matchList);
     scoreGroupMatchdays(matchList, 1);
-    const labels = optionLabels(matchList);
-    assert.deepEqual(labels, ["Pre-tournament", "Matchday 1"]);
+    assert.deepEqual(optionLabels(matchList), ["Pre-tournament", "Matchday 1"]);
   });
 
   it("includes round of 32 but not later knockouts when group is complete", () => {
     const matchList = cloneMatches();
+    clearScores(matchList);
     scoreAllGroupMatches(matchList);
     const labels = optionLabels(matchList);
     assert.ok(labels.includes("Round of 32"));
@@ -152,6 +172,7 @@ describe("getDropdownTimelineStartOptions", () => {
 
   it("still shows round of 32 when R32 is partially complete", () => {
     const matchList = cloneMatches();
+    clearScores(matchList);
     scoreAllGroupMatches(matchList);
     scoreKnockoutStage(matchList, "round-of-32", { complete: false, partialCount: 8 });
     const labels = optionLabels(matchList);
@@ -161,6 +182,7 @@ describe("getDropdownTimelineStartOptions", () => {
 
   it("adds round of 16 when R32 is fully complete", () => {
     const matchList = cloneMatches();
+    clearScores(matchList);
     scoreAllGroupMatches(matchList);
     scoreKnockoutStage(matchList, "round-of-32", { complete: true });
     const labels = optionLabels(matchList);
@@ -174,14 +196,14 @@ describe("getDropdownTimelineStartOptions", () => {
     assert.ok(optionLabels(matchList).includes("Pre-tournament"));
   });
 
-  it("dedupes to one label per stage band", () => {
+  it("dedupes to one option per round band", () => {
     const matchList = cloneMatches();
+    clearScores(matchList);
     scoreAllGroupMatches(matchList);
     const labels = optionLabels(matchList);
-    const md1Count = labels.filter((label) => label === "Matchday 1").length;
-    const r32Count = labels.filter((label) => label === "Round of 32").length;
-    assert.equal(md1Count, 1);
-    assert.equal(r32Count, 1);
+    assert.equal(labels.filter((label) => label === "Matchday 1").length, 1);
+    assert.equal(labels.filter((label) => label === "Round of 32").length, 1);
+    assert.ok(labels.every((label) => !label.includes("Day")));
   });
 });
 
@@ -194,6 +216,7 @@ describe("isDropdownStartDay", () => {
 
   it("blocks round of 16 when max stage is round-of-32 even if sim start day passes", () => {
     const matchList = cloneMatches();
+    clearScores(matchList);
     scoreAllGroupMatches(matchList);
     assert.equal(isSimStartDayForMatches(21, matchList), true);
     assert.equal(isDropdownStartDay(21, matchList), false);
@@ -201,6 +224,7 @@ describe("isDropdownStartDay", () => {
 
   it("allows round of 16 when R32 is complete", () => {
     const matchList = cloneMatches();
+    clearScores(matchList);
     scoreAllGroupMatches(matchList);
     scoreKnockoutStage(matchList, "round-of-32", { complete: true });
     assert.equal(isDropdownStartDay(21, matchList), true);
@@ -208,6 +232,7 @@ describe("isDropdownStartDay", () => {
 
   it("aligns play gate with dropdown for blocked future stages", () => {
     const matchList = cloneMatches();
+    clearScores(matchList);
     scoreAllGroupMatches(matchList);
     for (const day of [27, 31, 35]) {
       assert.equal(
@@ -220,16 +245,44 @@ describe("isDropdownStartDay", () => {
 });
 
 describe("production match data", () => {
-  it("caps dropdown at round of 32 with current results", () => {
+  it("exposes one option per round through Final with exact Option copy", () => {
     assert.equal(isGroupStageComplete(productionMatches), true);
-    assert.equal(getMaxDropdownStage(productionMatches), "round-of-32");
-    const labels = optionLabels(productionMatches);
-    assert.ok(labels.includes("Round of 32"));
-    assert.ok(!labels.includes("Round of 16"));
+    assert.equal(getMaxDropdownStage(productionMatches), "final");
+    assert.deepEqual(optionLabels(productionMatches), [
+      "Pre-tournament",
+      "Matchday 1",
+      "Matchday 2",
+      "Matchday 3",
+      "Round of 32",
+      "Round of 16",
+      "Quarter-final",
+      "Semi-final",
+      "Final",
+    ]);
   });
 
-  it("returns round of 32 with current production results", () => {
-    assert.equal(getLatestDropdownStartDay(productionMatches), 13);
+  it("defaults latest dropdown day to the final start day", () => {
+    assert.equal(getLatestDropdownStartDay(productionMatches), 35);
     assert.notEqual(getLatestDropdownStartDay(productionMatches), PRE_TOURNAMENT_DAY);
+  });
+
+  it("allows Play from Final even when the Final is historically scored", () => {
+    assert.equal(hasSimulationWorkFromDay(35, productionMatches), true);
+  });
+});
+
+describe("start-of-round idle data", () => {
+  it("excludes Final result when viewing Final start", () => {
+    const beforeFinal = getScriptedResultsBeforeDay(35);
+    assert.ok(!beforeFinal.some((result) => result.matchId === "fin-1"));
+    assert.ok(beforeFinal.some((result) => result.matchId === "sf-1"));
+    assert.ok(beforeFinal.some((result) => result.matchId === "sf-2"));
+  });
+
+  it("idle Final snapshot keeps start day 35 but not champion-only state", () => {
+    const idle = getIdleSnapshotForStartDay(35);
+    assert.equal(idle.day, 35);
+    assert.ok((idle.probabilities.esp ?? 0) < 100);
+    assert.ok((idle.probabilities.arg ?? 0) > 0);
   });
 });

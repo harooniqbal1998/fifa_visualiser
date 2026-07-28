@@ -12,14 +12,16 @@ import {
   getDropdownTimelineStartOptions,
   getLatestDropdownStartDay,
   getMaxDropdownStage,
+  hasSimulationWorkFromDay,
   isDropdownStartDay,
 } from "@/lib/tournament-progress";
 
-export { isDropdownStartDay, getLatestDropdownStartDay, getMaxDropdownStage };
+export { isDropdownStartDay, getLatestDropdownStartDay, getMaxDropdownStage, hasSimulationWorkFromDay };
 import { snapshotsByDay } from "@/data/snapshots";
 import { computeGroupStandings } from "@/lib/standings";
 import { PRE_TOURNAMENT_DAY } from "@/lib/match-context-label";
 import type { TimelineStartOption } from "@/lib/tournament-progress";
+import type { Snapshot } from "@/types";
 
 export type { TimelineStartOption };
 
@@ -29,6 +31,23 @@ export function getTeams(): Team[] {
 
 export function getSnapshotByDay(day: number) {
   return snapshotsByDay[day];
+}
+
+/**
+ * Idle snapshot for a round-start day: probs/eliminations from before that day,
+ * but `day` kept as the selected start day so Play bootstraps correctly.
+ */
+export function getIdleSnapshotForStartDay(startDay: number): Snapshot {
+  const dataDay = startDay > PRE_TOURNAMENT_DAY ? startDay - 1 : PRE_TOURNAMENT_DAY;
+  const base =
+    getSnapshotByDay(dataDay) ??
+    getSnapshotByDay(PRE_TOURNAMENT_DAY) ??
+    ({
+      day: PRE_TOURNAMENT_DAY,
+      probabilities: {},
+      possibleOpponents: {},
+    } satisfies Snapshot);
+  return { ...base, day: startDay };
 }
 
 export { PRE_TOURNAMENT_DAY };
