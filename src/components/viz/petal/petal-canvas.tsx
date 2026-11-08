@@ -226,18 +226,6 @@ export const PetalCanvas = forwardRef<PetalCanvasRef, PetalCanvasProps>(
       return () => runtimeRef.current.stopLoop();
     }, []);
 
-    useEffect(() => {
-      const darkMq = window.matchMedia("(prefers-color-scheme: dark)");
-      const mobileMq = window.matchMedia("(max-width: 767px)");
-      const onChange = () => runtimeRef.current.paint();
-      darkMq.addEventListener("change", onChange);
-      mobileMq.addEventListener("change", onChange);
-      return () => {
-        darkMq.removeEventListener("change", onChange);
-        mobileMq.removeEventListener("change", onChange);
-      };
-    }, []);
-
     return (
       <div ref={containerRef} className="h-full min-h-0 w-full bg-transparent">
         <canvas

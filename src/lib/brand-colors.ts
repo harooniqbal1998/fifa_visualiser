@@ -14,12 +14,6 @@ export function withAlpha(hex: string, alpha: number): string {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-export function isDarkMode(): boolean {
-  if (typeof window === "undefined") return false;
-  if (window.matchMedia("(max-width: 767px)").matches) return false;
-  return window.matchMedia("(prefers-color-scheme: dark)").matches;
-}
-
 export type CanvasPalette = {
   guideRing: string;
   guideRingInner: string;
@@ -28,12 +22,11 @@ export type CanvasPalette = {
 };
 
 export function getCanvasPalette(): CanvasPalette {
-  const dark = isDarkMode();
-  const lineToken = dark ? brandColors.lightGray : brandColors.darkHeather;
+  const lineToken = brandColors.darkHeather;
   return {
     guideRing: withAlpha(lineToken, 0.5),
     guideRingInner: withAlpha(lineToken, 0.35),
     connector: withAlpha(lineToken, 0.55),
-    placeholderFill: dark ? brandColors.lightGray : brandColors.darkHeather,
+    placeholderFill: brandColors.darkHeather,
   };
 }

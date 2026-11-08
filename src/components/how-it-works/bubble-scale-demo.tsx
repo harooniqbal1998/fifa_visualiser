@@ -11,7 +11,8 @@ export function BubbleScaleDemo() {
   const [probPct, setProbPct] = useState(8);
 
   const radius = useMemo(() => {
-    const sizing = getVizSizing();
+    // 16px matches getRootRemPx() during SSR, so the circle hydrates.
+    const sizing = getVizSizing(16);
     const scale = createRadiusScale(MAX_PROB_PCT, sizing.maxRadius, sizing);
     return scale(probPct);
   }, [probPct]);

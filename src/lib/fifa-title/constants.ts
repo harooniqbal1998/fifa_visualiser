@@ -26,7 +26,7 @@ export function getLetterColor(lineKind: FifaTitleLineKind, index: number): stri
 }
 
 export const DEFAULT_FIFA_TITLE_PARAMS = {
-  opacity: 0.1,
+  opacity: 0.2,
   kerning: -0.08,
   gradientSolid: 30,
   fontId: DEFAULT_FIFA_TITLE_FONT_ID,

@@ -30,8 +30,7 @@ export function remToPx(rem: number, remPx = getRootRemPx()): number {
   return rem * remPx;
 }
 
-export function getVizSizing(): VizSizing {
-  const remPx = getRootRemPx();
+export function getVizSizing(remPx = getRootRemPx()): VizSizing {
   const minRadius = Math.max(remToPx(MIN_RADIUS_REM, remPx), MIN_RADIUS_PX_FLOOR);
   const maxRadius = remToPx(MAX_RADIUS_REM, remPx);
   const minEffectiveMaxRadius = Math.max(

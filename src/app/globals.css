@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
-@custom-variant dark (@media (prefers-color-scheme: dark) and (min-width: 768px));
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
+  color-scheme: light;
   --background: #ffffff;
 
   /* brand palette — keep in sync with src/lib/brand-colors.ts */
@@ -31,13 +32,6 @@ html {
   --color-dark-heather: var(--dark-heather);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) and (min-width: 768px) {
-  :root {
-    --background: #474A4A;
-    --foreground: var(--light-gray);
-  }
 }
 
 @media (max-width: 767px) {
